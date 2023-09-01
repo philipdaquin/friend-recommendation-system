@@ -1,0 +1,25 @@
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+  port: 7000
+    
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/cqrs_user_service
+    username: postgres
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+    open-in-view: false
