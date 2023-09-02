@@ -1,12 +1,14 @@
 package com.example.user_service.service;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.example.user_service.domains.User;
 import com.example.user_service.repository.UserRepository;
@@ -26,15 +28,23 @@ public class UserService {
     }
 
 
-
+    /**
+     * Get one User entity by id 
+     * 
+     * @param id
+     * @return
+     */
+    @Transactional(readOnly = true)
     public Mono<User> getOne(final Long id) { 
-        return userRepository.findById(id);
+        return userRepository
+            .findById(id)
+            .single();
     }
 
 
     /**
      * 
-     * Insert the User with a supplied Callback that sends out an event to a shared messaging queue 
+     * Insert the User with a supplied Callback that sends out an event to a shared messaging 
      * queue like Apache kafka before finalising the transaction.
      * 
      * @param user an entity to create 
@@ -51,20 +61,44 @@ public class UserService {
                 .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item))));
     }
 
-    public Mono<User> partialUpdate(User newUser, final Long userId) { 
-        return userRepository.findById(userId)
-            .flatMap(current -> { 
 
-                if (newUser.getFirstName() != null) current.setFirstName(newUser.getFirstName());
-                if (newUser.getLastName() != null) current.setLastName(newUser.getLastName());
-                if (newUser.getEmail() != null) current.setEmail(newUser.getEmail());
+    /**
+     * Update basic information for the user with a supplied Callback from a shared messaging queue 
+     * like Apache Kafka before finalisng the transaction
+     * 
+     * @param newUser
+     * @param userId
+     * @return
+     */
+    public Mono<User> partialUpdate(User newUser, Consumer<User> callback) { 
+        Assert.notNull(newUser.getId(), "");
+        
+        AtomicReference<Long> userId = new AtomicReference<Long>();
+        userId.set(newUser.getId());
 
+        return userRepository.findById(userId.get())
+            .flatMap(
+                current -> { 
 
-                return userRepository.save(current);
-            }).switchIfEmpty(userRepository.save(newUser));
+                    if (newUser.getFirstName() != null) current.setFirstName(newUser.getFirstName());
+                    if (newUser.getLastName() != null) current.setLastName(newUser.getLastName());
+                    if (newUser.getEmail() != null) current.setEmail(newUser.getEmail());
+                    return userRepository.save(current);
+                }
+            )
+            
+            .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item)))
+            .single();
+            
     }
 
-    public void delete(final Long userId) {
+    /**
+     * Deletes an entity
+     * 
+     * @param userId
+     * @param callback
+     */
+    public void delete(final Long userId, Consumer<User> callback) {
         userRepository.deleteById(userId);
     }
 }
