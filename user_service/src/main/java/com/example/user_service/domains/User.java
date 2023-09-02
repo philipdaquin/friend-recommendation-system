@@ -2,40 +2,35 @@ package com.example.user_service.domains;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
-@Entity
 @Table
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionId = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 50)
-    @Column(name = "first_name", length = 60)
+    @Column(value = "first_name")
     private String firstName;
 
     @Size(max = 50)
-    @Column(name = "first_name", length = 50)
+    @Column(value = "first_name")
     private String lastName;
     
     @Email
     @Size(min = 5, max = 254)
-    @Column(length = 254, unique = true)
+    @UniqueElements
+    @Column(value = "email")
     private String email;
 
 

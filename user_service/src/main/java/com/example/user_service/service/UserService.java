@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.user_service.domains.User;
 import com.example.user_service.repository.UserRepository;
 
+import reactor.core.publisher.Mono;
+
 @Service
 @Transactional
 public class UserService {
@@ -23,11 +25,11 @@ public class UserService {
     }
 
 
-    public Optional<User> getUser(final Long id) { 
+    public Mono<User> getUser(final Long id) { 
         return userRepository.findById(id);
     }
 
-    public User save(User user) { 
+    public Mono<User> save(User user) { 
         return userRepository.save(user);
     }
 
