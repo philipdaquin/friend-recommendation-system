@@ -41,7 +41,6 @@ public class UserService {
             .single();
     }
 
-
     /**
      * 
      * Insert the User with a supplied Callback that sends out an event to a shared messaging 
@@ -93,12 +92,20 @@ public class UserService {
     }
 
     /**
-     * Deletes an entity
+     * 
+     * Deletes an entity; attempts to perform dual writes on both local persistence and 
+     * a shared messaging cluster, like Apache kafka
      * 
      * @param userId
      * @param callback
      */
     public void delete(final Long userId, Consumer<User> callback) {
-        userRepository.deleteById(userId);
+       
+        userRepository
+            .findById(userId)
+            .flatMap(user -> { 
+                return userRepository.delete(user).then(Mono.just(user));
+            })
+            .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item)));
     }
 }

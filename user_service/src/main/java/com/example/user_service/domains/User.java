@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
-@Table
+@Table(name = "users")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionId = 1L;
