@@ -1,0 +1,19 @@
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+  port: 7001
+    
+spring:
+  
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+  r2dbc:
+    password: password
+    url: r2dbc:postgresql://localhost:5432/cqrs_user_service
+    username: postgres
+  sql:
+    init:
+      mode: always

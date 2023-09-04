@@ -1,7 +1,6 @@
 package com.example.friend_service.domains;
 
 import java.io.Serializable;
-
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

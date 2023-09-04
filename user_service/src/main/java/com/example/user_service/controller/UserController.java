@@ -4,10 +4,14 @@ import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.service.annotation.PatchExchange;
 
 import com.example.user_service.domains.User;
 import com.example.user_service.domains.events.DomainEvent;
@@ -28,17 +33,14 @@ import com.example.user_service.service.UserService;
 import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
 
-@RestController
+@RestController 
 @RequestMapping("/v1/api")
 public class UserController {
+
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
     private final UserRepository userRepository;
-
     private final UserService userService;
-
     private final KafkaProducerService producer;
-
 
     public UserController(
         UserRepository userRepository,
@@ -125,7 +127,7 @@ public class UserController {
      * @throws URISyntaxException
      */
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PutMapping(path = "/user/{id}")
+    @PatchMapping(path = "/user/{id}")
     public Mono<User> partialUpdate(
         @PathVariable(value = "id", required = false) final Long userId, 
         @RequestBody @Valid final Mono<User> user
@@ -171,7 +173,7 @@ public class UserController {
      */
     @ResponseStatus(code = HttpStatus.CREATED)
     @PutMapping(path = "/user/{id}")
-    public Mono<User> updateUser(
+    public Mono<User> update(
         @PathVariable(value = "id", required = false) final Long userId, 
         @RequestBody @Valid final Mono<User> user
     ) throws URISyntaxException {
