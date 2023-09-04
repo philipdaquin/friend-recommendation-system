@@ -1,19 +1,37 @@
+logging:
+  level:
+    org.springframework.transaction: TRACE
+    org.springframework.data.r2dbc.connectionfactory: DEBUG
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://postgres:postgres@localhost:5432/friend_service
+    username: testuser
+    password: testpassword
+
+  kafka:
+    bootstrap-servers: localhost:9091
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    consumer:
+      group-id: reactivekafkaconsumerandproducer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.example.reactivekafkaconsumerandproducer.dto.FakeConsumerDTO
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
 
 server:
   error:
     include-message: always
     include-binding-errors: always
   port: 7001
-    
-spring:
-  
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
-  r2dbc:
-    password: password
-    url: r2dbc:postgresql://localhost:5432/cqrs_user_service
-    username: postgres
-  sql:
-    init:
-      mode: always
+
+FAKE_PRODUCER_DTO_TOPIC: fake_producer_dto_topic
