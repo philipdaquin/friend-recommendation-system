@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,7 @@ import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/api")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -53,10 +54,19 @@ public class UserController {
         this.userService = userService;
         this.producer = producer;
     }
+
+    /**
+     * Create a new User entity
+     * 
+     * @param user
+     * @return
+     */
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(path = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<User> createUser(@RequestBody Mono<User> user) { 
-        
+    public Mono<User> createUser(@RequestBody @Valid Mono<User> user) throws URISyntaxException { 
+
+        if (user.block().getId() != null) throw new UserResourceException("New User entity cannot already have an ID!");
+ 
         log.info("Creating a new user");
         // Flatten the Mono and map it to create a new user
         return user.flatMap(newUser -> {
@@ -105,6 +115,59 @@ public class UserController {
         });
     }
 
+    /**
+     * Partial updates given fields of an existing User entity fields
+     * 
+     * @param userId
+     * @param user
+     * @return
+     * @throws URISyntaxException
+     */
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @PutMapping(path = "/user/{id}")
+    public Mono<User> partialUpdate(
+        @PathVariable(value = "id", required = false) final Long userId, 
+        @RequestBody @Valid final Mono<User> user
+    ) throws URISyntaxException {
+        // Assert that the user exists 
+        if (!userRepository.existsById(userId).block()) throw new UserResourceException("User does not exist in the system!");
+
+        // Assert that the user id and id are the same
+        if (userId != user.block().getId()) throw new UserResourceException("Invalid Id");
+
+        // Assert that id in user is not empty
+        if (user.block().getId() == null) throw new UserResourceException("ID not found");
+
+        // Flatten the Mono and map it to create a new user
+        return user.flatMap(newUser -> {
+
+            // Execute dual writes to both local persistence and shared kafka cluster  
+            // If the database, the transaction is rollback else, a new event is emitted to the aggregated service
+            return userService.partialUpdate(newUser, cluster -> {
+
+                try { 
+                    DomainEvent<User> event = new DomainEvent<>();
+                    event.setSubject(cluster);
+                    event.setEventType(EventType.USER_UPDATED);
+                    // Send an Event to the kafka cluster 
+                    producer.send(event);
+    
+                } catch (Exception e) {
+                    throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
+                    "A database transaction failed. Try again later!");
+                }
+            });
+        });
+    }
+
+    /**
+     * Updates an existing User details 
+     * 
+     * @param userId
+     * @param user
+     * @return
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
     @ResponseStatus(code = HttpStatus.CREATED)
     @PutMapping(path = "/user/{id}")
     public Mono<User> updateUser(
@@ -144,8 +207,12 @@ public class UserController {
 
     } 
 
-
-
+    /**
+     * Get the "ID" User Entity
+     * 
+     * @param id
+     * @return
+     */
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<User> getUser(@PathVariable final Long id) {
