@@ -24,7 +24,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String firstName;
 
     @Size(max = 50)
-    @Column(value = "first_name")
+    @Column(value = "last_name")
     private String lastName;
     
     @Email
