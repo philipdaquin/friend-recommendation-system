@@ -12,7 +12,7 @@ services:
     image: confluentinc/cp-kafka:7.0.1
     container_name: kafka_broker
     ports:
-      - "9092:9092"
+      - "9091:9091"
     depends_on:
       - zookeeper
     environment:
