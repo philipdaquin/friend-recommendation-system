@@ -1,48 +1,41 @@
 package com.example.user_service.repository;
 
 
-import static org.junit.Assert.assertNotNull;
-
 import java.time.Instant;
 
 import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.reactivestreams.Publisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.example.user_service.AbstractIntegrationTest;
 import com.example.user_service.domains.User;
 
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @DataR2dbcTest
-@SpringJUnitConfig(classes = {DatabaseClient.class, UserRepositoryTest.TestConfig.class})
-public class UserRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class UserRepositoryTest extends AbstractIntegrationTest {
     
     private static final Logger log = LoggerFactory.getLogger(UserRepositoryTest.class);
-
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    DatabaseClient client;
-
-    @BeforeEach
-    public void setup() {
-        userRepository
-            .deleteAll()
-            .subscribe(data -> log.info("clean database: {} deleted.", data)
-        );
+    @AfterEach
+    void cleanUp() { 
+        userRepository.deleteAll();
     }
 
 
@@ -56,7 +49,6 @@ public class UserRepositoryTest {
         user.setCreatedDate(Instant.now());
         user.setLastModifiedBy("admin");
         user.setLastModifiedDate(Instant.now());
-        
         
         userRepository.save(user)
             .as(StepVerifier::create)
@@ -85,7 +77,4 @@ public class UserRepositoryTest {
             .expectNextMatches(item -> user.getId() != null)
             .verifyComplete();
     }
-
-    @ComponentScan
-    static class TestConfig {}
 }
