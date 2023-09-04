@@ -1,12 +1,9 @@
 package com.example.user_service.config;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.cloud.stream.binder.kafka.properties.KafkaProducerProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 
 import com.example.user_service.domains.User;

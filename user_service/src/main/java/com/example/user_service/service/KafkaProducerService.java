@@ -7,11 +7,6 @@ import org.springframework.stereotype.Service;
 import com.example.user_service.domains.User;
 import com.example.user_service.domains.events.DomainEvent;
 
-import reactor.core.publisher.Mono;
-import reactor.kafka.sender.SenderRecord;
-import reactor.kafka.sender.SenderResult;
-
-
 @Service
 public class KafkaProducerService {
     

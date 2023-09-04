@@ -5,9 +5,7 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
-import com.example.user_service.config.KafkaProducerConfig;
 import com.example.user_service.domains.User;
 import com.example.user_service.domains.events.DomainEvent;
 import com.example.user_service.domains.events.EventType;
@@ -90,6 +86,11 @@ public class UserController {
         });
     }
 
+    /**
+     * Delete the "id" of User Entity
+     * 
+     * @param id
+     */
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/users/{id}")
     public void deleteUser(@PathVariable final Long id) { 

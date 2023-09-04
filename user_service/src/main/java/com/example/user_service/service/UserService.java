@@ -1,6 +1,5 @@
 package com.example.user_service.service;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 

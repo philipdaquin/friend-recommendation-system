@@ -24,7 +24,7 @@ import com.example.user_service.domains.User;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@DataR2dbcTest
+// @DataR2dbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class UserRepositoryTest extends AbstractIntegrationTest {
     
