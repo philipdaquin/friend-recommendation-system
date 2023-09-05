@@ -81,15 +81,15 @@ public class FriendService {
      * @param friend
      * @param callback {@link Consumer<Friend>} allows you to ensure the transaction is successful else, a rollback is executed
      */
-    public void deleteOne(Friend friend, Consumer<Friend> callback) {
-        friendRepository
+    public Mono<Friend> deleteOne(Friend friend, Consumer<Friend> callback) {
+        return friendRepository
             .getFriend(friend.getUserId(), friend.getUserId())
             .flatMap(object -> { 
                 friend.setId(object.getId());
 
                 return friendRepository.delete(friend).then(Mono.just(friend));
             })
-            .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item)));
+            .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item))).single();
     }
 
     /**
@@ -113,5 +113,16 @@ public class FriendService {
             })
             .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item)))
             .single();
+    }
+
+    /**
+     * Retrieves the Friend entity using `userId` and `friendId`
+     * 
+     * @param userId
+     * @param friendId
+     * @return
+     */
+    public Mono<Friend> getFriend(final Long userId, final Long friendId) { 
+        return friendRepository.getFriend(userId, friendId).single();
     }
 }
