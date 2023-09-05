@@ -46,7 +46,7 @@ public class UserService {
      * queue like Apache kafka before finalising the transaction.
      * 
      * @param user an entity to create 
-     * @param callback is a {@link Consumer<User>} that will allow you to throw an exception to rollback the transaction.
+     * @param callback is a {@link Consumer<User>} that allows you to throw an exception to rollback the transaction.
      * @return a {@link Mono<User>} that emits the result of the transaction in the form of the committed {@link User}
      */
     public Mono<User> save(User user, Consumer<User> callback) { 
@@ -69,7 +69,7 @@ public class UserService {
      * @return
      */
     public Mono<User> partialUpdate(User newUser, Consumer<User> callback) { 
-        Assert.notNull(newUser.getId(), "");
+        Assert.notNull(newUser.getId(), "User Id cannot be null");
         
         AtomicReference<Long> userId = new AtomicReference<Long>();
         userId.set(newUser.getId());
