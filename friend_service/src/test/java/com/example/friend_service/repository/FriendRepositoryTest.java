@@ -28,15 +28,14 @@ import reactor.test.StepVerifier;
 @ExtendWith(SpringExtension.class)
 public class FriendRepositoryTest {
 
-    @Autowired
     FriendRepository repository;
 
     // @BeforeEach
     // void setup() { 
-    //     repository.deleteAll();
-    //     repository.save(new Friend(1L, 2L));
-    //     repository.save(new Friend(2L, 3L));
-    //     repository.save(new Friend(4L, 1L));
+    //     // repository.deleteAll();
+    //     // repository.save(new Friend(1L, 2L));
+    //     // repository.save(new Friend(2L, 3L));
+    //     // repository.save(new Friend(4L, 1L));
     // }
 
     @Test
