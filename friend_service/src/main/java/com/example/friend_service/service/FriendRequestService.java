@@ -85,4 +85,16 @@ public class FriendRequestService {
     public Flux<FriendRequest> getAllForUser(final Long userId) { 
         return repository.findAllForUser(userId);
     }
+
+
+    /**
+     * Retrieves the Friend Request Entity using UserId and Request Id
+     * 
+     * @param userId
+     * @param requestId
+     * @return
+     */
+    public Mono<FriendRequest> getOneWithIdAndUser(final Long userId, final Long requestId) { 
+        return repository.getRequestWithUser(userId, requestId);
+    }
 }

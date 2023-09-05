@@ -1,5 +1,7 @@
 package com.example.friend_service.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -63,8 +65,9 @@ public class FriendRequestController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping(path = "/request/{requestId}")
+    @DeleteMapping(path = "/users/{id}/request/{requestId}")
     public Mono<Void> deleteRequest(
+        @NotNull(message = "UserId cannot be null") @PathVariable final Long id, 
         @NotNull(message = "RequestId cannot be null") @PathVariable final Long requestId 
     ) {
 
@@ -72,7 +75,11 @@ public class FriendRequestController {
         if (!repository.existsById(requestId).block()) 
             throw new HttpClientErrorException(HttpStatus.CONFLICT, "Unabled to befriend yourself");
 
-        return service.deleteOne(requestId);
+        // Check if the request was created by the user 
+        return service.getOneWithIdAndUser(id, requestId)   
+            .flatMap(entity -> { 
+                return service.deleteOne(entity.getId());
+            }).and(null);
     }
 
     /**
@@ -82,20 +89,25 @@ public class FriendRequestController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.OK)
-    @GetMapping(path = "/friends/{id}/request", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<FriendRequest> getAllRequestsByUser(
+    @GetMapping(path = "/users/{id}/friend/from/request", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FriendRequest> getFriendRequestsByUser(
         @NotNull(message = "UserId cannot be null") @PathVariable final Long id 
     ) {
-        return service.getAllByUser(id);
+        return service.getAllByUser(id).collectList().block();
     }   
 
-    /** */
+    /**
+     * Retrieves all Friend Request entities for the user 
+     * 
+     * @param id
+     * @return
+     */
     @ResponseStatus(code = HttpStatus.OK)
-    @GetMapping(path = "/friends/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<FriendRequest> getAllRequestsForUser(
+    @GetMapping(path = "/users/{id}/friend/to/request", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FriendRequest> getFriendRequestsForUser(
         @NotNull(message = "UserId cannot be null") @PathVariable final Long id 
     ) {
-        return service.getAllForUser(id);
+        return service.getAllForUser(id).collectList().block();
     }
 
 }

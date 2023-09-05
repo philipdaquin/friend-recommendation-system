@@ -22,4 +22,7 @@ public interface FriendRequestRepository extends R2dbcRepository<FriendRequest, 
     @Query("SELECT * FROM friend_requests where friend_id = $1")
     Flux<FriendRequest> findAllForUser(final Long userId);
 
+
+    @Query("SELECT * FROM friend_requests WHERE user_id = $1 AND requestId = $2 LIMIT 1")
+    Mono<FriendRequest> getRequestWithUser(Long userId, Long requestId);
 }

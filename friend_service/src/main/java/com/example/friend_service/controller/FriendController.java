@@ -129,10 +129,6 @@ public class FriendController {
         });        
     }
 
-    // @ResponseStatus(code = HttpStatus.CREATED)
-    // @DeleteMapping(path = "/users")
-    // public void removeFriend() {}
-
     /**
      * Retrieves all the friends from the User by the `userId`
      * 
@@ -154,7 +150,7 @@ public class FriendController {
      */
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/friends/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Friend> getFriend(@PathVariable final Long friendId) {
+    public Mono<Friend> getEntity(@PathVariable final Long friendId) {
         return friendService.getOne(friendId);
     }
 }
