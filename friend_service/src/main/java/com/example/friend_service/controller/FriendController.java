@@ -101,7 +101,7 @@ public class FriendController {
     @DeleteMapping(path = "/users/{id}/command/remove-friend")
     public Mono<Friend> removeFriend(
         @NotNull(message = "UserId cannot be null") @PathVariable final Long id, 
-        @NotNull(message = "FriendId is empty") @RequestParam(required = true, value = "friendId") final Long friendId
+        @NotNull(message = "FriendId empty be empty") @RequestParam(required = true, value = "friendId") final Long friendId
     ) { 
         // Check if the UserId is already friends with FriendsId
         if (friendRepository.getFriend(id, friendId).single() == null) {

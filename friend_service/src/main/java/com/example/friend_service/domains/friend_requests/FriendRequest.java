@@ -18,6 +18,10 @@ public class FriendRequest implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(value = "user_id")
+    private Long userId;
+
+    @NotNull
     @Column(value = "friend_id")
     private Long friendId;
 
@@ -31,6 +35,19 @@ public class FriendRequest implements Serializable {
     public Long getId() {
         return id;
     }
+
+    public FriendRequest(Long userId, Long friendId) { 
+        this.userId = userId;
+        this.friendId = friendId;
+    }
+
+
+    public FriendRequest(Long userId, Long friendId, FriendRequestStatus requestStatus) { 
+        this.userId = userId;
+        this.friendId = friendId;
+        this.requestStatus = requestStatus;
+    }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -50,6 +67,14 @@ public class FriendRequest implements Serializable {
 
     public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public FriendRequestStatus getRequestStatus() {
