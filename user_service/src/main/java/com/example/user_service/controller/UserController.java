@@ -57,7 +57,7 @@ public class UserController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PostMapping(path = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<User> createUser(@RequestBody @Valid Mono<User> user) throws URISyntaxException { 
 
         if (user.block().getId() != null) throw new UserResourceException("New User entity cannot already have an ID!");
@@ -91,7 +91,7 @@ public class UserController {
      * @param id
      */
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping(path = "/users/{id}")
+    @DeleteMapping(path = "/user/{id}")
     public void deleteUser(@PathVariable final Long id) { 
 
         if (!userRepository.existsById(id).block()) { 

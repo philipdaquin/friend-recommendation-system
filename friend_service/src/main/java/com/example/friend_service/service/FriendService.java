@@ -17,6 +17,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import com.example.friend_service.domains.Friend;
 import com.example.friend_service.domains.events.DomainEvent;
 import com.example.friend_service.domains.events.EventType;
+import com.example.friend_service.external.UserClient;
 import com.example.friend_service.repository.FriendRepository;
 
 import reactor.core.publisher.Flux;
@@ -28,12 +29,15 @@ public class FriendService {
     
     private static final Long serialVersionId = 1L;
 
+    private final UserClient client;
+
     private final FriendRepository friendRepository;
 
-    public FriendService(FriendRepository friendRepository) { 
+    public FriendService(FriendRepository friendRepository, UserClient client) { 
         this.friendRepository = friendRepository;
+        this.client = client;
     }
-    
+
     /**
      * Create a new Friend Entity with a supplied callback that allows you submit a domain event
      * to another shared service before finalising the transaction
@@ -50,6 +54,10 @@ public class FriendService {
         if (friend.getUserId() == null || friend.getFriendId() == null) 
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Error in creating a new friend entity");
         
+        // Check if the friendId exist in the User Service 
+        if (client.getUser(friend.getFriendId()).single() != null) 
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Invalid Friend Id ");
+
         // Save to the database
         return friendRepository
             .save(friend)
