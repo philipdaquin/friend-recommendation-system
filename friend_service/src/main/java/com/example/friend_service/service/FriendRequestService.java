@@ -1,11 +1,16 @@
 package com.example.friend_service.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
+import com.example.friend_service.domains.Friend;
 import com.example.friend_service.domains.friend_requests.FriendRequest;
+import com.example.friend_service.domains.friend_requests.FriendRequestStatus;
 import com.example.friend_service.repository.FriendRequestRepository;
 
 import reactor.core.publisher.Flux;
@@ -16,16 +21,63 @@ import reactor.core.publisher.Mono;
 public class FriendRequestService {
     private static final Long serialVersionId = 1L;
 
+    private static final Logger log = LoggerFactory.getLogger(FriendRequestService.class);
+
     private final FriendRequestRepository repository;
 
-    public FriendRequestService(FriendRequestRepository repository) { 
+    private final FriendProducerService friendProducer;
+
+    public FriendRequestService(
+        FriendRequestRepository repository, 
+        FriendProducerService friendProducer
+    ) { 
         this.repository = repository;
+        this.friendProducer = friendProducer;
     }   
+    
+    /**
+     * Rejects the friend request and Deletes the entity.
+     * 
+     * @param request 
+     * @return
+     */
+    public Mono<Void> reject(FriendRequest request) {
+        // Update entity state
+        request.setRequestStatus(FriendRequestStatus.REJECTED);
+        request.setAccepted(false);
 
-    public void acceptRequest() {}
-    public void rejectRequest() {}
+        return deleteOne(request.getId())
+            .doOnSuccess(i -> log.info("Rejected Friend Request"))
+            .doOnError(e -> log.error("Error deleting Friend Request entity", e));
+    }
 
-    public void getRequestsForUser() {}
+    /**
+     * Accepts Friend Request for the User, Adds a new Friend, deletes original Friend Request.
+     * 
+     * @param request
+     * @return
+     */
+    public Mono<Friend> accept(FriendRequest request) {
+        // Update the Entity's state
+        request.setRequestStatus(FriendRequestStatus.ACCEPTED);
+        request.setAccepted(true);
+
+        // Update the object to the database  
+        create(request);    
+
+        // Create a new friend entity
+        Friend friend = new Friend(request.getUserId(), request.getFriendId());
+
+        // Perform dual writes to both local database and shared kafka cluster
+        // On success, delete the original Friend Request Entity 
+        return friendProducer.addFriendCallback(friend)
+            .doOnSuccess(i -> deleteOne(request.getId()))
+            .doOnError(e -> {
+                throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
+                    "Failed to execute dual writes on both external services");
+            });
+    }
+
 
     /**
      * Create a new Friend Request entity 
@@ -77,7 +129,7 @@ public class FriendRequestService {
     }
 
     /**
-     * 
+     * Retrieves all Friend Requests for the User under `userId`
      * 
      * @param userId
      * @return

@@ -5,13 +5,18 @@ package com.example.friend_service.service;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.example.friend_service.domains.Friend;
+import com.example.friend_service.domains.events.DomainEvent;
+import com.example.friend_service.domains.events.EventType;
 import com.example.friend_service.repository.FriendRepository;
 
 import reactor.core.publisher.Flux;
@@ -28,7 +33,7 @@ public class FriendService {
     public FriendService(FriendRepository friendRepository) { 
         this.friendRepository = friendRepository;
     }
-
+    
     /**
      * Create a new Friend Entity with a supplied callback that allows you submit a domain event
      * to another shared service before finalising the transaction

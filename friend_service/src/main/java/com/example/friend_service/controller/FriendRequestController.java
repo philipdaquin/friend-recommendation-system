@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.example.friend_service.domains.friend_requests.FriendRequest;
+import com.example.friend_service.domains.friend_requests.FriendRequestStatus;
 import com.example.friend_service.repository.FriendRequestRepository;
 import com.example.friend_service.service.FriendRequestService;
 
@@ -41,6 +44,79 @@ public class FriendRequestController {
         this.repository = repository;
         this.service = service;
     }
+
+
+    /**
+     * Accepts Friend Request and adds Friend to the User 
+     * 
+     * @param id
+     * @param requestId
+     * @return
+     */
+    @ResponseStatus(code = HttpStatus.OK)
+    @PostMapping(path = "/users/{id}/request/{requestId}/command/accept-request")
+    public Mono<Void> acceptRequest(
+        @NotNull(message = "UserId cannot be null") @PathVariable final Long id, 
+        @NotNull(message = "RequestId cannot be null") @PathVariable final Long requestId 
+    ) {
+
+        // Find the FriendRequest entity under the given UserID and a FriendRequest Entity with RequestID 
+        return service.getOneWithIdAndUser(id, requestId)
+            .doOnNext(entity -> { 
+                // Check if Friend Request entity exist 
+                if (entity == null) 
+                    throw new HttpClientErrorException(HttpStatus.CONFLICT, "Invalid Request entity; Entity not found!");
+        
+                // Check if the Friend Request entity is valid
+                if (entity.getRequestStatus() != FriendRequestStatus.PENDING)
+                    throw new HttpClientErrorException(HttpStatus.CONFLICT, 
+                        "To accept new Friend Request, the status must be PENDING!" 
+                        + "Entity Status:" 
+                        + entity.getRequestStatus().toString());
+            })
+            .doOnSuccess(request -> service.accept(request))
+            .doOnError(e -> {
+                throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
+                    "A database transaction failed. Try again later!");
+            }).then();
+
+    }
+
+    /**
+     * Reject Friend Request and Deletes Entity 
+     * 
+     * @param id
+     * @param requestId
+     * @return
+     */
+    @ResponseStatus(code = HttpStatus.OK)
+    @PutMapping(path = "/users/{id}/request/{requestId}/command/reject-request")
+    public Mono<Void> rejectRequest(
+        @NotNull(message = "UserId cannot be null") @PathVariable final Long id, 
+        @NotNull(message = "RequestId cannot be null") @PathVariable final Long requestId 
+    ) {
+        // Find the FriendRequest entity under the given UserID and a FriendRequest Entity with RequestID 
+        return service.getOneWithIdAndUser(id, requestId)
+            .doOnNext(entity -> { 
+                // Check if Friend Request entity exist 
+                if (entity == null) 
+                    throw new HttpClientErrorException(HttpStatus.CONFLICT, "Invalid Request entity; Entity not found!");
+        
+                // Check if the Friend Request entity is valid
+                if (entity.getRequestStatus() != FriendRequestStatus.PENDING)
+                    throw new HttpClientErrorException(HttpStatus.CONFLICT, 
+                        "To reject new Friend Request, the status must be PENDING!" 
+                        + "Entity Status:" 
+                        + entity.getRequestStatus().toString());
+            })
+            .doOnSuccess(request -> service.reject(request))
+            .doOnError(e -> {
+                throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
+                    "A database transaction failed. Try again later!");
+            }).then();
+
+    }
+
 
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(path = "/users/{id}/request", consumes = MediaType.APPLICATION_JSON_VALUE)

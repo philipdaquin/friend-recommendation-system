@@ -19,6 +19,7 @@ import com.example.friend_service.domains.Friend;
 import com.example.friend_service.domains.events.DomainEvent;
 import com.example.friend_service.domains.events.EventType;
 import com.example.friend_service.repository.FriendRepository;
+import com.example.friend_service.service.FriendProducerService;
 import com.example.friend_service.service.FriendService;
 import com.example.friend_service.service.KafkaProducerService;
 
@@ -34,18 +35,19 @@ public class FriendController {
 
     private final FriendService friendService;
 
+    private final FriendProducerService friendProducer;
+
     private final FriendRepository friendRepository;
-    
-    private final KafkaProducerService producer;
 
     public FriendController(
         FriendService friendService,
         FriendRepository friendRepository,
-        KafkaProducerService producer
+        KafkaProducerService producer,
+        FriendProducerService friendProducer
     ) {
         this.friendService = friendService;
         this.friendRepository = friendRepository;
-        this.producer = producer;
+        this.friendProducer = friendProducer;
     }
 
     /**
@@ -69,24 +71,8 @@ public class FriendController {
 
         Friend friend = new Friend(id, friendId);
 
-        return friendService.save(friend, entity -> { 
-            try { 
-                // Create a Domain Event to emit 
-                DomainEvent<Friend> event = new DomainEvent<>();
-                // Set the entity payload after it has been updated by database, but before committing 
-                event.setSubject(entity);
-                event.setEventType(EventType.FRIEND_ADDED);
-
-                // Emit a DomainEvent to perform dual writes to Kafka cluster
-                producer.send(event);
-
-            } catch (Exception e ) { 
-                log.error(String.format("A dual-write to local database and shared cluster failed!" + entity.toString()), e);
-                
-                throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
-                    "A database transaction failed. Try again later!");
-            }
-        });
+        // Execute dual writes to both local database and messaging broker
+        return friendProducer.addFriendCallback(friend);
     }
 
     /**
@@ -107,26 +93,10 @@ public class FriendController {
         if (friendRepository.getFriend(id, friendId).single() == null) {
             throw new HttpClientErrorException(HttpStatus.CONFLICT, "The userId and friendid does not exist");
         }
-
         Friend friend = new Friend(id, friendId);
 
-        return friendService.deleteOne(friend, entity -> { 
-            try { 
-                // Create a Domain Event to emit 
-                DomainEvent<Friend> event = new DomainEvent<>();
-                // Set the entity payload after it has been updated by database, but before committing 
-                event.setSubject(entity);
-                event.setEventType(EventType.FRIEND_ADDED);
-                // Emit a DomainEvent to perform dual writes to Kafka cluster
-                producer.send(event);
-            
-            } catch (Exception e ) { 
-                log.error(String.format("A dual-write to local database and shared cluster failed!" + entity.toString()), e);
-                
-                throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
-                    "A database transaction failed. Try again later!");
-            }
-        });        
+        // Execute dual writes to both local database and messaging broker
+        return friendProducer.removeFriendCallback(friend);    
     }
 
     /**

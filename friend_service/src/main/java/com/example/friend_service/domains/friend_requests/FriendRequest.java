@@ -26,6 +26,10 @@ public class FriendRequest implements Serializable {
     private Long friendId;
 
     @NotNull
+    @Column(value = "accepted")
+    private Boolean accepted = false;
+
+    @NotNull
     @Column(value = "created_date")
     private Instant createdDate = Instant.now();
 
@@ -47,7 +51,15 @@ public class FriendRequest implements Serializable {
         this.friendId = friendId;
         this.requestStatus = requestStatus;
     }
+        
 
+    public Boolean getAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
+    }
 
     public void setId(Long id) {
         this.id = id;
