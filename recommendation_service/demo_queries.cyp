@@ -17,8 +17,29 @@ CREATE (n:USER {
 MATCH (u:USER { userId: "" })
 DELETE u
 
-// CREATING a Friend Relationship between Two Users 
+// Create a relationship between two users u and y 
 CREATE (u: USER {userId: {0}} )-[:FRIEND {
     createdDate: {2},
     lastModifiedDate: {3}
 }]->(y: USER {1})
+
+
+
+MATCH (userA: User)-[relation:FRIEND]->(userB: User)
+WHERE userA.userId={0} AND userB.userId={1}
+DELETE relation
+
+
+MATCH (userA:USER{userId:{0}})-[:FRIEND]-(mutuals: FRIEND)-[:FRIEND]-(userB:USER{userId: {1}})
+RETURN DISTINCT mutuals
+
+
+
+MATCH (userA: User)-[:FRIEND]-(friends), (nonFriends: User)-[:FRIEND]-(friends)
+WHERE userA.userId={0}
+
+WHERE NOT (userA)-[:FRIEND]-(nonFriends)
+WITH nonFriends, count(nonFriends) as mutualFriends
+
+RETURN nonFriends, mutualFriends
+ORDER BY mutualFriends DESC

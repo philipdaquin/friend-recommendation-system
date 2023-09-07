@@ -106,7 +106,7 @@ public class FriendController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.OK)
-    @GetMapping(path = "/user/{id}/friends", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/users/{id}/friends", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Friend> getUserFriends(@PathVariable final Long userId) {
         return friendService.getAllByUserId(userId);
 
