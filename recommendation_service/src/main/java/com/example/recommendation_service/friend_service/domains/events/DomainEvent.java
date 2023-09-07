@@ -5,7 +5,7 @@ import java.time.Instant;
 public class DomainEvent<T> {
 
     private T subject;
-    private EventType eventType;
+    private FriendEventType eventType;
     private Instant createdDate = Instant.now();
     private String createdBy;
 
@@ -17,10 +17,10 @@ public class DomainEvent<T> {
     public void setSubject(T subject) {
         this.subject = subject;
     }
-    public EventType getEventType() {
+    public FriendEventType getEventType() {
         return eventType;
     }
-    public void setEventType(EventType eventType) {
+    public void setEventType(FriendEventType eventType) {
         this.eventType = eventType;
     }
     public Instant getCreatedDate() {

@@ -1,4 +1,4 @@
-package com.example.recommendation_service;
+package com.example.recommendation_service.common;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -9,7 +9,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.Nullable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.Size;
 
@@ -20,19 +19,15 @@ public abstract class AbstractAuditingEntity implements Serializable {
     @CreatedBy
     @Nullable
     @Size(max = 50)
-    @JsonIgnore
     public Instant createdDate = Instant.now();
     
     @CreatedDate
-    @JsonIgnore    
     public String createdBy;
 
     @LastModifiedBy
-    @JsonIgnore    
     private String lastModifiedBy;
 
     @LastModifiedDate
-    @JsonIgnore
     private Instant lastModifiedDate;
 
     public Instant getCreatedDate() {

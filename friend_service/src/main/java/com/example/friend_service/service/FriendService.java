@@ -52,7 +52,7 @@ public class FriendService {
             throw new HttpClientErrorException(HttpStatus.CONFLICT, "Unabled to befriend yourself");
         
         if (friend.getUserId() == null || friend.getFriendId() == null) 
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Error in creating a new friend entity");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Error in creating a new friend entity");
         
         // Check if the friendId exist in the User Service 
         if (client.getUser(friend.getFriendId()).single() != null) 

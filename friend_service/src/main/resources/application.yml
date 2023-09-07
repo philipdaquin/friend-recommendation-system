@@ -34,4 +34,4 @@ server:
     include-binding-errors: always
   port: 7001
 
-FAKE_PRODUCER_DTO_TOPIC: fake_producer_dto_topic
+PRODUCER_TOPIC: friend

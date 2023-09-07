@@ -20,7 +20,7 @@ public class UserClient {
         this.client = client;
     }
 
-    String baseUrl = "http://user-service";
+    String baseUrl = "http://user-service/";
     String baseUrlEntity = "v1/api/user/{id}";
 
     /**

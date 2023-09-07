@@ -12,7 +12,7 @@ public class KafkaProducerService {
     
     private final ReactiveKafkaProducerTemplate<String, DomainEvent<User>> producer;
 
-    @Value(value = "${FAKE_PRODUCER_DTO_TOPIC}")
+    @Value(value = "${PRODUCER_TOPIC}")
     private String topic;
 
     public KafkaProducerService(ReactiveKafkaProducerTemplate producer) { 

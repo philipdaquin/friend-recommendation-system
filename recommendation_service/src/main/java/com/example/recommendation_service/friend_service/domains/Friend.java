@@ -1,5 +1,5 @@
 package com.example.recommendation_service.friend_service.domains;
-import com.example.recommendation_service.AbstractAuditingEntity;
+import com.example.recommendation_service.common.AbstractAuditingEntity;
 
 
 public class Friend extends AbstractAuditingEntity  {
@@ -39,4 +39,6 @@ public class Friend extends AbstractAuditingEntity  {
     public void setFriendId(Long friendId) {
         this.friendId = friendId;
     }
+
+    
 }

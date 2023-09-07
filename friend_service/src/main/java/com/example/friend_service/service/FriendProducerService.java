@@ -75,7 +75,7 @@ public class FriendProducerService {
                 DomainEvent<Friend> event = new DomainEvent<>();
                 // Set the entity payload after it has been updated by database, but before committing 
                 event.setSubject(entity);
-                event.setEventType(EventType.FRIEND_ADDED);
+                event.setEventType(EventType.FRIEND_REMOVED);
                 // Emit a DomainEvent to perform dual writes to Kafka cluster
                 producer.send(event);
             

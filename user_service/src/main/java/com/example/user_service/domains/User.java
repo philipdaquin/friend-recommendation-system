@@ -17,7 +17,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     
     @Id
     private Long id;
-
     @Size(max = 50)
     @Column(value = "first_name")
     private String firstName;
