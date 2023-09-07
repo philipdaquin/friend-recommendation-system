@@ -118,6 +118,13 @@ public class FriendRequestController {
     }
 
 
+    /**
+     * Create a new friend request 
+     * 
+     * @param id
+     * @param friendId
+     * @return
+     */
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(path = "/users/{id}/request", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<FriendRequest> createRequest(

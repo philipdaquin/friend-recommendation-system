@@ -57,7 +57,7 @@ public class UserController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PostMapping(path = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<User> createUser(@RequestBody @Valid Mono<User> user) throws URISyntaxException { 
 
         if (user.block().getId() != null) throw new UserResourceException("New User entity cannot already have an ID!");
@@ -91,7 +91,7 @@ public class UserController {
      * @param id
      */
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping(path = "/user/{id}")
+    @DeleteMapping(path = "/users/{id}")
     public void deleteUser(@PathVariable final Long id) { 
 
         if (!userRepository.existsById(id).block()) { 
@@ -124,7 +124,7 @@ public class UserController {
      * @throws URISyntaxException
      */
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PatchMapping(path = "/user/{id}")
+    @PatchMapping(path = "/users/{id}")
     public Mono<User> partialUpdate(
         @PathVariable(value = "id", required = false) final Long userId, 
         @RequestBody @Valid final Mono<User> user
@@ -169,7 +169,7 @@ public class UserController {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PutMapping(path = "/user/{id}")
+    @PutMapping(path = "/users/{id}")
     public Mono<User> update(
         @PathVariable(value = "id", required = false) final Long userId, 
         @RequestBody @Valid final Mono<User> user
@@ -214,7 +214,7 @@ public class UserController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.OK)
-    @GetMapping(path = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<User> getUser(@PathVariable final Long id) {
         return userService.getOne(id);
     }

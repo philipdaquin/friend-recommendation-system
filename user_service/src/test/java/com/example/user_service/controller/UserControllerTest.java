@@ -63,7 +63,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
         // Define a sample reponse from User Service 
         when(service.save(any(User.class), any())).thenReturn(Mono.just(user));
 
-        // Perform a POST request to the /user endpoint
+        // Perform a POST request to the /users endpoint
         client.post()
             .uri(ENTITY_API_URI)
             .contentType(MediaType.APPLICATION_JSON)
