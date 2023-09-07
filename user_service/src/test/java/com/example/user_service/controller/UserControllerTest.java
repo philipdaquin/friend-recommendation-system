@@ -37,7 +37,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
     
     private static final String CREATED_BY = "admin";
 
-    private static final String ENTITY_API_URI = "/v1/api/users";
+    private static final String ENTITY_API_URI = "/api/v1/users";
 
     @Autowired
     private WebTestClient client;

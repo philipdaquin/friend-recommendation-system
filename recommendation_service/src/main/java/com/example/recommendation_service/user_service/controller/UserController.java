@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/v1/api")
+@RequestMapping("/api/v1")
 public class UserController {
 
     private final UserRepository repository;

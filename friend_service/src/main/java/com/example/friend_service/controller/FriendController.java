@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import com.example.friend_service.domains.Friend;
-import com.example.friend_service.domains.events.DomainEvent;
-import com.example.friend_service.domains.events.EventType;
 import com.example.friend_service.repository.FriendRepository;
 import com.example.friend_service.service.FriendProducerService;
 import com.example.friend_service.service.FriendService;
@@ -28,7 +25,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(path = "/v1/api")
+@RequestMapping(path = "/api/v1")
 public class FriendController {
     
     private static final Logger log = LoggerFactory.getLogger(FriendController.class);

@@ -31,7 +31,7 @@ import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
 
 @RestController 
-@RequestMapping("/v1/api")
+@RequestMapping("/api/v1")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);

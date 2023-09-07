@@ -21,10 +21,10 @@ public class UserClient {
     }
 
     String baseUrl = "http://user-service/";
-    String baseUrlEntity = "v1/api/user/{id}";
+    String baseUrlEntity = " api/v1/user/{id}";
 
     /**
-     * Fetch the User details from http://user-service/v1/api/user/{userId}
+     * Fetch the User details from http://user-service/ api/v1/user/{userId}
      * 
      * @param userId
      * @return

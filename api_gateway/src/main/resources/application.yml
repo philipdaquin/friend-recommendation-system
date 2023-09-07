@@ -1,0 +1,47 @@
+
+
+
+spring:
+
+  cloud:
+    discovery:
+      client:
+        health-indicator:
+          enabled: true
+        
+    gateway:
+      routes:
+      
+      # Id - Every route requires a unique identifer 
+      # uri - the target Uniform Resource Identifier for the routing request 
+      # predicates - This list of route predicates defines how a request
+      #             is matched against a configured route
+      # filters - This list of gateway filters defines pre and post filters for the 
+      #         Http request and response
+      - id: user-service
+        uri: lb://user-service
+        predicates:
+        - Path=/ api/v1/users/**
+
+        filters: 
+        
+      
+      - id: friend-service
+        uri: lb://user-service
+        predicates:
+        - Path=/ api/v1/users/**
+      
+      - id: recommendation-service
+        uri: lb://user-service
+        predicates:
+        - Path=/ api/v1/users/**
+      
+      - id: discovery-service
+        uri: lb://user-service
+        predicates:
+        - Path=/ api/v1/users/**
+      
+      - id: config-service
+        uri: lb://user-service
+        predicates:
+        - Path=/ api/v1/users/**
