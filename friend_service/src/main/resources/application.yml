@@ -5,7 +5,7 @@ logging:
 
 spring:
   r2dbc:
-    url: r2dbc:postgresql://postgres:postgres@localhost:5432/friend_service
+    url: r2dbc:postgresql://postgres:postgres@localhost:5432/friend
     username: testuser
     password: testpassword
 

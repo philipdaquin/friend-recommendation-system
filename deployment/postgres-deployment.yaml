@@ -73,11 +73,8 @@ data:
   POSTGRES_PASSWORD: password
   POSTGRES_DB: db
   init.sql: |
-    CREATE DATABASE IF NOT EXISTS new_accountsdb;
-    CREATE DATABASE IF NOT EXISTS ordersdb;
-    CREATE DATABASE IF NOT EXISTS productdb;
-    CREATE DATABASE IF NOT EXISTS shopping_cart_db;
-
+    CREATE DATABASE IF NOT EXISTS user;
+    CREATE DATABASE IF NOT EXISTS friend;
 
 ---
 
