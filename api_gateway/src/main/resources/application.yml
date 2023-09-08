@@ -1,47 +1,81 @@
 
+server:
+  port: 9090
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    enabled-by-default: true
+logging:
+  level:
+    root: INFO
+    kafka.*: WARN
+    org.springframework.*: INFO
+    org.neo4j.*: INFO
+    com.memorynotfound: DEBUG
+    org.apache.kafka.*: ERROR
 
 
 spring:
-
+  application:
+    name: api-gateway
   cloud:
+    
     discovery:
       client:
         health-indicator:
           enabled: true
         
     gateway:
-      routes:
-      
-      # Id - Every route requires a unique identifer 
-      # uri - the target Uniform Resource Identifier for the routing request 
-      # predicates - This list of route predicates defines how a request
-      #             is matched against a configured route
-      # filters - This list of gateway filters defines pre and post filters for the 
-      #         Http request and response
-      - id: user-service
-        uri: lb://user-service
-        predicates:
-        - Path=/ api/v1/users/**
 
-        filters: 
+      discovery:
+        locator:
+          enabled: true
+
+      routes:
+      # Id - Every route requires a unique identifer 
+      - id: user-service
         
-      
-      - id: friend-service
+        # uri - the target UTI 
         uri: lb://user-service
+        
+        # predicates - are conditions that determine whether a route should be applied to an incoming request
+        # If the path matches this route "/users/**", this route will be applied 
         predicates:
-        - Path=/ api/v1/users/**
+        - Path= /users/**
+        
+        # filters - are used to perform various operations on the request or response, such as rewriting 
+        # `RewritePath` filter is used to transform the path of the request before it is forwarded to the backend service.
+        # It captures the remaining path after `/user/` and replaces it in the url 
+        filters: 
+        - name: RewritePath
+          args: 
+            regexp: "/users/(?<remaining>.*)"
+            replacement: "/api/v1/users/${remaining}"
+      
+
+      - id: friend-service
+        uri: lb://friend-service
+        predicates:
+        - Path= /friend/**
+        filters: 
+        - name: RewritePath
+          args: 
+            regexp: "/friend/(?<remaining>.*)"
+            replacement: "/${remaining}"
       
       - id: recommendation-service
-        uri: lb://user-service
+        uri: lb://recommendation-service
         predicates:
-        - Path=/ api/v1/users/**
-      
-      - id: discovery-service
-        uri: lb://user-service
-        predicates:
-        - Path=/ api/v1/users/**
-      
-      - id: config-service
-        uri: lb://user-service
-        predicates:
-        - Path=/ api/v1/users/**
+        - Path= /recommendation/**
+        filters: 
+        - name: RewritePath
+          args: 
+            regexp: "/recommendation/(?<remaining>.*)"
+            replacement: "/${remaining}"
+
+
