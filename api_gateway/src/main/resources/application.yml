@@ -31,7 +31,6 @@ spring:
           enabled: true
         
     gateway:
-
       discovery:
         locator:
           enabled: true
@@ -56,7 +55,16 @@ spring:
           args: 
             regexp: "/users/(?<remaining>.*)"
             replacement: "/api/v1/users/${remaining}"
-      
+        - name: CircuitBreaker 
+          args:
+            name: user-service
+            fallbackuri: forward:/user-service-fallback
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 1
+            redis-rate-limiter.burstCapacity: 1
+            redis-rate-limiter.requestedTokens: 1
+
 
       - id: friend-service
         uri: lb://friend-service
@@ -67,7 +75,19 @@ spring:
           args: 
             regexp: "/friend/(?<remaining>.*)"
             replacement: "/${remaining}"
-      
+        - name: CircuitBreaker 
+          args:
+            name: user-service
+            fallbackuri: forward:/friend-service-fallback
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 1
+            redis-rate-limiter.burstCapacity: 1
+            redis-rate-limiter.requestedTokens: 1
+
+
+
+
       - id: recommendation-service
         uri: lb://recommendation-service
         predicates:
@@ -77,5 +97,43 @@ spring:
           args: 
             regexp: "/recommendation/(?<remaining>.*)"
             replacement: "/${remaining}"
+        - name: CircuitBreaker 
+          args:
+            name: user-service
+            fallbackuri: forward:/recommendation-service-fallback
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 1
+            redis-rate-limiter.burstCapacity: 1
+            redis-rate-limiter.requestedTokens: 1
 
 
+      #
+      # Retry
+      # - 
+      #
+      - id: retry
+        uri: lb://api-gateway/9090
+        predicates:
+        - Path= /api-gateway/retry
+        filters:
+        - name: retry
+          args:
+            # Retries
+            # - The number of retries that should be attempted
+            retries: 3
+            # Http Method 
+            methods: GET
+            series: SERVER_ERROR
+            # Status
+            # - The HTTP status codes  
+            statuses: BAD_REQUEST, INTERNAL_SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException, org.springframework.web.client.HttpServerErrorException
+            # Backoff
+            # - The configured exponential backoff for the retries 
+            backoff:
+              firstBackoff: 10ms 
+              maxBackoff: 500ms
+              factor: 3
+              basedOnPreviousValue: false
+        
