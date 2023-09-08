@@ -61,8 +61,16 @@ spring:
             fallbackuri: forward:/user-service-fallback
         - name: RequestRateLimiter
           args:
-            redis-rate-limiter.replenishRate: 1
-            redis-rate-limiter.burstCapacity: 1
+            # ReplishRate 
+            # Defines how many request per second to allow without any dropped requests
+            redis-rate-limiter.replenishRate: 10
+            
+            # BurstCapacity
+            # The maximum number of requests a user is allowed in a single record without any dropped requests
+            redis-rate-limiter.burstCapacity: 10
+
+            # RequestedTokens
+            # Defines how may tokens a request cost
             redis-rate-limiter.requestedTokens: 1
 
 
@@ -81,8 +89,8 @@ spring:
             fallbackuri: forward:/friend-service-fallback
         - name: RequestRateLimiter
           args:
-            redis-rate-limiter.replenishRate: 1
-            redis-rate-limiter.burstCapacity: 1
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 10
             redis-rate-limiter.requestedTokens: 1
 
 
@@ -103,8 +111,8 @@ spring:
             fallbackuri: forward:/recommendation-service-fallback
         - name: RequestRateLimiter
           args:
-            redis-rate-limiter.replenishRate: 1
-            redis-rate-limiter.burstCapacity: 1
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 10
             redis-rate-limiter.requestedTokens: 1
 
 
