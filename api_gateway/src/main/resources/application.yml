@@ -18,13 +18,25 @@ logging:
     org.neo4j.*: INFO
     com.memorynotfound: DEBUG
     org.apache.kafka.*: ERROR
-
-
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${DEFAULT_ZONE_URL}/eureka
+    registerWithEureka: true
 spring:
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379 
   application:
     name: api-gateway
-  cloud:
+  
+  config:
     
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:9296}
+    
+  cloud:
     discovery:
       client:
         health-indicator:

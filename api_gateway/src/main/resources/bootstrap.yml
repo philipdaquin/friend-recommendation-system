@@ -1,0 +1,11 @@
+
+spring:
+  profiles: default, test, docker, development
+  application:
+    name: api-gateway
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    enabled-by-default: true
