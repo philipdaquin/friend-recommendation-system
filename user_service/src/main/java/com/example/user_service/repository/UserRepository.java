@@ -9,9 +9,9 @@ import com.example.user_service.domains.User;
 /**
  * Spring Data SQL repository for the User entity.
  */
+// @EnableR2dbcRepositories
 @SuppressWarnings("unused")
 @Repository
-@EnableR2dbcRepositories
 public interface UserRepository extends R2dbcRepository<User, Long> {
 
     // @Query("SELECT * FROM users x WHERE x.id = $1 LIMIT 1")

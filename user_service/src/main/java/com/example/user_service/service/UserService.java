@@ -98,13 +98,14 @@ public class UserService {
      * @param userId
      * @param callback
      */
-    public void delete(final Long userId, Consumer<User> callback) {
+    public Mono<Void> delete(final Long userId, Consumer<User> callback) {
        
-        userRepository
+        return userRepository
             .findById(userId)
             .flatMap(user -> { 
                 return userRepository.delete(user).then(Mono.just(user));
             })
-            .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item)));
+            .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item)))
+            .and(null);
     }
 }

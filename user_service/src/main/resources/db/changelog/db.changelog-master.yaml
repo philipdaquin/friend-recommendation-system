@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: '1'
+      author: user-service
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: first_name
+                  type: VARCHAR
+                  constraints:
+                    nullable: true
+              - column:
+                  name: last_name
+                  type: VARCHAR
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_by
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  descending: false
+                  type: java.sql.types.TIMESTAMP
+                  defaultValueComputed: NOW()
+                  valueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_by
+                  type: VARCHAR
+                  constraints:
+                    nullable: true
+              - column:
+                  name: lastModifiedDate
+                  type: java.sql.types.TIMESTAMP
+                  constraints:
+                    nullable: true
+                

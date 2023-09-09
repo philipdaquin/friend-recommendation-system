@@ -1,1 +1,44 @@
 version: '1.0'
+
+services:
+  discovery-service:
+    image: ''
+  
+  friend-service:
+    image: ''
+
+  recommendation-service:
+    image: ''
+  
+  user-service:
+    image: ''
+
+
+  #
+  #   Apache Kafka Cluster 
+  #
+  kafka: 
+    image: ''
+  zookeeper:
+    image: ''
+  
+
+
+  #
+  #   Persistence 
+  #
+  frienddb: 
+    image: ''
+
+  userdb: 
+    image: ''
+
+
+  #
+  #  Neo4J
+  #
+  neodb:
+    image: ''
+
+  
+  

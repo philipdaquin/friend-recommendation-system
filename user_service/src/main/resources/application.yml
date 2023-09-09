@@ -1,32 +1,8 @@
-logging:
-  level:
-    org.springframework.transaction: TRACE
-    org.springframework.data.r2dbc.connectionfactory: DEBUG
-
 spring:
-  r2dbc:
-    url: r2dbc:postgresql://postgres:postgres@localhost:5432/user
-    username: testuser
-    password: testpassword
-
-  kafka:
-    bootstrap-servers: localhost:9091
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
-    consumer:
-      group-id: reactivekafkaconsumerandproducer
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.use.type.headers: false
-        spring.json.value.default.type: com.example.reactivekafkaconsumerandproducer.dto.FakeConsumerDTO
-
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
+  application:
+    name: user-service
+  profiles:
+    default: dev
 
 server:
   error:
@@ -34,4 +10,118 @@ server:
     include-binding-errors: always
   port: 7000
 
-PRODUCER_TOPIC: user
+logging:
+  level:
+    root: INFO
+    kafka.*: WARN
+    org.springframework.*: INFO
+    org.apache.kafka.*: WARN
+
+---
+
+# ####
+# #   
+# #   Development 
+# #
+# ####
+# postgres.port: 5432
+# postgres.host: localhost
+# postgres.database-name: users 
+# postgres.url: postgresql://${postgres.host:localhost}:${postgres.port}/${postgres.database-name}
+# PRODUCER_TOPIC: user
+
+# spring:
+#   main.allow-bean-definition-overriding: true
+#   devtools:
+#     restart:
+#       enabled: true
+#     livereload:
+#       enabled: true
+#   config:
+#     activate:
+#       on-profile: development 
+#   datasource:
+#     url: ${postgres.url}
+#     username: postgres
+#     password: 123
+#     driver-class-name: org.postgresql.Driver
+#   r2dbc:
+#     # url: r2dbc:${postgres.url}
+#     url: r2dbc:postgresql://localhost:5432/users
+#     username: postgres
+#     password: 123
+#   ##
+#   #  Apache Kafka Produder 
+#   ##
+#   kafka:
+#     bootstrap-servers: localhost:9091
+#     producer:
+#       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#   # mvc:
+#   #   pathmatch:
+#   #     matching-strategy: ant-path-matcher
+# ######
+# #  Service Registry 
+# #####
+# eureka:
+#   instance:
+#     prefer-ip-address: true
+#   client:
+#     registerWithEureka: true
+#     fetchRegistry: true
+#     serviceUrl:
+#       defaultZone: http://discovery-service:8761/eureka/
+
+# --- 
+
+
+# ####
+# #   
+# #   Production 
+# #
+# ####
+# postgres.port: 5432
+# postgres.host: user_db
+# postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/
+# postgres.database-name: postgres 
+# PRODUCER_TOPIC: user
+
+# spring:
+#   devtools:
+#     restart:
+#       enabled: false
+#     livereload:
+#       enabled: true
+#   config:
+#     activate:
+#       on-profile: production 
+#   datasource:
+#     url: ${postgres.url}
+#     username: username
+#     password: password
+#     driver-class-name: org.postgresql.Driver
+#   r2dbc:
+#     url: r2dbc:${postgres.url}
+#   ##
+#   #  Apache Kafka Produder 
+#   ##
+#   kafka:
+#     bootstrap-servers: localhost:9091
+#     producer:
+#       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#   # mvc:
+#   #   pathmatch:
+#   #     matching-strategy: ant-path-matcher
+# ######
+# #  Service Registry 
+# #####
+# eureka:
+#   instance:
+#     prefer-ip-address: true
+#   client:
+#     registerWithEureka: true
+#     fetchRegistry: true
+#     serviceUrl:
+#       defaultZone: http://discovery-service:8761/eureka/

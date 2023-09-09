@@ -92,7 +92,7 @@ public class UserController {
      */
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/users/{id}")
-    public void deleteUser(@PathVariable final Long id) { 
+    public Mono<Void> deleteUser(@PathVariable final Long id) { 
 
         if (!userRepository.existsById(id).block()) { 
             throw new UserResourceException("User does not exist in the system!");
@@ -100,7 +100,7 @@ public class UserController {
         // Execute dual writes to both local persistence and shared kafka cluster  
         // If the database, the transaction is failing then a transaction is rollbacked.
         // Else, a new event is emitted to the aggregated service.
-        userService.delete(id, cluster -> {
+        return userService.delete(id, cluster -> {
             try { 
                 DomainEvent<User> event = new DomainEvent<>();
                 event.setSubject(cluster);
@@ -112,7 +112,7 @@ public class UserController {
                 throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
                 "A database transaction failed. Try again later!");
             }
-        });
+        }).and(null);
     }
 
     /**
