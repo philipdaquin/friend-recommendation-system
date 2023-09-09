@@ -19,9 +19,9 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
 import jakarta.validation.constraints.NotNull;
 
-@Configuration
-@EnableR2dbcRepositories(basePackages = "com.exmaple")
-@Profile({"dev, prod"})
+@Configuration(proxyBeanMethods = false)
+@EnableR2dbcRepositories(basePackages = "com.example.repository")
+@Profile({"dev, prod, test"})
 public class DatabaseConfig extends AbstractR2dbcConfiguration{
 
 
