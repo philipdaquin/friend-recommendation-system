@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.validateMockitoUsage;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import jakarta.validation.Validation;
@@ -17,7 +17,7 @@ public class UserDetailsTest {
 
     private Validator validator;
 
-    @Before
+    @BeforeEach
     void setUp() { 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();

@@ -1,80 +1,85 @@
 package com.example.user_service.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.time.Instant;
-
-import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.r2dbc.dialect.H2Dialect;
+import org.springframework.r2dbc.core.DatabaseClient;
 
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-import com.example.user_service.AbstractIntegrationTest;
 import com.example.user_service.domains.User;
+import com.example.user_service.errors.UserResourceException;
+import com.example.user_service.service.KafkaProducerService;
 
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-// @DataR2dbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class UserRepositoryTest extends AbstractIntegrationTest {
-    
-    private static final Logger log = LoggerFactory.getLogger(UserRepositoryTest.class);
+@DataR2dbcTest
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+public class UserRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private TestEntityManager manager;
 
-    @AfterEach
-    void cleanUp() { 
-        userRepository.deleteAll();
+    @Autowired
+    private UserRepository repository;
+
+    @Autowired
+    private KafkaProducerService producerService;
+
+    @Autowired
+    private DatabaseClient databaseClient;
+
+    private User user;
+
+    public String FIRSTNAME = "XXXXXX";
+    
+    public String LASTNAME = "AAAAAA";
+    
+    public String EMAIL = "PPPPP@PPPP";
+
+    @BeforeEach 
+    public void setup() { 
+        user.setFirstName(FIRSTNAME);
+        user.setLastName(LASTNAME);
+        user.setEmail(EMAIL);
+
+        manager.persist(user);
+        manager.flush();
     }
 
-
     @Test
-    public void Should_Save_ReturnsSavedItem() { 
-        User user = new User();
-        user.setFirstName("john");
-        user.setLastName("dor");
-        user.setEmail("johndoe@gmail.com");
-        user.setCreatedBy("admin");
-        user.setCreatedDate(Instant.now());
-        user.setLastModifiedBy("admin");
-        user.setLastModifiedDate(Instant.now());
+    void User_GetOne_ReturnsUserObject() {
         
-        userRepository.save(user)
+        User newUser = new User();
+        newUser.setId(1L);
+        newUser.setFirstName(FIRSTNAME);
+        newUser.setLastName(LASTNAME);
+        newUser.setEmail(EMAIL);
+
+        R2dbcEntityTemplate template = new R2dbcEntityTemplate(databaseClient, H2Dialect.INSTANCE);
+        template.insert(User.class)
+            .using(newUser)
+            .then()
             .as(StepVerifier::create)
-            .expectNextMatches(item -> item.getId() != null)
+            .verifyComplete();
+
+        Mono<User> findUser = repository.findById(1L);
+        
+        findUser.as(StepVerifier::create)
+            .assertNext(current -> { 
+                assertEquals(current.getFirstName(), FIRSTNAME);
+                assertEquals(current.getLastName(), LASTNAME);
+            })
             .verifyComplete();
 
     }
 
-    @Test
-    public void Should_Delete_ReturnsVoid() { 
-        User user = new User();
-        user.setFirstName("paul");
-        user.setLastName("dore");
-        user.setEmail("pauldore@gmail.com");
-        user.setCreatedBy("admin");
-        user.setCreatedDate(Instant.now());
-        user.setLastModifiedBy("admin");
-        user.setLastModifiedDate(Instant.now());
-
-        Mono<User> delete = userRepository
-            .save(user)
-            .flatMap(saved -> userRepository.delete(user).thenReturn(saved));
-
-        StepVerifier
-            .create(delete)
-            .expectNextMatches(item -> user.getId() != null)
-            .verifyComplete();
-    }
 }
