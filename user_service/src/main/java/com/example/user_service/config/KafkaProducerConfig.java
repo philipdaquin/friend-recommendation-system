@@ -2,6 +2,8 @@ package com.example.user_service.config;
 
 import java.util.Map;
 
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,15 +15,22 @@ import com.example.user_service.domains.events.DomainEvent;
 
 import reactor.kafka.sender.SenderOptions;
 
-@EnableKafka
 @Configuration
 public class KafkaProducerConfig {
     
     @Bean
-    public ReactiveKafkaProducerTemplate<String, DomainEvent<User>> reactiveProducer(KafkaProperties properties) { 
-        Map<String, Object> config = properties.buildProducerProperties();
-        
-        return new ReactiveKafkaProducerTemplate<String, DomainEvent<User>>(SenderOptions.create(config));
+    public ReactiveKafkaProducerTemplate<String, DomainEvent<User>> reactiveKafkaProducerTemplate() {
+        SenderOptions<String, DomainEvent<User>> senderOptions = SenderOptions.<String, DomainEvent<User>>create()
+            .producerProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+            .producerProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName())
+            .producerProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName())
+            .producerProperty(ProducerConfig.ACKS_CONFIG, "all")
+            .producerProperty(ProducerConfig.RETRIES_CONFIG, 3)
+            .producerProperty(ProducerConfig.BATCH_SIZE_CONFIG, 16384)
+            .producerProperty(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+
+        return new ReactiveKafkaProducerTemplate<>(senderOptions);
     }
+
     
 }
