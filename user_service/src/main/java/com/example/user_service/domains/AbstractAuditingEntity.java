@@ -7,13 +7,19 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionId = 1L;
@@ -29,12 +35,13 @@ public abstract class AbstractAuditingEntity implements Serializable {
     public String createdBy;
 
     @LastModifiedBy
+    @Null
     @Column(value = "last_modified_by")
     private String lastModifiedBy;
 
     @LastModifiedDate
+    @Nullable
     @Column(value = "last_modified_date")
-     
     private Instant lastModifiedDate;
 
     public Instant getCreatedDate() {

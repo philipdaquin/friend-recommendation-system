@@ -72,13 +72,15 @@ spring:
     kubernetes.enabled: false
   h2:
     console:
-      enabled: true
+      enabled: 'true'
   datasource:
-    # url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}
     url: jdbc:h2:mem:database
-    username: postgres
-    password: password
-    driver-class-name: org.postgresql.Driver
+  # datasource:
+  #   # url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}
+  #   url: jdbc:h2:mem:database
+  #   username: postgres
+  #   password: password
+    # driver-class-name: org.postgresql.Driver
   liquibase:
     url: ${spring.datasource.url}
     user: postgres
