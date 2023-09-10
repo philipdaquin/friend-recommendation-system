@@ -31,7 +31,7 @@ import jakarta.validation.constraints.NotNull;
 @EnableR2dbcAuditing
 @EnableTransactionManagement
 @Profile({"dev, prod, test"})
-public class DatabaseConfig extends AbstractR2dbcConfiguration{
+public class PostgresConfig extends AbstractR2dbcConfiguration{
 
 
     @Value("${postgres.host}")
@@ -48,7 +48,7 @@ public class DatabaseConfig extends AbstractR2dbcConfiguration{
 
 	private DataSourceProperties dataSourceProperties;
 
-	DatabaseConfig(DataSourceProperties dataSourceProperties) {
+	PostgresConfig(DataSourceProperties dataSourceProperties) {
 		this.dataSourceProperties = dataSourceProperties;
 	}
 

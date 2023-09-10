@@ -24,6 +24,7 @@ import com.example.user_service.domains.events.DomainEvent;
 import com.example.user_service.domains.events.EventType;
 import com.example.user_service.errors.UserResourceException;
 import com.example.user_service.service.KafkaProducerService;
+import com.example.user_service.service.RedisService;
 import com.example.user_service.service.UserService;
 
 import jakarta.validation.Valid;
@@ -34,17 +35,17 @@ import reactor.core.publisher.Mono;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    // private final UserRepository userRepository;
+    private final RedisService cache;
     private final UserService userService;
     private final KafkaProducerService producer;
 
     public UserController(
-        // UserRepository userRepository,
+        RedisService cache,
         UserService userService,
         KafkaProducerService producer
         
     ) {
-        // this.userRepository = userRepository;
+        this.cache = cache;
         this.userService = userService;
         this.producer = producer;
     }
@@ -66,7 +67,7 @@ public class UserController {
         return user.flatMap(newUser -> {
 
             // Execute dual writes to both local persistence and shared kafka cluster  
-            // If the database, the transaction is rollback else, a new event is emitted to the aggregated service
+            // If the database fails, the transaction is rollbacked else, a new event is emitted to the aggregated service
             return userService.save(newUser, cluster -> {
 
                 try { 
@@ -75,11 +76,17 @@ public class UserController {
                     event.setEventType(EventType.USER_ADDED);
                     // Send an Event to the kafka cluster 
                     producer.send(event);
+                    
+                    // Save User Entity to cache
+                    cache.put(String.format("user-" + cluster.getId()), cluster);
     
                 } catch (Exception e) {
                     throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
                     "A database transaction failed. Try again later!");
                 }
+            })// On success, cache the value 
+            .doOnSuccess(savedValue -> {
+                cache.put(String.format("user-" + savedValue.getId()), savedValue);
             });
         });
     }
@@ -111,7 +118,12 @@ public class UserController {
                 throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
                 "A database transaction failed. Try again later!");
             }
-        }).and(null);
+        })
+        // If on success, delete the cached value
+        .doOnSuccess(savedValue -> {
+            cache.delete(String.format("user-" + id));
+        })
+        .and(null);
     }
 
     /**
@@ -150,11 +162,15 @@ public class UserController {
                     event.setEventType(EventType.USER_UPDATED);
                     // Send an Event to the kafka cluster 
                     producer.send(event);
-    
+                    
                 } catch (Exception e) {
                     throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
                     "A database transaction failed. Try again later!");
                 }
+            })
+            // On success, cache the value 
+            .doOnSuccess(savedValue -> {
+                cache.put(String.format("user-" + savedValue.getId()), savedValue);
             });
         });
     }
@@ -196,18 +212,22 @@ public class UserController {
                     event.setEventType(EventType.USER_UPDATED);
                     // Send an Event to the kafka cluster 
                     producer.send(event);
-    
+                    
                 } catch (Exception e) {
                     throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, 
                     "A database transaction failed. Try again later!");
                 }
+            })
+            // On success, cache the value             
+            .doOnSuccess(savedValue -> {
+                cache.put(String.format("user-" + savedValue.getId()), savedValue);
             });
         });
 
     } 
 
     /**
-     * Get the "ID" User Entity
+     * Get the User entity based off its ID, check any Cached Value else get the value from database.
      * 
      * @param id
      * @return
@@ -215,7 +235,31 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<User> getUser(@PathVariable final Long id) {
-        return userService.getOne(id);
+
+        String key = String.format("user-" + id);
+
+        return Mono.defer(() -> { 
+            // Check the caching layer for the key-value
+            return cache.get(key)
+                // Else check the database 
+                .switchIfEmpty(
+                    userService.getOne(id)
+                        // If the value is valid in our database, save to cache and return the value
+                        .flatMap(user -> { 
+                                return cache.put(key, user).then(Mono.just(user));
+                            }
+                        )
+                        //  if empty, throw an `HttpStatus.INTERNAL_SERVER_ERROR`
+                        .switchIfEmpty(
+                            Mono.error(new HttpServerErrorException(
+                                    HttpStatus.INTERNAL_SERVER_ERROR, 
+                                    "Unable to find user entity"
+                                )
+                            )
+                        )
+                );
+            }
+        );
     }
 
 }
