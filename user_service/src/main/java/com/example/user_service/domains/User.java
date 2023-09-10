@@ -3,6 +3,7 @@ package com.example.user_service.domains;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedBy;
@@ -30,7 +31,6 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Size(max = 50)
     @Column(value = "first_name")
     private String firstName;
@@ -49,12 +49,12 @@ public class User implements Serializable {
     @Nullable
     @Size(max = 50)
     @Column(value = "created_date")
-    public Timestamp createdDate;
+    private Date createdDate = Date.from(Instant.now());
     
     @CreatedDate
     @Nullable
     @Column(value = "created_by")
-    public String createdBy;
+    private String createdBy;
 
     @LastModifiedBy
     @Nullable
@@ -64,14 +64,14 @@ public class User implements Serializable {
     @LastModifiedDate
     @Nullable
     @Column(value = "last_modified_date")
-    private Timestamp lastModifiedDate;
+    private Date lastModifiedDate;
 
 
-    public Timestamp getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Timestamp createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -91,11 +91,11 @@ public class User implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Timestamp getLastModifiedDate() {
+    public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+    public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 

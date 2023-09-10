@@ -2,6 +2,7 @@ package com.example.user_service.domains.friend_requests;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -23,7 +24,7 @@ public class FriendRequest implements Serializable {
 
     @NotNull
     @Column(value = "created_date")
-    private Instant createdDate = Instant.now();
+    private Date createdDate = Date.from(Instant.now());
 
     @Column(value = "request_status")
     private FriendRequestStatus requestStatus = FriendRequestStatus.PENDING;
@@ -44,11 +45,11 @@ public class FriendRequest implements Serializable {
         this.friendId = friendId;
     }
 
-    public Instant getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 

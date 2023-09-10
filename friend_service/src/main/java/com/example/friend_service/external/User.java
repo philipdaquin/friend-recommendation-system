@@ -1,8 +1,8 @@
 package com.example.friend_service.external;
 
-import com.example.friend_service.domains.AbstractAuditingEntity;
+import java.sql.Timestamp;
 
-public class User extends AbstractAuditingEntity {
+public class User {
 
     private static final long serialVersionId = 1L;
     
@@ -11,6 +11,11 @@ public class User extends AbstractAuditingEntity {
     private String firstName;
     private String lastName;
     private String email;
+    private Timestamp createdDate;
+    private String createdBy;
+    private String lastModifiedBy;
+    private Timestamp lastModifiedDate;
+
 
     public User() {}
 
@@ -59,5 +64,36 @@ public class User extends AbstractAuditingEntity {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Timestamp getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

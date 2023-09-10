@@ -15,7 +15,6 @@ public class FriendRequestTest {
     @Test
     void equalsVerifier() { 
         FriendRequest request = new FriendRequest();
-        request.setCreatedDate(Instant.now());
         request.setFriendId(1L);
         request.setRequestStatus(FriendRequestStatus.PENDING);
         

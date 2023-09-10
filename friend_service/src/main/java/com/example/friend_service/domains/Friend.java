@@ -1,15 +1,25 @@
 package com.example.friend_service.domains;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Date;
+
 import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Table(name = "friend")
-public class Friend extends AbstractAuditingEntity implements Serializable {
+public class Friend implements Serializable {
     private static final long serialVersionId = 1L;
     
     @Id
@@ -23,11 +33,64 @@ public class Friend extends AbstractAuditingEntity implements Serializable {
     @Column(value = "friend_id")
     private Long friendId;
 
+    @CreatedBy
+    @Nullable
+    @Size(max = 50)
+    @Column(value = "created_date")
+    public Date createdDate = Date.from(Instant.now());
+    
+    @CreatedDate
+    @Nullable
+    @Column(value = "created_by")
+    public String createdBy;
+
+    @LastModifiedBy
+    @Nullable
+    @Column(value = "last_modified_by")
+    private String lastModifiedBy;
+
+    @LastModifiedDate
+    @Nullable
+    @Column(value = "last_modified_date")
+    private Date lastModifiedDate;
+
     public Friend() {}
 
     public Friend(Long userId, Long friendId) {
         this.userId = userId;
         this.friendId = friendId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Long getId() {
