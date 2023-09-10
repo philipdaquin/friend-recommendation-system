@@ -6,12 +6,12 @@ import java.time.Instant;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import jakarta.validation.constraints.NotNull;
 
-@Table(name = "friend_requests")
+@Document(value = "friend_requests")
 public class FriendRequest implements Serializable {
 
     private static final Long serialVersionId = 1L;
@@ -20,22 +20,23 @@ public class FriendRequest implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(value = "user_id")
+    @Field(value = "user_id")
     private Long userId;
 
     @NotNull
-    @Column(value = "friend_id")
+    @Field(value = "friend_id")
     private Long friendId;
 
     @NotNull
-    @Column(value = "accepted")
+    @Field(value = "accepted")
     private Boolean accepted = false;
 
     @NotNull
-    @Column(value = "created_date")
+    @Field(value = "created_date")
     private Date createdDate = Date.from(Instant.now());
 
-    @Column(value = "request_status")
+    @NotNull
+    @Field(value = "request_status")
     private FriendRequestStatus requestStatus = FriendRequestStatus.PENDING;
 
     public Long getId() {

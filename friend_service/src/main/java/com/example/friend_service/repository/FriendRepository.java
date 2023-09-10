@@ -1,7 +1,8 @@
 package com.example.friend_service.repository;
 
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.friend_service.domains.Friend;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @Repository
-public interface FriendRepository extends R2dbcRepository<Friend,Long> {
+public interface FriendRepository extends ReactiveMongoRepository<Friend,Long> {
 
     @Query("SELECT * FROM friend WHERE user_id = $1")
     Flux<Friend> findAllByUserId(final Long userId);

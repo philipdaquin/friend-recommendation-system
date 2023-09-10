@@ -11,14 +11,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-@Table(name = "friend")
+@Document(collection = "friend")
 public class Friend implements Serializable {
     private static final long serialVersionId = 1L;
     
@@ -26,32 +26,32 @@ public class Friend implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(value = "user_id")
+    @Field(value = "user_id")
     private Long userId;
 
     @NotNull
-    @Column(value = "friend_id")
+    @Field(value = "friend_id")
     private Long friendId;
 
     @CreatedBy
     @Nullable
     @Size(max = 50)
-    @Column(value = "created_date")
+    @Field(value = "created_date")
     public Date createdDate = Date.from(Instant.now());
     
     @CreatedDate
     @Nullable
-    @Column(value = "created_by")
+    @Field(value = "created_by")
     public String createdBy;
 
     @LastModifiedBy
     @Nullable
-    @Column(value = "last_modified_by")
+    @Field(value = "last_modified_by")
     private String lastModifiedBy;
 
     @LastModifiedDate
     @Nullable
-    @Column(value = "last_modified_date")
+    @Field(value = "last_modified_date")
     private Date lastModifiedDate;
 
     public Friend() {}

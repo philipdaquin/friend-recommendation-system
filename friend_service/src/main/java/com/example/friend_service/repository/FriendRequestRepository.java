@@ -1,7 +1,8 @@
 package com.example.friend_service.repository;
 
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.friend_service.domains.Friend;
@@ -12,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 @SuppressWarnings("unused")
 @Repository
-public interface FriendRequestRepository extends R2dbcRepository<FriendRequest, Long> {
+public interface FriendRequestRepository extends ReactiveMongoRepository<FriendRequest, Long> {
     @Query("SELECT * FROM friend_requests WHERE user_id = $1 AND friend_id = $2")
     Mono<FriendRequest> getRequest(Long userId, Long friendId);
 
