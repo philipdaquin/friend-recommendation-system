@@ -9,18 +9,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
+import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.r2dbc.connection.init.CompositeDatabasePopulator;
+import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
+import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
 import jakarta.validation.constraints.NotNull;
 
-@Configuration(proxyBeanMethods = false)
-@EnableR2dbcRepositories(basePackages = "com.example.repository")
+
+@Configuration
+@EnableR2dbcRepositories(basePackages = "com.example.user_service.UserRepository")
+@EnableR2dbcAuditing
+@EnableTransactionManagement
 @Profile({"dev, prod, test"})
 public class DatabaseConfig extends AbstractR2dbcConfiguration{
 
@@ -65,10 +74,16 @@ public class DatabaseConfig extends AbstractR2dbcConfiguration{
 	}
 
 	@Bean
-	@ConfigurationProperties("spring.datasource")
-	@LiquibaseDataSource
-	public DataSource dataSource(DataSourceProperties properties) {
-		return new SimpleDriverDataSource(new org.postgresql.Driver(), properties.getUrl(),
-				properties.getUsername(), properties.getPassword());
-	}
+    public ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
+
+        ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
+        initializer.setConnectionFactory(connectionFactory);
+
+        CompositeDatabasePopulator populator = new CompositeDatabasePopulator();
+        populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
+        // populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("data.sql")));
+        initializer.setDatabasePopulator(populator);
+
+        return initializer;
+    }
 }

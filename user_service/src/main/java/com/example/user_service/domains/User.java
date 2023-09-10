@@ -1,6 +1,7 @@
 package com.example.user_service.domains;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 import org.hibernate.validator.constraints.UniqueElements;
@@ -13,6 +14,8 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.lang.Nullable;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
@@ -23,7 +26,10 @@ public class User implements Serializable {
     private static final long serialVersionId = 1L;
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     @Size(max = 50)
     @Column(value = "first_name")
     private String firstName;
@@ -38,32 +44,33 @@ public class User implements Serializable {
     @Column(value = "email")
     private String email;
 
-     @CreatedBy
+    @CreatedBy
     @Nullable
     @Size(max = 50)
-    @Column(value = "created_by")
-    public Instant createdDate = Instant.now();
+    @Column(value = "created_date")
+    public Timestamp createdDate;
     
     @CreatedDate
-    @Column(value = "created_date")
+    @Nullable
+    @Column(value = "created_by")
     public String createdBy;
 
     @LastModifiedBy
-    @Null
+    @Nullable
     @Column(value = "last_modified_by")
     private String lastModifiedBy;
 
     @LastModifiedDate
     @Nullable
     @Column(value = "last_modified_date")
-    private Instant lastModifiedDate;
+    private Timestamp lastModifiedDate;
 
 
-    public Instant getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -83,11 +90,11 @@ public class User implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Instant getLastModifiedDate() {
+    public Timestamp getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 

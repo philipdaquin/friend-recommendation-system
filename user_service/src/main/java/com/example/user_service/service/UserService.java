@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.r2dbc.dialect.MySqlDialect.ByteToBooleanConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -89,6 +90,17 @@ public class UserService {
             .single();
             
     }
+
+    /**
+     * Checks if the item exists by Id
+     * 
+     * @param userId
+     * @return
+     */
+    public Boolean existsById(Long userId) { 
+        return userRepository.existsById(userId).single().block();
+    }
+
 
     /**
      * 

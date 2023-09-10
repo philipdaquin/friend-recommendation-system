@@ -23,7 +23,6 @@ import com.example.user_service.domains.User;
 import com.example.user_service.domains.events.DomainEvent;
 import com.example.user_service.domains.events.EventType;
 import com.example.user_service.errors.UserResourceException;
-import com.example.user_service.repository.UserRepository;
 import com.example.user_service.service.KafkaProducerService;
 import com.example.user_service.service.UserService;
 
@@ -35,17 +34,17 @@ import reactor.core.publisher.Mono;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    private final UserRepository userRepository;
+    // private final UserRepository userRepository;
     private final UserService userService;
     private final KafkaProducerService producer;
 
     public UserController(
-        UserRepository userRepository,
+        // UserRepository userRepository,
         UserService userService,
         KafkaProducerService producer
         
     ) {
-        this.userRepository = userRepository;
+        // this.userRepository = userRepository;
         this.userService = userService;
         this.producer = producer;
     }
@@ -94,7 +93,7 @@ public class UserController {
     @DeleteMapping(path = "/users/{id}")
     public Mono<Void> deleteUser(@PathVariable final Long id) { 
 
-        if (!userRepository.existsById(id).block()) { 
+        if (!userService.existsById(id)) { 
             throw new UserResourceException("User does not exist in the system!");
         }
         // Execute dual writes to both local persistence and shared kafka cluster  
@@ -130,7 +129,7 @@ public class UserController {
         @RequestBody @Valid final Mono<User> user
     ) throws URISyntaxException {
         // Assert that the user exists 
-        if (!userRepository.existsById(userId).block()) throw new UserResourceException("User does not exist in the system!");
+        if (!userService.existsById(userId)) throw new UserResourceException("User does not exist in the system!");
 
         // Assert that the user id and id are the same
         if (userId != user.block().getId()) throw new UserResourceException("Invalid Id");
@@ -176,7 +175,7 @@ public class UserController {
     ) throws URISyntaxException {
         
         // Assert that the user exists 
-        if (!userRepository.existsById(userId).block()) throw new UserResourceException("User does not exist in the system!");
+        if (!userService.existsById(userId)) throw new UserResourceException("User does not exist in the system!");
 
         // Assert that the user id and id are the same
         if (userId != user.block().getId()) throw new UserResourceException("Invalid Id");

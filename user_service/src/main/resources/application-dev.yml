@@ -25,7 +25,7 @@ logging:
 postgres.port: 5432
 postgres.host: localhost
 postgres.database-name: users 
-postgres.username: username
+postgres.username: postgres
 # postgres.url: postgresql://${postgres.host:localhost}:${postgres.port}/${postgres.database-name}
 postgres.url: postgresql://${postgres.host}:${postgres.port}/${postgres.database-name}
 PRODUCER_TOPIC: user
