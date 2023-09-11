@@ -76,9 +76,45 @@ public class ReactiveFriendRepositoryIntegrationTest {
 		
 		saveAndCount
 			.as(StepVerifier::create)
-			.expectNextCount(6)
+			.expectNext(6L)
 			.verifyComplete();
-		
-
 	}
+
+	@Test
+	void shouldPerformConversionBeforeResultProcessing() {
+		repository.findAll()
+			.doOnNext(System.out::println)
+			.as(StepVerifier::create)
+			.expectNextCount(4)
+			.verifyComplete();
+	}
+
+	@Test
+	void shouldQueryFindFriendObject() {
+		repository.getFriend(1L, 2L)
+			.as(StepVerifier::create)
+			.expectNextCount(1)
+			.verifyComplete();
+	}
+
+	@Test
+	void shouldQueryAllFriendsByUserId() { 
+		
+		repository.deleteAll();
+		
+		var count = operations.insertAll(
+			Flux.just(
+				new Friend(1L, 2L), 
+				new Friend(1L, 6L),
+				new Friend(1L, 3L),
+				new Friend(1L, 4L)
+			).collectList());
+
+
+		count.as(StepVerifier::create)
+			.expectNextCount(4L)
+			.verifyComplete();
+			
+	}
+
 }
