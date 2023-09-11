@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -23,7 +24,7 @@ public class Friend implements Serializable {
     private static final long serialVersionId = 1L;
     
     @Id
-    private Long id;
+    private String id;
 
     @NotNull
     @Field(value = "user_id")
@@ -54,8 +55,11 @@ public class Friend implements Serializable {
     @Field(value = "last_modified_date")
     private Date lastModifiedDate;
 
+
+    // @PersistenceCreator
     public Friend() {}
 
+    // @PersistenceCreator
     public Friend(Long userId, Long friendId) {
         this.userId = userId;
         this.friendId = friendId;
@@ -93,11 +97,11 @@ public class Friend implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

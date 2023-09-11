@@ -15,7 +15,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @Repository
-public interface FriendRepository extends ReactiveMongoRepository<Friend,Long> {
+public interface FriendRepository extends ReactiveMongoRepository<Friend, String> {
 
     @Query("{'user_id' : ?0}")
     Flux<Friend> findAllByUserId(final Long userId);

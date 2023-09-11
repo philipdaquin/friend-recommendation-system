@@ -41,7 +41,7 @@ public class FriendServiceTest {
     @BeforeEach
     public void init() { 
         friend = new Friend(1L, 2L);
-        friend.setId(1L);
+        friend.setId(String.valueOf(1L));
 
     }
 
@@ -50,7 +50,7 @@ public class FriendServiceTest {
 
         // Stub the repository methods 
         when(repository.save(any(Friend.class))).thenReturn(Mono.just(friend));
-        when(repository.findById(friend.getFriendId())).thenReturn(Mono.just(friend));
+        when(repository.findById(friend.getFriendId().toString())).thenReturn(Mono.just(friend));
     
         // Define a callback to be executed
         Consumer<Friend> callback = mock(Consumer.class);

@@ -84,7 +84,7 @@ public class FriendService {
      * @param id of Friend entity
      * @return emits {@link Mono<User>} the result of the transaction
      */
-    public Mono<Friend> getOne(final Long id) {
+    public Mono<Friend> getOne(final String id) {
         return friendRepository.findById(id);
     }
 
