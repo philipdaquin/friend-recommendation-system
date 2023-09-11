@@ -75,7 +75,7 @@ public class FriendService {
      * @return emits {@link Flux<User>} the result of the transaction
      */
     public Flux<Friend> getAllByUserId(final Long userId) {
-        return friendRepository.findAllByUserId(userId);
+        return friendRepository.findByUserId(userId);
     }
 
     /**

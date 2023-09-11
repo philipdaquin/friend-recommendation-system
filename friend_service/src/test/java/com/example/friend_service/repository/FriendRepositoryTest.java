@@ -108,23 +108,6 @@ public class FriendRepositoryTest {
     }
     
     @Test
-    public void shouldGetAllFriendsOfUserReturnsList() {
-        repository.deleteAll();
-        
-        repository.saveAll(Flux.just(
-            new Friend(1L, 2L),
-            new Friend(1L, 2L),
-            new Friend(1L, 2L),
-            new Friend(1L, 2L)
-        ));
-
-        Optional<List<Friend>> count = repository.findAll().collectList().blockOptional();
-
-        assertTrue(count.isPresent());
-        assertEquals(count.get().size(), 4);
-    }
-    
-    @Test
     public void shouldGetFriendWithIdAndFriendIdReturnsFriend() {
         Long userId = new Random().nextLong(), friendId = new Random().nextLong();
 
@@ -138,7 +121,7 @@ public class FriendRepositoryTest {
     }
     
     @Test
-    public void shouldGetAllRequestsByUserReturnsList() {
+    public void shouldGetAllFriendsByUserReturnsList() {
 
         Long id = new Random().nextLong();
 
