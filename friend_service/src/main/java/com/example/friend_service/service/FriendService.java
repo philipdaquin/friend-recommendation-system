@@ -5,18 +5,13 @@ package com.example.friend_service.service;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import com.example.friend_service.domains.Friend;
-import com.example.friend_service.domains.events.DomainEvent;
-import com.example.friend_service.domains.events.EventType;
 import com.example.friend_service.external.UserClient;
 import com.example.friend_service.repository.FriendRepository;
 
@@ -55,7 +50,7 @@ public class FriendService {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Error in creating a new friend entity");
         
         // Check if the friendId exist in the User Service 
-        if (client.getUser(friend.getFriendId()).single() != null) 
+        if (!client.getUser(friend.getFriendId()).hasElement().block()) 
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Invalid Friend Id ");
 
         // Save to the database
@@ -95,13 +90,11 @@ public class FriendService {
      * @param callback {@link Consumer<Friend>} allows you to ensure the transaction is successful else, a rollback is executed
      */
     public Mono<Friend> deleteOne(Friend friend, Consumer<Friend> callback) {
-        return friendRepository
-            .getFriend(friend.getUserId(), friend.getUserId())
-            .flatMap(object -> { 
-                friend.setId(object.getId());
-
-                return friendRepository.delete(friend).then(Mono.just(friend));
+        return getFriend(friend.getUserId(), friend.getFriendId())
+            .doOnNext(entity -> {
+                friendRepository.delete(entity);
             })
+            .then(Mono.just(friend))
             .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item))).single();
     }
 
