@@ -23,5 +23,5 @@ public interface FriendRepository extends ReactiveMongoRepository<Friend, String
     @Query("{'user_id' : ?0 , 'friend_id' : ?1}")
     Mono<Friend> getFriend(Long userId, Long friendId);
 
-    List<Friend> findByUserId(Long userId);
+    Flux<Friend> findByUserId(Long userId);
 }
