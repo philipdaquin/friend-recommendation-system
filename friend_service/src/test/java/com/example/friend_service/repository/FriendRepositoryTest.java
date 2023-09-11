@@ -51,8 +51,8 @@ public class FriendRepositoryTest {
     // private Friend friend1, friend2, friend3, friend4;
 
     // @BeforeEach
-    @Before
-    public void setup() { 
+    @After
+    public void setup() throws Exception { 
         repository.deleteAll();
     }
 

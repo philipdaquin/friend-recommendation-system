@@ -17,8 +17,21 @@ import java.util.List;
 @Repository
 public interface FriendRepository extends ReactiveMongoRepository<Friend, String> {
 
+    /**
+     * Gets the Friend entity using `userId` and `friendId`
+     * 
+     * @param userId
+     * @param friendId
+     * @return
+     */
     @Query("{'user_id' : ?0 , 'friend_id' : ?1}")
     Mono<Friend> getFriend(Long userId, Long friendId);
 
+    /**
+     * Gets all the Friends connected to the User 
+     * 
+     * @param userId
+     * @return
+     */
     Flux<Friend> findByUserId(Long userId);
 }
