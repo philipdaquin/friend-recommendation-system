@@ -1,17 +1,58 @@
 version: '1.0'
 services:
 
+
+  # Neo4j
+  neo4j:
+    environment:
+      NEO4J_AUTH: none
+    image: neo4j:3.5.0
+    ports:
+      - "7474:7474/tcp"
+      - "7687:7687/tcp"
+    deploy:
+      replicas: 1
+
+
+  # Redis db
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - app-tier
+
+  # Mongo Db
+  mongodb:
+    image: "mongo:latest"
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+    networks:
+      - ""
+
   # PostgreSQL
   postgres:
     image: postgres:14-alpine
     ports:
       - 5432:5432
+    restart: always
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=username
       - POSTGRES_DB=citizix_db
+    networks:
+      - ""
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 10
 
   # KAFKA: Dual Writes
   zookeeper:
@@ -35,3 +76,14 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+volumes:
+  mongodb_data_container:
+  db-data:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+
+networks:
+  bankAccount:
