@@ -17,10 +17,10 @@ import java.util.List;
 @Repository
 public interface FriendRepository extends ReactiveMongoRepository<Friend,Long> {
 
-    @Query("SELECT * FROM friend WHERE user_id = $1")
+    @Query("{'user_id' : ?0}")
     Flux<Friend> findAllByUserId(final Long userId);
 
-    @Query("SELECT * FROM friend WHERE user_id = $1 AND friend_id = $2")
+    @Query("{'user_id' : ?0 , 'friend_id' : ?1}")
     Mono<Friend> getFriend(Long userId, Long friendId);
 
     List<Friend> findByUserId(Long userId);

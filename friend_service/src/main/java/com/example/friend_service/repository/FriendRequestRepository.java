@@ -14,16 +14,18 @@ import reactor.core.publisher.Mono;
 @SuppressWarnings("unused")
 @Repository
 public interface FriendRequestRepository extends ReactiveMongoRepository<FriendRequest, Long> {
-    @Query("SELECT * FROM friend_requests WHERE user_id = $1 AND friend_id = $2")
+    
+    // @Query("SELECT * FROM friend_requests WHERE user_id = $1 AND friend_id = $2")
+    @Query("{'user_id' : ?0, 'friend_id' : ?1}")
     Mono<FriendRequest> getRequest(Long userId, Long friendId);
 
-    @Query("SELECT * FROM friend_requests WHERE user_id = $1")
+    @Query("{'user_id' : ?0}")
     Flux<FriendRequest> findAllByUserId(final Long userId);
 
-    @Query("SELECT * FROM friend_requests where friend_id = $1")
+    @Query("{'friend_id' : ?0}")
     Flux<FriendRequest> findAllForUser(final Long userId);
 
 
-    @Query("SELECT * FROM friend_requests WHERE user_id = $1 AND requestId = $2 LIMIT 1")
+    @Query("{'user_id' : ?0 , 'requestId' : ?1}")
     Mono<FriendRequest> getRequestWithUser(Long userId, Long requestId);
 }
