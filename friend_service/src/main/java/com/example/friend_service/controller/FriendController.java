@@ -116,7 +116,7 @@ public class FriendController {
      * @return
      */
     @ResponseStatus(code = HttpStatus.OK)
-    @GetMapping(path = "/friends/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/friends/{friendId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Friend> getEntity(@PathVariable final Long friendId) {
         return friendService.getOne(friendId);
     }
