@@ -6,7 +6,7 @@ logging:
 spring:
   data:
     mongodb:
-      database: friend
+      database: mongo
       host: localhost
       port: 27017
   # r2dbc:
