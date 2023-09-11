@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: dev 
+
+  data:
+    mongodb:
+      database: mongo
+      host: localhost
+      port: 27017
+
+  kafka:
+    bootstrap-servers: localhost:9091
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+PRODUCER_TOPIC: friend
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://discovery-service:8761/eureka/

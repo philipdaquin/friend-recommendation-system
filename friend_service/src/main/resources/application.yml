@@ -1,28 +1,8 @@
-logging:
-  level:
-    org.springframework.transaction: TRACE
-    org.springframework.data.r2dbc.connectionfactory: DEBUG
-
 spring:
-  data:
-    mongodb:
-      database: mongo
-      host: localhost
-      port: 27017
-  # r2dbc:
-  #   url: r2dbc:postgresql://postgres:postgres@localhost:5432/friend
-  #   username: testuser
-  #   password: testpassword
-
-  kafka:
-    bootstrap-servers: localhost:9091
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
-
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
+  application:
+    name: friend-service
+  profiles:
+    default: dev
 
 server:
   error:
@@ -30,4 +10,10 @@ server:
     include-binding-errors: always
   port: 7001
 
-PRODUCER_TOPIC: friend
+logging:
+  level:
+    org.springframework.transaction: TRACE
+    root: INFO
+    kafka.*: WARN
+    org.springframework.*: INFO
+    org.apache.kafka.*: WARN

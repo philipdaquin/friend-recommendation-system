@@ -1,0 +1,28 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  data:
+    mongodb:
+      database: mongo
+      host: localhost
+      port: 27017
+      # auto-index-creation: true
+
+  kafka:
+    bootstrap-servers: localhost:9091
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+PRODUCER_TOPIC: friend
+
+
+eureka:
+  client:
+    registerWithEureka: false
