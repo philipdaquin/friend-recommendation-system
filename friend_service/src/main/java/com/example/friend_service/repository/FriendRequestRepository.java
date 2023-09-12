@@ -55,5 +55,5 @@ public interface FriendRequestRepository extends ReactiveMongoRepository<FriendR
      * @return
      */
     @Query("{'user_id' : ?0 , 'friend_id' : ?1}")
-    Mono<FriendRequest> getRequestWithUser(Long userId, Long requestId);
+    Mono<FriendRequest> getRequestWithUser(Long userId, Long friendId);
 }
