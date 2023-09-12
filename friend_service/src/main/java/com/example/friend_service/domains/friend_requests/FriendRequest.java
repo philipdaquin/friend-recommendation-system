@@ -17,7 +17,7 @@ public class FriendRequest implements Serializable {
     private static final Long serialVersionId = 1L;
 
     @Id
-    private Long id;
+    private String id;
 
     @NotNull
     @Field(value = "user_id")
@@ -39,7 +39,8 @@ public class FriendRequest implements Serializable {
     @Field(value = "request_status")
     private FriendRequestStatus requestStatus = FriendRequestStatus.PENDING;
 
-    public Long getId() {
+    public FriendRequest() {}
+    public String getId() {
         return id;
     }
 
@@ -64,7 +65,7 @@ public class FriendRequest implements Serializable {
         this.accepted = accepted;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

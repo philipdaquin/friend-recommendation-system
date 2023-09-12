@@ -155,7 +155,7 @@ public class FriendRequestController {
     ) {
 
         // Check if Friend Request already exists
-        if (!repository.existsById(requestId).block()) 
+        if (!repository.existsById(requestId.toString()).block()) 
             throw new HttpClientErrorException(HttpStatus.CONFLICT, "Unabled to befriend yourself");
 
         // Check if the request was created by the user 

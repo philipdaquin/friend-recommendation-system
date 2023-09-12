@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
 import java.util.Date;
@@ -14,10 +12,8 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -25,11 +21,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.friend_service.domains.Friend;
-
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-
 
 // @DataR2dbcTest
 // @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -47,9 +39,7 @@ public class FriendRepositoryTest {
 
     // @Autowired
     // private TestEntityManager entityManager;
-
     // private Friend friend1, friend2, friend3, friend4;
-
     // @BeforeEach
     @After
     public void setup() throws Exception { 

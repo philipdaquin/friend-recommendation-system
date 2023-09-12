@@ -113,7 +113,7 @@ public class FriendRequestService {
      * @param id
      * @return
      */
-    public Mono<Void> deleteOne(final Long id) {
+    public Mono<Void> deleteOne(final String id) {
         return repository.deleteById(id);
     }
 
