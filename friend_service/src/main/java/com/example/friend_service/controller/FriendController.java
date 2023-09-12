@@ -39,7 +39,6 @@ public class FriendController {
     public FriendController(
         FriendService friendService,
         FriendRepository friendRepository,
-        KafkaProducerService producer,
         FriendProducerService friendProducer
     ) {
         this.friendService = friendService;
@@ -62,7 +61,7 @@ public class FriendController {
         @NotNull(message = "FriendId is empty") @RequestParam(required = true, value = "friendId") final Long friendId
     ) {
         // Check if the UserId is already friends with FriendsId
-        if (friendRepository.getFriend(id, friendId).single() != null) {
+        if (friendRepository.getFriend(id, friendId).single() == null) {
             throw new HttpClientErrorException(HttpStatus.CONFLICT, "The userId and friendid already exist!");
         }
 

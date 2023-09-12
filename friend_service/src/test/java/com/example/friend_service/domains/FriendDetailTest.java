@@ -6,7 +6,6 @@ import org.junit.Test;
 
 public class FriendDetailTest {
     
-    
     @Test
     public void equalsVerifier() {
         Friend friendOne = new Friend(1L, 2L);
