@@ -134,6 +134,25 @@
 			<artifactId>r2dbc</artifactId>
 			<scope>test</scope>
 		</dependency> -->
+	
+		<!-- WireMock, used for mocking HTTP services for testing -->
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock-standalone</artifactId>
+			<!-- <version>2.27.2</version> -->
+			<version>3.0.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- <dependency>
+		<groupId>org.wiremock</groupId>
+		<artifactId>wiremock</artifactId>
+		<version>3.0.4</version>
+		<scope>test</scope>
+		</dependency>
+		 -->
+	
+	
+	
 	</dependencies>
 
 	<build>

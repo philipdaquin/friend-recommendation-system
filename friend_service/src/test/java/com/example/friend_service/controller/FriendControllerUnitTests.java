@@ -56,10 +56,10 @@ public class FriendControllerUnitTests {
 
     @Test
     public void shouldGetEntityReturnsEntity() { 
-        String id = "123";
+        Long id = 123L;
         
         Friend friend = new Friend(1L, 2L);
-        when(service.getOne(id)).thenReturn(Mono.just(friend));
+        when(service.getOne(id.toString())).thenReturn(Mono.just(friend));
 
         // webClient.get()
         //     .uri(API_VERSION + "/friends/{id}", id)
@@ -69,7 +69,7 @@ public class FriendControllerUnitTests {
         //     .expectBody(Friend.class)
         //     .isEqualTo(friend);
 
-        Mono<Friend> response = controller.getEntity(id);
+        Mono<Friend> response = controller.getEntity(id.toString());
         assertEquals(friend, response.block());
     }
 

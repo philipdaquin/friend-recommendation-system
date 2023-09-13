@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.example.friend_service.domains.Friend;
+import com.example.friend_service.exception.ResourceNotFoundException;
 import com.example.friend_service.repository.FriendRepository;
 import com.example.friend_service.service.FriendProducerService;
 import com.example.friend_service.service.FriendService;
@@ -104,8 +105,13 @@ public class FriendController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/users/{id}/friends", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Friend> getUserFriends(@PathVariable final Long userId) {
-        return friendService.getAllByUserId(userId);
 
+        Flux<Friend> friend = friendService.getAllByUserId(userId);
+        
+        if (friend.collectList().block() == null) throw new ResourceNotFoundException("Missing Value");
+        
+        else
+            return friend;
     }
 
     /**
@@ -117,6 +123,9 @@ public class FriendController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "/friends/{friendId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Friend> getEntity(@PathVariable final String friendId) {
-        return friendService.getOne(friendId);
+        Mono<Friend> friend = friendService.getOne(friendId);
+        if (friend.block() == null) throw new ResourceNotFoundException("Missing Value");
+        else
+            return friend;
     }
 }
