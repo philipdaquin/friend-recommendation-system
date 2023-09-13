@@ -26,6 +26,6 @@ public class KafkaProducerService {
      * @return
      */
     public void send(DomainEvent<Friend> event) { 
-        producer.send(topic, event).subscribe();
+        producer.send(topic, event);
     }
 }

@@ -9,9 +9,11 @@ spring:
       host: localhost
       port: 27017
       # auto-index-creation: true
-
+  datasource:
+    url: jdbc:h2:file:~/testdb
   kafka:
     bootstrap-servers: localhost:9091
+    
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer

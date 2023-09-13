@@ -49,6 +49,8 @@ public class ReactiveFriendControllerIntegrationTest extends WireMockService {
     @Autowired
     private ObjectMapper mapper;
 
+    
+
     @BeforeEach
     void setup() { 
         // Fill in Repository with Mock Friends 
