@@ -13,6 +13,8 @@ import com.example.recommendation_service.friend_service.domains.Friend;
 import com.example.recommendation_service.friend_service.domains.events.DomainEvent;
 import com.example.recommendation_service.repository.UserRepository;
 
+import reactor.core.publisher.Mono;
+
 
 @Service
 @Transactional
@@ -26,7 +28,7 @@ public class FriendConsumerService {
         this.repository = repository;
     }
 
-    public void apply(DomainEvent<Friend> event) { 
+    public Mono<Friend> apply(DomainEvent<Friend> event) { 
         
         Friend friend = event.getSubject();
 
@@ -48,14 +50,20 @@ public class FriendConsumerService {
                     friend.getCreatedDate(), 
                     friend.getLastModifiedDate()
                 );
+                return Mono.just(friend);
 
 
             case FRIEND_REMOVED: 
                 log.info("Removing friend connection");
                 repository.removeFriend(friend.getUserId(), friend.getFriendId());
+                
+                return Mono.just(friend);
+
+
 
             default: 
-                break;
+                return Mono.just(friend);
+
         }
     }
 }

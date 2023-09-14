@@ -36,4 +36,11 @@ public class DomainEvent<T> {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
+
+    @Override
+    public String toString() {
+        return "DomainEvent {subject=" + subject + ", eventType=" + eventType + ", createdDate=" + createdDate
+                + ", createdBy=" + createdBy + "}";
+    }
+    
 }

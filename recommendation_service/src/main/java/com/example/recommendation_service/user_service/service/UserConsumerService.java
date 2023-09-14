@@ -1,6 +1,9 @@
 package com.example.recommendation_service.user_service.service;
 
+
 import java.time.Instant;
+import java.util.Date;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +34,21 @@ public class UserConsumerService {
      * 
      * @param event
      */
-    public void apply(DomainEvent<User> event) { 
+    public Mono<User> apply(DomainEvent<User> event) { 
         
         switch (event.getEventType()) { 
             case USER_ADDED: 
                 log.info("Adding new User");
-                repository.save(event.getSubject());
-                break;
+                return repository.save(event.getSubject());
+                // break;
+                
 
             case USER_REMOVED: 
                 log.info("Removing User");
-                repository.delete(event.getSubject());
-                break;
+                var subject = event.getSubject();
+                repository.delete(subject);
+                return Mono.just(subject);
+                // break;
 
             case USER_UPDATED: 
                 log.info("Updating User Object");
@@ -53,13 +59,16 @@ public class UserConsumerService {
                     if (newUser.getFirstName() != null) curr.setFirstName(newUser.getFirstName());
                     if (newUser.getLastName() != null) curr.setLastName(newUser.getLastName());
                     if (newUser.getEmail() != null) curr.setEmail(newUser.getEmail());
-                    curr.setLastModifiedDate(Instant.now());
-                    repository.save(curr);
+                    curr.setLastModifiedDate(Date.from(Instant.now()));
+                    return repository.save(curr);
                 }
-                break;
+                // break;
+                return Mono.just(curr);
 
             default: 
-                break;
+
+                return Mono.just(event.getSubject());
+                // break;
         }
     }
 }

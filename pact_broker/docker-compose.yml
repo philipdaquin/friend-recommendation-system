@@ -1,0 +1,48 @@
+version: "3"
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+
+  postgresql:
+    image: 'docker.io/bitnami/postgresql:14'
+    healthcheck:
+      test: psql postgres --command "select 1" -U postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgresql_data:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_DATABASE=postgres
+
+  pact-broker:
+    image: 'pactfoundation/pact-broker:latest'
+    ports:
+      - '9292:9292'
+    depends_on:
+      - postgresql
+    environment:
+     - PACT_BROKER_DATABASE_URL="postgresql://postgres:password@postgresql/postgres"
+    restart: on-failure
+
+volumes:
+  postgresql_data:
+    driver: local

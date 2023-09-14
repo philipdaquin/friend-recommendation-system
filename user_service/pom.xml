@@ -156,6 +156,25 @@
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-h2</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>au.com.dius.pact.consumer</groupId>
+            <artifactId>junit5</artifactId>
+            <version>4.3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>au.com.dius.pact.provider</groupId>
+            <artifactId>junit5</artifactId>
+            <version>4.3.13</version>
+        </dependency>
+		<dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+		 <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-stub-runner</artifactId>
+            <version>3.0.3</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -164,6 +183,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <systemPropertyVariables>
+                        <pact.verifier.publishResults>true</pact.verifier.publishResults>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

@@ -1,9 +1,11 @@
 package com.example.recommendation_service.friend_service.domains.events;
 
+import java.io.InputStream;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
-public class DomainEvent<T> {
+public class DomainEvent<T> implements Serializable {
 
     private T subject;
     private FriendEventType eventType;
@@ -36,4 +38,11 @@ public class DomainEvent<T> {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
+
+    @Override
+    public String toString() {
+        return "DomainEvent {subject=" + subject + ", eventType=" + eventType + ", createdDate=" + createdDate
+                + ", createdBy=" + createdBy + "}";
+    }
+    
 }

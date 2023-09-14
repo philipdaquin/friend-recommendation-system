@@ -1,6 +1,7 @@
 package com.example.recommendation_service.repository;
 
 import java.time.Instant;
+import java.util.Date;
 
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -25,7 +26,7 @@ public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
         WHERE userA.userId={0} AND userB.userId={1}    
         CREATE (userA)-[:FRIEND { createdDate: {2}, lastModifiedDate: {3}}]->(userB)
     """)
-    void addFriend(Long userId, Long friendId, Instant createdDate, Instant lastModifiedDate);
+    void addFriend(Long userId, Long friendId, Date createdDate, Date lastModifiedDate);
     
     @Query("""
         MATCH (userA: User)-[relation:FRIEND]->(userB: User)

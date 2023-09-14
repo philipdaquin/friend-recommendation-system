@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import com.example.recommendation_service.friend_service.domains.Friend;
@@ -26,13 +27,12 @@ public class FriendConsumer {
 
 
     @KafkaListener(topics = topic, groupId = "${spring.kafka.consumer.group-id}")
-    public void consume(ConsumerRecord<String, DomainEvent<Friend>> event, Acknowledgment ack) {
-
+    public void consume(
+        // ConsumerRecord<String, DomainEvent<Friend>> event, Acknowledgment ack
+        @Payload DomainEvent<Friend> event
+        ) {
         log.info("Friend Consumer is working");
-
-        service.apply(event.value());
-
-        ack.acknowledge();
-        
+        service.apply(event);
+        // ack.acknowledge();
     }
 }
