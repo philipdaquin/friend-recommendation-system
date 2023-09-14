@@ -72,13 +72,13 @@ public class FriendListenerContractTest {
                 .integerType("friendId", 23)
                 .date("createdDate", "yyyy-MM-dd")
                 .stringType("createdBy", "test-user")
-                .stringType("lastModifiedBy", "test-user")
+                .stringType("lastModifiedBy", "test-friend")
                 .date("lastModifiedDate", "yyyy-MM-dd")
                 .closeObject()
             .asBody()
             .stringValue("eventType", "FRIEND_ADDED")
             .date("createdDate", "yyyy-MM-dd")
-            .stringValue("createdBy", "test-user");
+            .stringValue("createdBy", "test-friend");
 
         return builder
             .expectsToReceive("friendProducerKafka")

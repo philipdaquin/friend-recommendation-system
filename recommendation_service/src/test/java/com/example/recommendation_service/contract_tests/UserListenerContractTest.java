@@ -8,6 +8,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -63,19 +67,19 @@ public class UserListenerContractTest {
         PactDslJsonBody jsonBody = new PactDslJsonBody();
 
         jsonBody.object("subject")
-                .integerType("id", 1)
-                .integerType("userId", 123)
+                .integerType("id", 1L)
+                .integerType("userId", 123L)
                 .stringType("firstName", "John")
                 .stringType("lastName", "Doe")
                 .stringType("email", "john.doe@example.com")
-                .date("createdDate", "yyyy-MM-dd")
+                .date("createdDate",  "2000-01-31")
                 .stringType("createdBy", "test-user")
                 .stringType("lastModifiedBy", "test-user")
-                .date("lastModifiedDate", "yyyy-MM-dd")
+                .date("lastModifiedDate", "2000-01-31")
                 .closeObject()
             .asBody()
             .stringValue("eventType", "USER_ADDED")
-            .date("createdDate", "yyyy-MM-dd")
+            .date("createdDate", "2000-01-31")
             .stringValue("createdBy", "test-user");
 
         return builder
@@ -89,21 +93,29 @@ public class UserListenerContractTest {
     @PactTestFor(pactMethod = "validUserMessageFromKafkaProvider", providerType = ProviderType.ASYNCH)
     void shouldReceiveValidDomainEventMessage(List<Message> messages) {
         DomainEvent<User> event = new DomainEvent<>();
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dateString = "2000-01-31";
+        
+        // Step 1: Parse the date string into a LocalDate
+        LocalDate localDate = LocalDate.parse(dateString);
+        
+        // Step 2: Convert the LocalDate to a Date
+        Date newDate = Date.from(localDate.atTime(LocalTime.of(8, 0)).atZone(ZoneId.systemDefault()).toInstant());
         User user = new User()
             .id(1L)
             .email("john.doe@example.com")
             .userId(123L)
             .firstName("John")
             .lastName("Doe")
-            .createdDate(Date.from(Instant.now()))
+            .createdDate(newDate)
             .createdBy("test-user")
             .lastModifiedBy("test-user")
-            .lastModifiedDate(Date.from(Instant.now()));
+            .lastModifiedDate(newDate);
 
         event.setSubject(user);
         event.setEventType(UserEventType.USER_ADDED);
         event.setCreatedBy("test-user");
-        event.setCreatedDate(Date.from(Instant.now()));
+        event.setCreatedDate(newDate);
 
         // when(service.apply(any(DomainEvent.class))).thenReturn(Mono.just(user));
         

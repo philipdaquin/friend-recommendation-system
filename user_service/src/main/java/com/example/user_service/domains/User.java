@@ -31,6 +31,9 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // @Column(value = "user_id")
+    // private Long userId;
+
     @Size(max = 50)
     @Column(value = "first_name")
     private String firstName;
@@ -83,6 +86,14 @@ public class User implements Serializable {
         this.createdBy = createdBy;
     }
 
+    // public Long getUserId() {
+    //     return userId;
+    // }
+
+    // public void setUserId(Long userId) {
+    //     this.userId = userId;
+    // }
+
     public String getLastModifiedBy() {
         return lastModifiedBy;
     }
@@ -118,6 +129,11 @@ public class User implements Serializable {
         this.email = email;
         return this;
     }
+
+    // public User userId(Long userId) { 
+    //     this.userId = userId;
+    //     return this;
+    // }
     
     public User createdDate(Date date) { 
         this.createdDate = date;
