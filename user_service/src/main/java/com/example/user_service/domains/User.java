@@ -101,6 +101,44 @@ public class User implements Serializable {
 
     public User() {}
 
+
+    public User id(Long id) { 
+        this.id = id;
+        return this;
+    }
+    public User firstName(String firstName) { 
+        this.firstName = firstName;
+        return this;
+    }
+    public User lastName(String lastName) { 
+        this.lastName = lastName;
+        return this;
+    }
+    public User email(String email) { 
+        this.email = email;
+        return this;
+    }
+    
+    public User createdDate(Date date) { 
+        this.createdDate = date;
+        return this;
+    }
+    public User createdBy(String createdBy) { 
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public User lastModifiedBy(String modifiedBy) { 
+        this.lastModifiedBy = modifiedBy;
+        return this;
+    }
+    public User lastModifiedDate(Date date) { 
+        this.lastModifiedDate = date;
+        return this;
+    }
+
+
+
     public Long getId() {
         return id;
     }

@@ -1,12 +1,13 @@
 package com.example.recommendation_service.user_service.domains.events;
 
 import java.time.Instant;
+import java.util.Date;
 
 public class DomainEvent<T> {
 
     private T subject;
     private UserEventType eventType;
-    private Instant createdDate = Instant.now();
+    private Date createdDate = Date.from(Instant.now());
     private String createdBy;
 
     public DomainEvent(){}
@@ -23,10 +24,10 @@ public class DomainEvent<T> {
     public void setEventType(UserEventType eventType) {
         this.eventType = eventType;
     }
-    public Instant getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
     public String getCreatedBy() {

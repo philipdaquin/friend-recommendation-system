@@ -1,17 +1,14 @@
 package com.example.friend_service.domains;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -63,6 +60,41 @@ public class Friend implements Serializable {
     public Friend(Long userId, Long friendId) {
         this.userId = userId;
         this.friendId = friendId;
+    }
+    public Friend(Long id, Long userId, Long friendId) {
+        this.userId = userId;
+        this.friendId = friendId;
+        this.id = id.toString();
+    }
+
+        
+    public Friend id(Long id) { 
+        this.id = id.toString();
+        return this;
+    }
+    public Friend userId(Long userId) { 
+        this.userId = userId;
+        return this;
+    }
+    public Friend friendId(Long friendId) { 
+        this.friendId = friendId;
+        return this;
+    }
+    public Friend createdDate(Date createdDate) { 
+        this.createdDate = createdDate;
+        return this;
+    }
+    public Friend createdBy(String createdBy) { 
+        this.createdBy = createdBy;
+        return this;
+    }
+    public Friend lastModifiedBy(String lastModifiedBy) { 
+        this.lastModifiedBy = lastModifiedBy;
+        return this;
+    }
+    public Friend lastModifiedDate(Date lastModifiedDate) { 
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
     }
 
     public Date getCreatedDate() {

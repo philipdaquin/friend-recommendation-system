@@ -1,6 +1,7 @@
 package com.example.friend_service.external;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class User {
 
@@ -11,10 +12,10 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private Timestamp createdDate;
+    private Date createdDate;
     private String createdBy;
     private String lastModifiedBy;
-    private Timestamp lastModifiedDate;
+    private Date lastModifiedDate;
 
 
     public User() {}
@@ -65,11 +66,11 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public Timestamp getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Timestamp createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -89,11 +90,11 @@ public class User {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Timestamp getLastModifiedDate() {
+    public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+    public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }
