@@ -56,7 +56,7 @@ public class FriendServiceTest {
     @Test
     public void testSaveFriendReturnsSavedItemWithCallback() { 
         Friend friend = new Friend(1L, 2L);
-        friend.setId(String.valueOf(1L));
+        friend.setId("1");
 
         User user = new User();
         user.setId(2L);
@@ -67,7 +67,7 @@ public class FriendServiceTest {
         
         when(repository.save(friend)).thenReturn(Mono.just(friend));
 
-        when(repository.findById(friend.getId())).thenReturn(Mono.just(friend));
+        when(repository.findById(friend.getId().toString())).thenReturn(Mono.just(friend));
         
         // Define a callback to be executed
         Consumer<Friend> callback = mock(Consumer.class);
@@ -163,12 +163,12 @@ public class FriendServiceTest {
     public void partialUpdate_givenNewObjects_returnsFriendEntity() {
         Consumer<Friend> callback = mock(Consumer.class);
         Friend friend = new Friend(1L, 2L);
-        friend.setId(String.valueOf(1L));
+        friend.setId("1");
         User user = new User();
             user.setId(2L);
             user.setUserId(2L);
 
-        when(repository.findById(friend.getId())).thenReturn(Mono.just(friend));
+        when(repository.findById(friend.getId().toString())).thenReturn(Mono.just(friend));
 
         when(repository.save(friend)).thenReturn(Mono.just(friend));
 

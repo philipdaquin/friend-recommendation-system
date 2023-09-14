@@ -58,7 +58,7 @@ public class FriendService {
             .save(friend)
             .map(Friend::getId)
             .flatMap(id -> friendRepository
-                .findById(id)
+                .findById(id.toString())
                 .single()
                 .delayUntil(item -> Mono.fromRunnable(() -> callback.accept(item))));
     } 
@@ -109,7 +109,7 @@ public class FriendService {
     public Mono<Friend> partialUpdate(Friend friend, Consumer<Friend> callback) { 
         Assert.notNull(friend.getId(), "Friend Id cannot be null");
 
-        return friendRepository.findById(friend.getId())
+        return friendRepository.findById(friend.getId().toString())
             .flatMap(current -> { 
 
                 if (friend.getUserId() != null) current.setUserId(friend.getUserId());

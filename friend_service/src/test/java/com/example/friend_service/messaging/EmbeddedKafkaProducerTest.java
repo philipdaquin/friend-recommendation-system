@@ -33,7 +33,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.junit.jupiter.Container;
 
+import com.example.friend_service.KafkaContainers;
 import com.example.friend_service.config.KafkaProducerConfig;
 import com.example.friend_service.domains.Friend;
 import com.example.friend_service.domains.events.DomainEvent;
@@ -53,7 +55,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest(properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class EmbeddedKafkaProducerTest {
+public class EmbeddedKafkaProducerTest  {
+
+    // @Container
+    // private static KafkaCont kafkaContainer = 
+
 
     @Autowired
     private ObjectMapper mapper;
@@ -116,7 +122,6 @@ public class EmbeddedKafkaProducerTest {
     private Map<String, Object> getConsumerProperties() {
         return Map.of(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString(),
-                ConsumerConfig.GROUP_ID_CONFIG, "consumer",
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true",
                 ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "10",
                 ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "60000",

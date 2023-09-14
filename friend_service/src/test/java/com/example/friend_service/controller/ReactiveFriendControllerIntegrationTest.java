@@ -69,10 +69,10 @@ public class ReactiveFriendControllerIntegrationTest extends WireMockService {
 
     @Test
     public void shouldGetFriendEntityGivenFriendIDReturnsFriendEntity() throws Exception { 
-        Long id = 1L;
+        String id = "1";
 
         Friend friend = new Friend(1L, 2L);
-        friend.setId(String.valueOf(id));
+        friend.setId(id);
 
         when(service.getOne(anyString())).thenReturn(Mono.just(friend));
 
@@ -106,10 +106,11 @@ public class ReactiveFriendControllerIntegrationTest extends WireMockService {
 
     @Test
     public void shouldAddFriendReturnsFriendEntity() throws Exception {
-        Long id = 1L, userId = 2L, friendId = 3L;
-        
+        Long userId = 2L, friendId = 3L;
+        String id = "1";
+
         Friend friend = new Friend(userId, friendId);
-        friend.setId(String.valueOf(id));
+        friend.setId(id);
 
         when(repository.getFriend(userId, friendId)).thenReturn(Mono.just(friend));
         when(producer.addFriendCallback(friend)).thenReturn(Mono.just(friend));
@@ -163,10 +164,13 @@ public class ReactiveFriendControllerIntegrationTest extends WireMockService {
     
     @Test
     public void shouldRemoveFriendFromUserReturnsRemovedEntity() throws Exception {
-        Long id = 1L, userId = 2L, friendId = 3L;
-        
+        Long userId = 2L, friendId = 3L;
+
+        String id = "1";
+
+
         Friend friend = new Friend(userId, friendId);
-        friend.setId(String.valueOf(id));
+        friend.setId(id);
 
         when(repository.getFriend(userId, friendId)).thenReturn(Mono.just(friend));
         when(producer.removeFriendCallback(friend)).thenReturn(Mono.just(friend));
