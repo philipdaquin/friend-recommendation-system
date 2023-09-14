@@ -4,6 +4,9 @@ spring:
     active: development
   application:
     name: discovery-service
+  # config:
+  #   import: optional:configserver:${CONFIG_SERVER_URL}:http://localhost:9296
+
 server:
   port: 8761
 logging:
