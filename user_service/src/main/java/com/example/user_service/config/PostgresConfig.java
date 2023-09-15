@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 
 
 @Configuration
-@EnableR2dbcRepositories(basePackages = "com.example.user_service.UserRepository")
+@EnableR2dbcRepositories(basePackages = "com.example.user_service.repository")
 @EnableR2dbcAuditing
 @EnableTransactionManagement
 @Profile({"dev, prod, test"})

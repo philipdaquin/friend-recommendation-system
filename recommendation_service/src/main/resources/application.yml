@@ -1,0 +1,22 @@
+
+
+spring:
+  application:
+    name: recommendation-name
+  profiles:
+    default: dev
+
+server:
+  port: 7002
+  error:
+    include-message: always
+    include-binding-errors: always
+    
+
+logging:
+  level:
+    org.springframework.transaction: TRACE
+    root: INFO
+    kafka.*: WARN
+    org.springframework.*: INFO
+    org.apache.neo4j.*: WARN

@@ -47,12 +47,16 @@ public class User {
     @UniqueElements
     private String email;
 
+    @CreatedDate
     private Date createdDate = Date.from(Instant.now());
     
+    @CreatedBy
     private String createdBy;
 
+    @LastModifiedBy
     private String lastModifiedBy;
 
+    @LastModifiedDate
     private Date lastModifiedDate;
 
     public User() {

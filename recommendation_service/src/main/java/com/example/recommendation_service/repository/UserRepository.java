@@ -8,42 +8,116 @@ import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Repository;
 
+import com.example.recommendation_service.friend_service.domains.Friend;
 import com.example.recommendation_service.user_service.domains.User;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-@SuppressWarnings("unused")
-@Repository
+
+// @SuppressWarnings("unused")
+// @Repository
 public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
 
-    // Match the user by the given UserID
-    @Query("MATCH (user:USER {userId: {0}})")
-    User findUserByUserId(Long userId);
 
 
-    // Create a relationship between userA and userB
+
+
+    /**
+     * 
+     * 
+     * 
+     * @param userId
+     * @param friendId
+     * @return
+     */
     @Query("""
-        MATCH (userA: User), (userB: User)
-        WHERE userA.userId={0} AND userB.userId={1}    
-        CREATE (userA)-[:FRIEND { createdDate: {2}, lastModifiedDate: {3}}]->(userB)
-    """)
-    void addFriend(Long userId, Long friendId, Date createdDate, Date lastModifiedDate);
+        MATCH (userA:User {userId: $userId})
+        OPTIONAL MATCH (userA)-[:FRIEND]->(userB:User {userId: $friendId})
+        RETURN COALESCE(EXISTS((userA)-[:FRIEND]->(userB)), false) AS exists;
+        """)
+    Mono<Boolean> findRelationExist(Long userId, Long friendId);
+
+
+
+    @Query("""
+            MATCH (userA:User {userId: $userId})
+            RETURN COUNT { (userA)-[:FRIEND]->(:User) } as count
+            """)
+    Mono<Integer> findAllByUserId(Long userId);
+
+    /**
+     * 
+     * // Match the user by the given UserID
+     * 
+     * 
+     * @param userId
+     * @return
+     */
+    @Query("""
+            MATCH (user: User)
+            WHERE user.userId = $userId
+            RETURN user
+        """)
+    Mono<User> findUserByUserId(Long userId);
+
+
+    /**
+     * 
+     * /**
+     *  Create a relationship between userA and userB
+
     
+        CREATE (userA)-[r: FRIEND { 
+            createdDate : $createdDate, 
+            lastModifiedDate : $lastModifiedDate 
+        }]->(userB)
+     
+     * 
+     * 
+     * @param userId
+     * @param friendId
+     * @param createdDate
+     * @param lastModifiedDate
+     * @return
+     */  
     @Query("""
-        MATCH (userA: User)-[relation:FRIEND]->(userB: User)
-        WHERE userA.userId={0} AND userB.userId={1}
-        DELETE relation
+        MATCH (userA: User {userId: $userId})
+        CREATE (userA)-[:FRIEND]->(userB: User {userId: $friendId}) 
+        RETURN EXISTS ((userA)-[:FRIEND]->(userB)) AS exists
+        LIMIT 1
+
     """)
-    void removeFriend(Long userId, Long friendId);
+    Mono<Boolean> addFriend(Long userId, Long friendId, Date createdDate, Date lastModifiedDate);
+    
+    /**
+     * 
+     * @param userId
+     * @param friendId
+     * @return
+     */
+    @Query("""
+        MATCH (userA:User {userId: $userId})-[relation:FRIEND]->(userB:User {userId: $friendId})
+        DELETE relation
+        RETURN EXISTS ((userA)-[:FRIEND]->(userB)) AS exists
+        LIMIT 1
+    """)
+    Mono<Boolean> removeFriend(Long userId, Long friendId);
 
     // Find the FRIEND that both userA and userB shares
+    /**
+     * DISTINCT
+     * 
+     * 
+     * @param userId
+     * @param friendId
+     * @return
+     */
     @Query("""
-        MATCH (userA: USER), (userB: User)
-        WHERE userA.userId={0} AND userB.userId={1}                
-        MATCH (userA)-[:FRIEND]-(mutuals: User)-[:FRIEND]-(userB)
+        MATCH (userA:User {userId: $userId})-[:FRIEND]-(mutuals:User)-[:FRIEND]-(userB:User {userId: $friendId})
         RETURN DISTINCT mutuals
-
     """)
-    Streamable<User> findMutualFriends(Long userId, Long friendId);
+    Flux<User> findMutualFriends(Long userId, Long friendId);
 
     /**
      * Find all the Friends of your Friends
@@ -61,13 +135,12 @@ public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
      */
     @Query("""
         MATCH (userA: User)-[:FRIEND]-(friends), (nonFriends: User)-[:FRIEND]-(friends)
-        WHERE userA.userId={0}
-
-        WHERE NOT (userA)-[:FRIEND]-(nonFriends)
+        WHERE userA.userId = $userId 
+        AND NOT (userA)-[:FRIEND]-(nonFriends)
         WITH nonFriends, count(nonFriends) as mutualFriends
 
         RETURN nonFriends as user, mutualFriends as weight
         ORDER BY mutualFriends DESC
     """)    
-    <T> Streamable<T> recommendFriends(Long userId, Class<T> clazz);
+    <T> Flux<T> recommendFriends(Long userId, Class<T> clazz);
 }

@@ -9,8 +9,7 @@ public class R2DBCTestContainers {
 
 	public static PostgreSQLContainer getDefaultContainer() {
 		return new PostgreSQLContainer<>(DockerImageName.parse(IMAGE_NAME))
-            .withCopyFileToContainer(MountableFile.forClasspathResource("init.sql"), "/docker-entrypoint-initdb.d/init.sql")    
+            .withCopyFileToContainer(MountableFile.forClasspathResource("schema.sql"), "/docker-entrypoint-initdb.d/init.sql")    
             .withReuse(true);
 	}
-
 }

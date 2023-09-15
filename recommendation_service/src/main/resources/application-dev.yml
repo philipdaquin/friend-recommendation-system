@@ -1,0 +1,21 @@
+
+
+spring:
+  config:
+    activate:
+      on-profile: development
+  
+  neo4j:
+    uri: neo4j://localhost:7687/recommendations
+    authentication:  
+      username: neo4j
+      password: password
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka

@@ -53,7 +53,7 @@ public class UserConsumerService {
             case USER_UPDATED: 
                 log.info("Updating User Object");
                 User newUser = event.getSubject();
-                User curr = repository.findUserByUserId(newUser.getId());
+                User curr = repository.findUserByUserId(newUser.getId()).block();
 
                 if (curr != null) { 
                     if (newUser.getFirstName() != null) curr.setFirstName(newUser.getFirstName());

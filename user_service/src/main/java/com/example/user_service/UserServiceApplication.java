@@ -8,7 +8,7 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 
 // @EnableR2dbcRepositories
 // @EnableWebFlux
-@SpringBootApplication(scanBasePackages = "com.example.user_service.*")
+@SpringBootApplication
 public class UserServiceApplication {
 
 	public static void main(String[] args) {

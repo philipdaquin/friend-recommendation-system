@@ -43,3 +43,12 @@ WITH nonFriends, count(nonFriends) as mutualFriends
 
 RETURN nonFriends, mutualFriends
 ORDER BY mutualFriends DESC
+
+
+
+// Check if the relationship exists between the user and friend 
+
+
+MATCH (userA: User), (userB: User) 
+WHERE userA.userId = $userId AND userB.userId = $userId
+RETURN COUNT { (userA)-[:FRIEND]->(userB) } > 1 

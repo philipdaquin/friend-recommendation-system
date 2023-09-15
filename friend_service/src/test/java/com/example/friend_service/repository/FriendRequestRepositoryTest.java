@@ -20,7 +20,7 @@ import reactor.core.publisher.Flux;
 
 @RunWith(SpringRunner.class)
 @DataMongoTest
-public class FriendRequestRepostioryTest {
+public class FriendRequestRepositoryTest {
     
     @Autowired
     FriendRequestRepository repository;
