@@ -254,7 +254,7 @@ public class UserRepositoryUnitTest {
         log.info("A FRIENDS  " + userAFriends + "    " + userCFriends );
 
         // Find Mutual Friends between A and C, should return B
-        List<User> mutuals = repository.findMutualFriends(userA.getUserId(), userC.getUserId()).collectList().block();
+        List<User> mutuals = repository.findMutualFriends(userC.getUserId(), userA.getUserId()).collectList().block();
         assertNotNull(mutuals);
         assertEquals(mutuals.size(), 1);
     }

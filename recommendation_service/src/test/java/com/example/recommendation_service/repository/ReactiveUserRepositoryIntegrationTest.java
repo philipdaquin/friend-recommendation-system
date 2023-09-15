@@ -1,5 +1,6 @@
 package com.example.recommendation_service.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -23,4 +24,8 @@ public class ReactiveUserRepositoryIntegrationTest {
         registry.add("spring.neo4j.authentication.username", () -> "neo4j");
         registry.add("spring.neo4j.authentication.password", neo4jContainer::getAdminPassword);
     }
+
+    @Autowired
+    UserRepository repository;
+
 }

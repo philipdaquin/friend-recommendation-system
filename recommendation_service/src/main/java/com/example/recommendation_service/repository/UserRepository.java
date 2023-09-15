@@ -18,11 +18,6 @@ import reactor.core.publisher.Mono;
 // @SuppressWarnings("unused")
 // @Repository
 public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
-
-
-
-
-
     /**
      * 
      * 
@@ -58,6 +53,7 @@ public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
             MATCH (user: User)
             WHERE user.userId = $userId
             RETURN user
+            LIMIT 1
         """)
     Mono<User> findUserByUserId(Long userId);
 
