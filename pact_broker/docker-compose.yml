@@ -1,24 +1,23 @@
 version: "3"
 services:
-  zookeeper:
-    image: 'bitnami/zookeeper:latest'
-    ports:
-      - '2181:2181'
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-
-  kafka:
-    image: 'bitnami/kafka:latest'
-    ports:
-      - '9092:9092'
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    depends_on:
-      - zookeeper
+  # zookeeper:
+  #   image: 'bitnami/zookeeper:latest'
+  #   ports:
+  #     - '2181:2181'
+  #   environment:
+  #     - ALLOW_ANONYMOUS_LOGIN=yes
+  # kafka:
+  #   image: 'bitnami/kafka:latest'
+  #   ports:
+  #     - '9092:9092'
+  #   environment:
+  #     - KAFKA_BROKER_ID=1
+  #     - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+  #     - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+  #     - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+  #     - ALLOW_PLAINTEXT_LISTENER=yes
+  #   depends_on:
+  #     - zookeeper
 
   postgresql:
     image: 'docker.io/bitnami/postgresql:14'
@@ -26,8 +25,6 @@ services:
       test: psql postgres --command "select 1" -U postgres
     ports:
       - '5432:5432'
-    volumes:
-      - 'postgresql_data:/bitnami/postgresql'
     environment:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=password
@@ -42,6 +39,39 @@ services:
     environment:
      - PACT_BROKER_DATABASE_URL="postgresql://postgres:password@postgresql/postgres"
     restart: on-failure
+
+  #
+  #   Pack Broker with Ngnix   
+  #
+  #
+  pact-broker-with-ngnix:
+    image: nginx:alpine
+    depends_on:
+      - pact-broker
+    volumes:
+      - ./ssl/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - "8443:443"
+      - "9292:9292"
+
+
+  #
+  #   Pact CLI 
+  #
+  #
+  can-i-deploy:
+    image: pactfoundation/pact-cli
+    depends_on:
+      - pact-broker-with-ngnix
+    environment:
+      PACT_BROKER_BASE_URL: https://pact-broker-with-ngnix:443
+      SSL_CERT_FILE: /tmp/self-signed-cert.pem
+    volumes:
+      - ${PWD}/ssl/self-signed-cert.pem:/tmp/self-signed-cert.pem
+    command: broker can-i-deploy --pacticipant "Example App" --latest
+
+
 
 volumes:
   postgresql_data:
