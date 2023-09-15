@@ -1,0 +1,50 @@
+pipeline {
+   agent any
+
+   stages {
+        stage('checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/master']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [
+                        [
+                            url: 'https://github.com/philipdaquin/friend-recommendation-system'
+                        ]
+                    ]
+                ])
+            }
+        }
+
+        stage('Run Consumer Friend Contract Test') {
+            steps {
+                sh 'mvn clean test -Dtest=FriendListenerContractTest -pl recommendation_service'
+            }
+        }
+        stage('Run Consumer User Contract Test') {
+            steps {
+                sh 'mvn clean test -Dtest=UserListenerContractTest -pl recommendation_service'
+            }
+        }
+
+        stage('Publish Pact to Broker') {
+            steps {
+                sh 'cd recommendation_service && mvn pact:publish'
+            }
+        }
+
+        stage('Deploy Friend') {
+            steps {
+                sh 'pact-broker can-i-deploy --pacticipant=friendConsumerKafka --broker-base-url=http://localhost:9292 --latest'
+            }
+        }
+        stage('Deploy User') {
+            steps {
+                sh 'pact-broker can-i-deploy --pacticipant=recommendationConsumerKafka --broker-base-url=http://localhost:9292 --latest'
+            }
+        }
+    }
+}

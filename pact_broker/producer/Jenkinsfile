@@ -1,0 +1,22 @@
+pipeline {
+   agent any
+
+    stages {
+        stage('checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url:'https://github.com/philipdaquin/friend-recommendation-system']]])
+            }
+        }
+
+        stage('Run Provider Verify Test') {
+            steps {
+                sh 'mvn clean -Dtest=userProducerKafka test -pl date-provider'
+            }
+        }
+        stage('Run Provider Verify Test') {
+            steps {
+                sh 'mvn clean -Dtest=friendProducerKafka test -pl date-provider'
+            }
+        }
+    }
+}
