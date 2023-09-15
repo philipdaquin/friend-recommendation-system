@@ -39,7 +39,7 @@ public class UserController {
         @NotNull(message = "UserId cannot be null") @PathVariable final Long id, 
         @NotNull(message = "FriendId empty be empty") @RequestParam(required = true, value = "friendId") final Long friendId
     ) {
-        return Flux.fromIterable(repository.findMutualFriends(id, friendId));
+        return repository.findMutualFriends(id, friendId);
     }
 
     /**
@@ -53,6 +53,6 @@ public class UserController {
     public Flux<RankedUser> recommendFriends(
         @NotNull(message = "UserId cannot be null") @PathVariable final Long id
     ) {
-        return Flux.fromIterable(repository.recommendFriends(id, RankedUser.class));
+        return repository.recommendFriends(id, RankedUser.class);
     }
 }
