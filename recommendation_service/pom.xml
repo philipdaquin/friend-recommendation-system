@@ -219,12 +219,21 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>${docker.user}/${project.name}</repository>
+                    <repository>philipasd/${project.name}</repository>
                     <tag>${project.version}</tag>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                     <buildArgs>
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
                 </configuration>
+				<dependencies>
+					<!-- To make this work on JDK 9+ -->
+					<dependency>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation-api</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
             </plugin>
 		</plugins>
 		<!-- Add this directly after the <build>-opening tag -->
