@@ -1,0 +1,75 @@
+pipeline { 
+    agent any 
+
+    environment { 
+        dockerImageName = "philipasd/recommendation_service"
+    }
+    stages { 
+
+        stage('Checkout') { 
+            steps { 
+                echo "Hello World!"
+            }
+        }
+
+        stage('Compile Code') {
+            steps {
+                sh 'cd recommendation_service && ./`mvnw clean compile'
+            }
+        } 
+        stage('Unit Test') {
+            steps {
+                sh 'cd recommendation_service && ./mvnw test'
+            }
+        } 
+        stage('Integration Test') { 
+            steps { 
+                sh 'cd recommendation_service && ./mvnw verify'
+            }
+        } 
+        stage('Package Artifact Jar') {
+            steps { 
+                sh 'cd recommendation_service && ./mvnw package'
+            }
+        } 
+        stage('Build Docker Image') {
+            // environment {
+            //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+            // }
+            // steps {
+            //     sh "docker build -t product-service:${COMMIT_ID} -f product-service/Dockerfile product-service/"
+            // }
+            steps {
+                sh "docker build -t ${dockerImageName} -f recommendation_service/Dockerfile recommendation_service/"
+            }
+        } 
+        stage('Push Image to DockerHub') {
+            steps { 
+                script { 
+                    docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
+                        dockerImage.push()
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        } 
+        stage('Update Kubertenes Deployment Instance') {
+            steps { 
+                sh 'kubectl apply -f deployments/
+' 
+            }
+        } 
+    }
+    post { 
+        success { 
+            echo "Build Success"
+            echo "Successfully built ${env.JOB_NAME} - ${env.BUILD_ID} on ${env.BUILD_URL}" 
+        }
+        failure { 
+            echo "Build failed - ${env.JOB_NAME} - ${env.BUILD_ID} on ${env.BUILD_URL}"
+        }
+        aborted { 
+            echo "${env.JOB_NAME} Build - ${env.BUILD_ID} Aborted!"
+        }
+    }
+}

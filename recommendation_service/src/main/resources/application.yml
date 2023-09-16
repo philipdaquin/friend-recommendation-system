@@ -4,7 +4,7 @@ spring:
   application:
     name: recommendation-name
   profiles:
-    default: development
+    default: dev
 
 server:
   port: 7002

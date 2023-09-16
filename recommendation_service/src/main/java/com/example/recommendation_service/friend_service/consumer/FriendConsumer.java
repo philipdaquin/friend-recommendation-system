@@ -25,7 +25,6 @@ public class FriendConsumer {
         this.service = service;
     } 
 
-
     @KafkaListener(topics = topic, groupId = "${spring.kafka.consumer.group-id}")
     public void consume(
         // ConsumerRecord<String, DomainEvent<Friend>> event, Acknowledgment ack

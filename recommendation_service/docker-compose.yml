@@ -1,0 +1,13 @@
+version: '1.0'
+
+services:
+    # Neo4j
+  neo4j:
+    environment:
+      NEO4J_AUTH: none
+    image: neo4j:3.5.0
+    ports:
+      - "7474:7474/tcp"
+      - "7687:7687/tcp"
+    deploy:
+      replicas: 1

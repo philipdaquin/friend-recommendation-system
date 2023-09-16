@@ -4,6 +4,7 @@ import org.neo4j.driver.Driver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.neo4j.config.EnableNeo4jAuditing;
 import org.springframework.data.neo4j.config.EnableReactiveNeo4jAuditing;
 import org.springframework.data.neo4j.core.ReactiveDatabaseSelectionProvider;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableReactiveNeo4jAuditing
 @EnableTransactionManagement
+@ComponentScan
 public class RecommendationServiceApplication {
 
 	public static void main(String[] args) {
