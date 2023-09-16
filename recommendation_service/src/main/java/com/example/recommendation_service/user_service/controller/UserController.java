@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.recommendation_service.repository.UserRepository;
+import com.example.recommendation_service.repository.Neo4JUserRepository;
 import com.example.recommendation_service.user_service.domains.User;
 import com.example.recommendation_service.user_service.ranked.RankedUser;
 
@@ -20,9 +20,9 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/api/v1")
 public class UserController {
 
-    private final UserRepository repository;
+    private final Neo4JUserRepository repository;
 
-    public UserController(UserRepository repository) { 
+    public UserController(Neo4JUserRepository repository) { 
         this.repository = repository;
     }
     

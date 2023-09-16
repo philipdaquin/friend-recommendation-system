@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.recommendation_service.friend_service.service.FriendConsumerService;
-import com.example.recommendation_service.repository.UserRepository;
+import com.example.recommendation_service.repository.Neo4JUserRepository;
 import com.example.recommendation_service.user_service.domains.User;
 import com.example.recommendation_service.user_service.domains.events.DomainEvent;
 
@@ -23,9 +23,9 @@ public class UserConsumerService {
     
     private static final Logger log = LoggerFactory.getLogger(FriendConsumerService.class);
 
-    private final UserRepository repository;
+    private final Neo4JUserRepository repository;
 
-    public UserConsumerService(UserRepository repository) { 
+    public UserConsumerService(Neo4JUserRepository repository) { 
         this.repository = repository;
     }
 

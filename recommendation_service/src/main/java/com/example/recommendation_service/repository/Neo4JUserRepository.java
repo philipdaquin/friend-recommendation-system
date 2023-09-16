@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 
 // @SuppressWarnings("unused")
 // @Repository
-public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
+public interface Neo4JUserRepository extends ReactiveNeo4jRepository<User, Long> {
     /**
      * 
      * 
@@ -29,7 +29,7 @@ public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
     @Query("""
         MATCH (userA:User {userId: $userId})
         OPTIONAL MATCH (userA)-[:FRIEND]->(userB:User {userId: $friendId})
-        RETURN COALESCE(EXISTS((userA)-[:FRIEND]->(userB)), false) AS exists;
+        RETURN COALESCE(COUNT((userA)-[:FRIEND]->(userB)) > 0, false) AS exists;
         """)
     Mono<Boolean> findRelationExist(Long userId, Long friendId);
 
@@ -38,6 +38,7 @@ public interface UserRepository extends ReactiveNeo4jRepository<User, Long> {
     @Query("""
             MATCH (userA:User {userId: $userId})
             RETURN COUNT { (userA)-[:FRIEND]->(:User) } as count
+            LIMIT 1
             """)
     Mono<Integer> findAllByUserId(Long userId);
 

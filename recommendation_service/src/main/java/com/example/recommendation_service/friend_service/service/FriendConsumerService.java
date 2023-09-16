@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.example.recommendation_service.friend_service.domains.Friend;
 import com.example.recommendation_service.friend_service.domains.events.DomainEvent;
-import com.example.recommendation_service.repository.UserRepository;
+import com.example.recommendation_service.repository.Neo4JUserRepository;
 
 import reactor.core.publisher.Mono;
 
@@ -22,9 +22,9 @@ public class FriendConsumerService {
     
     private static final Logger log = LoggerFactory.getLogger(FriendConsumerService.class);
 
-    private final UserRepository repository;
+    private final Neo4JUserRepository repository;
 
-    public FriendConsumerService(UserRepository repository) { 
+    public FriendConsumerService(Neo4JUserRepository repository) { 
         this.repository = repository;
     }
 

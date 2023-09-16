@@ -26,6 +26,6 @@ public class ReactiveUserRepositoryIntegrationTest {
     }
 
     @Autowired
-    UserRepository repository;
+    Neo4JUserRepository repository;
 
 }

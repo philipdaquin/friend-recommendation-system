@@ -14,12 +14,17 @@
 	<name>recommendation_service</name>
 	<description>Demo project for Spring Boot</description>
 	<packaging>jar</packaging>
+
+
+
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
-		<neo4j.version>5.9.0</neo4j.version>
-
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 	</properties>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -59,12 +64,6 @@
 
 		
 		<dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -85,22 +84,10 @@
 			<artifactId>spring-cloud-stream-test-binder</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- Contract Test -->
-		<!-- <dependency>
-            <groupId>au.com.dius.pact.consumer</groupId>
-            <artifactId>junit5</artifactId>
-            <version>4.2.10</version>
-        </dependency>
-		<dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency> -->
 		<dependency>
             <groupId>org.neo4j.test</groupId>
             <artifactId>neo4j-harness</artifactId>
-            <version>${neo4j.version}</version>
+            <version>5.12.0</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -134,11 +121,6 @@
             <artifactId>neo4j</artifactId>
             <scope>test</scope>
         </dependency>
-		<!-- <dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency> -->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -150,7 +132,6 @@
 			<artifactId>spring-boot-testcontainers</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 
 	</dependencies>
 	<dependencyManagement>
@@ -165,50 +146,28 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<build>
+	<build>	
 		<plugins>
-			<!-- <plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.9</version>
-				<executions>
-					<execution>
-					<id>default</id>
-					<goals>
-						<goal>build</goal>
-						<goal>push</goal>
-					</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<repository>${docker.user}/${project.name}</repository>
-					<tag>${project.version}</tag>
-					<buildArgs>
-					<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
-				</configuration>
-            </plugin> -->
-
-			<plugin>
+		 	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.0</version>
 				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-junit4</artifactId>
-						<version>2.22.0</version>
-					</dependency>
-				</dependencies>
-        	</plugin>
-
+				</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			 <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+
+			<!-- Contract Testss -->
 
 			<plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
@@ -222,7 +181,7 @@
 
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M4</version>
+				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*IntegrationTest</exclude>
@@ -231,7 +190,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M4</version>
+				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<includes>
 						<include>**/*IntegrationTest</include>
@@ -246,9 +205,26 @@
 					</execution>
 				</executions>
 			</plugin>
-
-
 		</plugins>
+		<!-- Add this directly after the <build>-opening tag -->
+    <resources>
+        <resource>
+            <filtering>true</filtering>
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>**/*.properties</include>
+            </includes>
+            <excludes>
+                <exclude>**/*local.properties</exclude>
+            </excludes>
+        </resource>
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+            </includes>
+        </resource>
+    </resources>
 	</build>
-
 </project>
