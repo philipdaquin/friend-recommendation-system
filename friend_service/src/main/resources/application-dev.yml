@@ -8,6 +8,7 @@ spring:
       database: mongo
       host: localhost
       port: 27017
+      
 
   kafka:
     template:
