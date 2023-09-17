@@ -13,8 +13,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>friend_service</name>
 	<description>Demo project for Spring Boot</description>
+	<packaging>jar</packaging>
+	
 	<properties>
 		<java.version>17</java.version>
+		<spring-cloud.version>2022.0.4</spring-cloud.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -73,18 +78,6 @@
 			<artifactId>mongodb</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency> -->
-		<!-- <dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>r2dbc-postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency> -->
-
-
 		<!-- Testing  -->
 
 		<dependency>
@@ -113,13 +106,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
-		<!-- <dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>5.5.0</version>
-			<scope>test</scope>
-    	</dependency> -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -132,17 +118,6 @@
 			<scope>test</scope>
 			<version>4.9.2</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>r2dbc</artifactId>
-			<scope>test</scope>
-		</dependency> -->
-	
 		<!-- WireMock, used for mocking HTTP services for testing -->
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
@@ -151,14 +126,6 @@
 			<version>3.0.1</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
-		<groupId>org.wiremock</groupId>
-		<artifactId>wiremock</artifactId>
-		<version>3.0.4</version>
-		<scope>test</scope>
-		</dependency>
-		 -->
-	
 		<dependency>
             <groupId>au.com.dius.pact.consumer</groupId>
             <artifactId>junit5</artifactId>
@@ -184,6 +151,15 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.0</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+				</configuration>
+				</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
@@ -198,7 +174,57 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+		<plugin>
+            <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.9</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>philipasd/${project.name}</repository>
+                    <tag>${project.version}</tag>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                    <buildArgs>
+                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+				<dependencies>
+					<!-- To make this work on JDK 9+ -->
+					<dependency>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation-api</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
+            </plugin>
 		</plugins>
+			<!-- Add this directly after the <build>-opening tag -->
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+				<excludes>
+					<exclude>**/*local.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 </project>

@@ -1,13 +1,10 @@
-use users;
-
-
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     email VARCHAR(254) UNIQUE,
-    created_date TIMESTAMP ,
+    created_date DATE ,
     created_by VARCHAR(50),
     last_modified_by VARCHAR(50),
-    last_modified_date TIMESTAMP 
+    last_modified_date DATE 
 );

@@ -37,7 +37,3 @@ eureka:
     prefer-ip-address: true
 ---
 
-spring:
-  config:
-    activate:
-      on-profile: test

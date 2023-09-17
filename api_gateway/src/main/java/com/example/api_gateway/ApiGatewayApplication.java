@@ -6,7 +6,6 @@ import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuit
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.config.EnableWebFlux;
@@ -14,9 +13,7 @@ import org.springframework.cloud.client.circuitbreaker.Customizer;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 
-@EnableWebFlux
 @SpringBootApplication
-@EnableEurekaClient
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {

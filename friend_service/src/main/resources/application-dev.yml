@@ -10,6 +10,8 @@ spring:
       port: 27017
 
   kafka:
+    template:
+      default-topic: user
     bootstrap-servers: localhost:9091
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

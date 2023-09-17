@@ -14,8 +14,7 @@ import reactor.core.publisher.Mono;
 /**
  * Spring Data SQL repository for the User entity.
  */
-// @EnableR2dbcRepositories
-// @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 @Repository
 public interface UserRepository extends ReactiveCrudRepository<User, Long> {
 

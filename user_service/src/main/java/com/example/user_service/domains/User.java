@@ -52,7 +52,7 @@ public class User implements Serializable {
     @Nullable
     @Size(max = 50)
     @Column(value = "created_date")
-    private Date createdDate = Date.from(Instant.now());
+    private Instant createdDate = Instant.now();
     
     @CreatedDate
     @Nullable
@@ -67,14 +67,14 @@ public class User implements Serializable {
     @LastModifiedDate
     @Nullable
     @Column(value = "last_modified_date")
-    private Date lastModifiedDate;
+    private Instant lastModifiedDate;
 
 
-    public Date getCreatedDate() {
+    public Instant getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -102,11 +102,11 @@ public class User implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Date getLastModifiedDate() {
+    public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -135,7 +135,7 @@ public class User implements Serializable {
     //     return this;
     // }
     
-    public User createdDate(Date date) { 
+    public User createdDate(Instant date) { 
         this.createdDate = date;
         return this;
     }
@@ -148,7 +148,7 @@ public class User implements Serializable {
         this.lastModifiedBy = modifiedBy;
         return this;
     }
-    public User lastModifiedDate(Date date) { 
+    public User lastModifiedDate(Instant date) { 
         this.lastModifiedDate = date;
         return this;
     }
