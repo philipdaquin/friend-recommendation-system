@@ -145,6 +145,11 @@
             <artifactId>spring-cloud-contract-stub-runner</artifactId>
             <version>3.0.3</version>
         </dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 	
 	</dependencies>
 
@@ -195,14 +200,7 @@
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
                 </configuration>
-				<dependencies>
-					<!-- To make this work on JDK 9+ -->
-					<dependency>
-						<groupId>javax.activation</groupId>
-						<artifactId>javax.activation-api</artifactId>
-						<version>1.2.0</version>
-					</dependency>
-				</dependencies>
+			
             </plugin>
 		</plugins>
 			<!-- Add this directly after the <build>-opening tag -->

@@ -7,8 +7,11 @@ pipeline {
     stages { 
 
         stage('Checkout') { 
+
+            // checkout scm 
+
             steps { 
-                echo "Hello World!"
+                echo "Checking out"
             }
         }
 
@@ -33,32 +36,41 @@ pipeline {
             }
         } 
         stage('Build Docker Image') {
-            // environment {
-            //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-            // }
-            // steps {
-            //     sh "docker build -t product-service:${COMMIT_ID} -f product-service/Dockerfile product-service/"
-            // }
+            environment {
+                // COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                COMMIT_ID = ${env.BUILD_NUMBER}
+            }
             steps {
-                sh "docker build -t ${dockerImageName} -f api_gateway/Dockerfile api_gateway/"
+                sh "docker build -t ${dockerImageName}:${COMMIT_ID} -f api_gateway/Dockerfile api_gateway/"
             }
+            // steps {
+            //     sh "docker build -t ${dockerImageName} -f api_gateway/Dockerfile api_gateway/"
+            // }
         } 
-        stage('Push Image to DockerHub') {
-            steps { 
-                script { 
-                    docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
-                        dockerImage.push()
-                        dockerImage.push('latest')
-                    }
-                }
-            }
-        } 
-        stage('Update Kubertenes Deployment Instance') {
-            steps { 
-                sh 'kubectl apply -f deployments/
-' 
-            }
-        } 
+        // Update Deployment Yaml Files
+        stage('Trigger ManifestUpdate') {
+            echo "triggering updatemanifestjob"
+            build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        }
+
+
+
+        // stage('Push Image to DockerHub') {
+        //     steps { 
+        //         script { 
+        //             docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
+        //                 dockerImage.push()
+        //                 dockerImage.push('latest')
+        //             }
+        //         }
+        //     }
+        // } 
+//         stage('Update Kubertenes Deployment Instance') {
+//             steps { 
+//                 sh 'kubectl apply -f deployments/
+// ' 
+//             }
+//         } 
     }
     post { 
         success { 

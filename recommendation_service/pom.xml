@@ -143,6 +143,12 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!-- To make this work on JDK 9+ -->
+					<dependency>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation-api</artifactId>
+						<version>1.2.0</version>
+					</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -230,14 +236,6 @@
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
                 </configuration>
-				<dependencies>
-					<!-- To make this work on JDK 9+ -->
-					<dependency>
-						<groupId>javax.activation</groupId>
-						<artifactId>javax.activation-api</artifactId>
-						<version>1.2.0</version>
-					</dependency>
-				</dependencies>
             </plugin>
 		</plugins>
 		
