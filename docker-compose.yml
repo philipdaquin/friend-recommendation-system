@@ -1,44 +1,185 @@
 version: '1.0'
 
 services:
+
+
   discovery-service:
-    image: ''
+    container_name: discovery_service
+    image: 'philipasd/discovery_service:latest'
+    networks:
+      - friend-recommendation-system
+    expose:
+      - 8761
+    ports:
+      - "8761:8761"
+    depends_on:
+      neo4j:
+        condition: service_healthy
   
   friend-service:
-    image: ''
+    container_name: friend_service
+    image: 'philipasd/friend_service:latest'
+    networks:
+      - friend-recommendation-system
+    expose:
+      - 7001
+    ports:
+      - "7001:7001"
+    depends_on:
+      neo4j:
+        condition: service_healthy
 
+
+
+  #
+  #   RECOMMENDATION SERVICE
+  #
   recommendation-service:
-    image: ''
-  
+    container_name: recommendation_service
+    image: 'philipasd/api_gateway:latest'
+    networks:
+      - friend-recommendation-system
+    expose:
+      - 7002
+    ports:
+      - "7002:7002"
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    
+  #
+  #   User Service 
+  #
   user-service:
-    image: ''
+    container_name: user_service
+    image: 'philipasd/user_service:latest'
+    expose:
+      - 7000
+    ports:
+      - "7000:7000"
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgresdb: 
+        condition: service_healthy
+      redisdb: 
+        condition: service_healthy
+    networks:
+      - friend-recommendation-system
+  #
+  #   API GATEWAY
+  #
+  api-gateway:
+    container_name: api_gateway
+    image: 'philipasd/api_gateway:latest'
+    expose:
+      - 9090
+    ports:
+      - "9090:9090"
+    depends_on:
+      redisdb: 
+        condition: service_healthy
+    networks:
+      - friend-recommendation-system
+
+  #
+  #
+  # Redis db
+  redis:
+    image: 'bitnami/redis:latest'
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - friend-recommendation-system
+  
+
+  #
+  #
+  # PostgreSQL
+  postgresdb:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=username
+      - POSTGRES_DB=citizix_db
+    networks:
+      - friend-recommendation-system
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "db", "-U", "postgres", "-h", "database"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 
   #
   #   Apache Kafka Cluster 
   #
-  kafka: 
-    image: ''
+  # 
   zookeeper:
-    image: ''
-  
-
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka_broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: kafka_broker
+    ports:
+      - "9091:9091"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   #
-  #   Persistence 
   #
-  frienddb: 
-    image: ''
-
-  userdb: 
-    image: ''
-
-
+  # Mongo Db
+  mongodb:
+    image: "mongo:latest"
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+    networks:
+      - friend-recommendation-system
   #
-  #  Neo4J
   #
-  neodb:
-    image: ''
+  # Neo4j
+  neo4j:
+    environment:
+      NEO4J_AUTH: none
+    image: neo4j:3.5.0
+    ports:
+      - "7687:7687/tcp"
+    deploy:
+      replicas: 1
 
-  
-  
+
+
+
+
+networks:
+  friend-recommendation-system:
+    external: false
+    driver: bridge
+volumes:
+  mongodb_data_container:
+  db-data:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local

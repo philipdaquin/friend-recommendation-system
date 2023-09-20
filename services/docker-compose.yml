@@ -3,16 +3,6 @@ services:
 
 
 
-
-
-
-
-
-
-
-
-
-
   # Neo4j
   neo4j:
     environment:
