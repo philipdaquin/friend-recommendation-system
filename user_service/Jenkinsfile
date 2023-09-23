@@ -24,9 +24,18 @@ pipeline {
         } 
         stage('Integration Test') { 
             steps { 
-                sh 'cd user_service && ./mvnw verify'
+                sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
             }
         } 
+
+        stage("Performance tests") { 
+            steps { 
+                steps { 
+                    sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+                }
+            }
+        }
+
         stage('Package Artifact Jar') {
             steps { 
                 sh 'cd user_service && ./mvnw package'

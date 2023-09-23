@@ -297,7 +297,7 @@
 			<id>integration-testing</id>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
-				<myTestSourceDirectory>${project.basedir}/src/integration/java</myTestSourceDirectory>
+				<myTestSourceDirectory>${project.baseDir}/src/integration/java</myTestSourceDirectory>
 			</properties>
 		</profile>
 	</profiles>
