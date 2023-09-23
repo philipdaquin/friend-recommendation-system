@@ -1,6 +1,5 @@
 package com.example.friend_service.repository;
 
-import java.util.Random;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.friend_service.MongoContainers;
 import com.example.friend_service.domains.friend_requests.FriendRequest;
-import com.example.friend_service.domains.friend_requests.FriendRequestStatus;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
