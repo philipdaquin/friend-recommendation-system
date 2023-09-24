@@ -17,6 +17,16 @@ pipeline {
                 sh 'cd user_service && ./`mvnw clean compile'
             }
         } 
+        // stage('Static Code Analysis') {
+        //     environment {
+        //         SONAR_URL = "http://34.201.116.83:9000"
+        //     }
+        //     steps {
+        //         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+        //             sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        //         }
+        //     }
+        // }
         stage('Unit Test') {
             steps {
                 sh 'cd user_service && ./mvnw test'
@@ -35,12 +45,17 @@ pipeline {
                 }
             }
         }
-
         stage('Package Artifact Jar') {
             steps { 
                 sh 'cd user_service && ./mvnw package'
             }
         } 
+
+        /*
+
+          UNTESTED MANIFEST FILE LISTENER  
+
+        */
         stage('Build Docker Image') {
             // environment {
             //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
@@ -62,12 +77,20 @@ pipeline {
                 }
             }
         } 
-        stage('Update Kubertenes Deployment Instance') {
-            steps { 
-                sh 'kubectl apply -f deployments/
-' 
-            }
-        } 
+
+        /*
+
+            UNTESTED MANIFEST FILE LISTENER
+
+        */
+        //
+        //  **Replaced By ArgoCD
+        //
+        // stage('Update Kubertenes Deployment Instance') {
+        //     steps { 
+        //         sh 'kubectl apply -f deployments/' 
+        //     }
+        // } 
     }
     post { 
         success { 

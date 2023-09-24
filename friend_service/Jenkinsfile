@@ -55,10 +55,19 @@ pipeline {
         } 
         stage('Update Kubertenes Deployment Instance') {
             steps { 
-                sh 'kubectl apply -f deployments/
-' 
+                sh 'kubectl apply -f deployments/' 
             }
         } 
+
+        /*
+
+            Update the Manifest File for UserService
+
+        */
+        stage('Trigger ManifestUpdate') {
+                echo "triggering updatemanifestjob"
+                build job: 'updateFriendServiceManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        }
     }
     post { 
         success { 
@@ -73,3 +82,4 @@ pipeline {
         }
     }
 }
+

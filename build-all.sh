@@ -11,7 +11,7 @@ cd user_service \
 echo 'Building Api Gateway'
 cd api_gateway \
     && ./mvnw clean install \ 
-    && cd -
+    && cd - || exit
 
 echo 'Building Discovery Service'
 cd discovery_service \
