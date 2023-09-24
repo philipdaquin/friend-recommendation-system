@@ -8,13 +8,15 @@ pipeline {
 
         stage('Checkout') { 
             steps { 
-                echo "Hello World!"
+                // echo "Hello World!"
+                checkout scm 
+
             }
         }
 
         stage('Compile Code') {
             steps {
-                sh 'cd user_service && ./`mvnw clean compile'
+                sh './`mvnw clean compile'
             }
         } 
         // stage('Static Code Analysis') {
