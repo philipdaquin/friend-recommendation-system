@@ -16,7 +16,7 @@ pipeline {
 
         stage('Compile Code') {
             steps {
-                sh 'mvn clean compile'
+                sh './mvnw clean compile'
             }
         } 
         // stage('Static Code Analysis') {
