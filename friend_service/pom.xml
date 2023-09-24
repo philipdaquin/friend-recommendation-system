@@ -17,6 +17,7 @@
 	
 	<properties>
 		<java.version>17</java.version>
+		<myTestSourceDirectory>${project.basedir}/src/test/java</myTestSourceDirectory>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
@@ -110,6 +111,7 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
+			<version>2.0.206</version>
 		</dependency>
 		
 		<dependency>
@@ -200,8 +202,67 @@
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
                 </configuration>
-			
+				<dependencies>
+					<!-- To make this work on JDK 9+ -->
+					<dependency>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation-api</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
             </plugin>
+
+
+			<!-- 
+
+				To run performance tests
+				mvn clean jmeter:jmeter
+
+				JMeter GUI
+				mvn jmeter:gui
+
+			 -->
+			<plugin>
+				<groupId>com.lazerycode.jmeter</groupId>
+				<artifactId>jmeter-maven-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<id>configuration</id>
+						<goals>
+							<goal>configure</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jmeter-tests</id>
+						<goals>
+							<goal>jmeter</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jmeter-check-results</id>
+						<goals>
+							<goal>results</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	<!-- 
+
+		To run integration tests
+
+		mvn clean test -Pintegration-testing
+	 
+	 -->
+	<profiles>
+		<profile>
+			<id>integration-testing</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<myTestSourceDirectory>${project.baseDir}/src/integration/java</myTestSourceDirectory>
+			</properties>
+		</profile>
+	</profiles>
 </project>

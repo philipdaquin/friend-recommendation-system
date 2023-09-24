@@ -8,57 +8,77 @@ pipeline {
 
         stage('Checkout') { 
             steps { 
-                echo "Hello World!"
+                checkout scm 
             }
         }
 
         stage('Compile Code') {
             steps {
-                sh 'cd recommendation_service && ./`mvnw clean compile'
+                sh 'cd recommendation_service && ./mvnw clean compile'
             }
         } 
+
+        stage('Static Code Analysis') {
+            // environment {
+            //     SONAR_URL = "http://34.201.116.83:9000"
+            // }
+            // steps {
+            //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+            //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+            //     }
+            // }
+        }
+
+
         stage('Unit Test') {
             steps {
                 sh 'cd recommendation_service && ./mvnw test'
             }
         } 
+
         stage('Integration Test') { 
             steps { 
-                sh 'cd recommendation_service && ./mvnw verify'
+                sh 'cd recommendation_service && ./mvnw clean test -Pintegration-testing'
             }
         } 
+
+        stage("Performance tests") { 
+            steps { 
+                steps { 
+                    sh 'cd recommendation_service && ./mvnw clean jmeter:jmeter'
+                }
+            }
+        }
+
         stage('Package Artifact Jar') {
             steps { 
                 sh 'cd recommendation_service && ./mvnw package'
             }
         } 
+
         stage('Build Docker Image') {
-            // environment {
-            //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-            // }
-            // steps {
-            //     sh "docker build -t product-service:${COMMIT_ID} -f product-service/Dockerfile product-service/"
-            // }
             steps {
-                sh "docker build -t ${dockerImageName} -f recommendation_service/Dockerfile recommendation_service/"
+                def app = docker.build("${dockerImageName}", "-f recommendation_service/Dockerfile recommendation_service/")
             }
         } 
+
         stage('Push Image to DockerHub') {
             steps { 
                 script { 
-                    docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
-                        dockerImage.push()
-                        dockerImage.push('latest')
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                            app.push("${env.BUILD_NUMBER}")
                     }
                 }
             }
         } 
-        stage('Update Kubertenes Deployment Instance') {
-            steps { 
-                sh 'kubectl apply -f deployments/
-' 
-            }
-        } 
+        // 
+        // UNTESTED MANIFEST FILE LISTENER
+        // 
+        stage('Trigger Manifest Update') {
+                echo "triggering updateRecommendationServiceManifest"
+
+                build job: 'updateRecommendationServiceManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        }
     }
     post { 
         success { 
