@@ -8,9 +8,7 @@ pipeline {
 
         stage('Checkout') { 
             steps { 
-                // echo "Hello World!"
                 checkout scm 
-
             }
         }
 
@@ -19,21 +17,26 @@ pipeline {
                 sh 'cd user_service && ./mvnw clean compile'
             }
         } 
-        // stage('Static Code Analysis') {
-        //     environment {
-        //         SONAR_URL = "http://34.201.116.83:9000"
-        //     }
-        //     steps {
-        //         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-        //             sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        //         }
-        //     }
-        // }
+
+        stage('Static Code Analysis') {
+            // environment {
+            //     SONAR_URL = "http://34.201.116.83:9000"
+            // }
+            // steps {
+            //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+            //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+            //     }
+            // }
+        }
+        
+        
         stage('Unit Test') {
             steps {
                 sh 'cd user_service && ./mvnw test'
             }
         } 
+        
+        
         stage('Integration Test') { 
             steps { 
                 sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
@@ -53,46 +56,30 @@ pipeline {
             }
         } 
 
-        /*
-
-          UNTESTED MANIFEST FILE LISTENER  
-
-        */
+      
         stage('Build Docker Image') {
-            // environment {
-            //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-            // }
-            // steps {
-            //     sh "docker build -t product-service:${COMMIT_ID} -f product-service/Dockerfile product-service/"
-            // }
             steps {
-                sh "docker build -t ${dockerImageName} -f user_service/Dockerfile user_service/"
+                def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
             }
         } 
         stage('Push Image to DockerHub') {
             steps { 
                 script { 
-                    docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
-                        dockerImage.push()
-                        dockerImage.push('latest')
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                            app.push("${env.BUILD_NUMBER}")
                     }
                 }
             }
         } 
 
-        /*
+        // 
+        // UNTESTED MANIFEST FILE LISTENER
+        // 
+        stage('Trigger Manifest Update') {
+                echo "triggering updatemanifestjob"
 
-            UNTESTED MANIFEST FILE LISTENER
-
-        */
-        //
-        //  **Replaced By ArgoCD
-        //
-        // stage('Update Kubertenes Deployment Instance') {
-        //     steps { 
-        //         sh 'kubectl apply -f deployments/' 
-        //     }
-        // } 
+                build job: 'updateFriendServiceManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        }
     }
     post { 
         success { 
