@@ -16,7 +16,7 @@ pipeline {
 
         stage('Compile Code') {
             steps {
-                sh './mvnw clean compile'
+                sh 'cd user_service && ./mvnw clean compile'
             }
         } 
         // stage('Static Code Analysis') {
