@@ -1,8 +1,9 @@
 pipeline { 
     agent any 
-    def app 
+
     environment { 
         dockerImageName = "philipasd/user_service"
+        dockerImage = ""
     }
     stages { 
 
@@ -91,7 +92,7 @@ pipeline {
         stage('Build Docker Image') {
             steps { 
                 script { 
-                    app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+                    dockerImage = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
                 }
             }
         } 
@@ -99,7 +100,7 @@ pipeline {
             steps { 
                 script { 
                         docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        app.push("${env.BUILD_NUMBER}")
+                        dockerImage.push("${env.BUILD_NUMBER}")
                     }
                 }
             }
