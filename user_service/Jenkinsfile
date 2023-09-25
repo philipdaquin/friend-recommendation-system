@@ -32,14 +32,26 @@ pipeline {
         // }
         
         
-        // stage('Unit Test') {
-        //     steps {
-        //         sh 'cd user_service && ./mvnw test'
+        stage('Unit Test') {
+            steps {
+                sh 'cd user_service && ./mvnw test'
+            }
+        } 
+        
+        
+        stage('Integration Test') { 
+            steps { 
+                sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+            }
+        } 
+
+        // stage('End to End Test') { 
+        //     steps { 
+        //         sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
         //     }
         // } 
-        
-        
-        // stage('Integration Test') { 
+      
+        // stage('Acceptance Test') { 
         //     steps { 
         //         sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
         //     }
