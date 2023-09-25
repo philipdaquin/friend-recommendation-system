@@ -17,16 +17,16 @@ pipeline {
                 sh 'cd friend_service && ./mvnw clean compile'
             }
         } 
-        stage('Static Code Analysis') {
-            // environment {
-            //     SONAR_URL = "http://34.201.116.83:9000"
-            // }
-            // steps {
-            //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-            //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-            //     }
-            // }
-        }
+        // stage('Static Code Analysis') {
+        //     // environment {
+        //     //     SONAR_URL = "http://34.201.116.83:9000"
+        //     // }
+        //     // steps {
+        //     //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+        //     //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        //     //     }
+        //     // }
+        // }
 
 
         stage('Unit Test') {
