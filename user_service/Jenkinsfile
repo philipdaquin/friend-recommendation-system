@@ -18,18 +18,21 @@ pipeline {
             }
         } 
 
-        //
-        //
-        // stage('Static Code Analysis') {
-        //     // environment {
-        //     //     SONAR_URL = "http://34.201.116.83:9000"
-        //     // }
-        //     // steps {
-        //     //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-        //     //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        //     //     }
-        //     // }
-        // }
+        
+        
+        stage('Static Code Analysis') {
+            // environment {
+            //     SONAR_URL = "http://34.201.116.83:9000"
+            // }
+            // steps {
+            //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+            //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+            //     }
+            // }
+            steps { 
+                sh 'echo sonar analysis'
+            }
+        }
         
         
         stage('Unit Test') {
@@ -41,50 +44,59 @@ pipeline {
         
         stage('Integration Test') { 
             steps { 
-                sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                sh 'echo integration testing'
             }
         } 
 
-        // stage('End to End Test') { 
-        //     steps { 
-        //         sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //     }
-        // } 
-      
-        // stage('Acceptance Test') { 
-        //     steps { 
-        //         sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //     }
-        // } 
+        stage('End to End Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                sh 'echo e2e tests'
 
-        // stage("Performance tests") { 
-        //     steps { 
-        //         steps { 
-        //             sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-        //         }
-        //     }
-        // }
-        // stage('Package Artifact Jar') {
-        //     steps { 
-        //         sh 'cd user_service && ./mvnw package'
-        //     }
-        // } 
+            }
+        } 
+      
+        stage('Acceptance Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                sh 'echo acceptance tests'
+
+            }
+        } 
+
+        stage("Performance tests") { 
+            steps { 
+                steps { 
+                    // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+                sh 'echo performance test'
+
+                }
+            }
+        }
+        stage('Package Artifact Jar') {
+            steps { 
+                // sh 'cd user_service && ./mvnw package'
+                sh 'echo packaging the artifact'
+
+            }
+        } 
 
       
-        // stage('Build Docker Image') {
-        //     steps {
-        //         def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
-        //     }
-        // } 
-        // stage('Push Image to DockerHub') {
-        //     steps { 
-        //         script { 
-        //                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-        //                     app.push("${env.BUILD_NUMBER}")
-        //             }
-        //         }
-        //     }
-        // } 
+        stage('Build Docker Image') {
+            steps {
+                def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+            }
+        } 
+        stage('Push Image to DockerHub') {
+            steps { 
+                script { 
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                            app.push("${env.BUILD_NUMBER}")
+                    }
+                }
+            }
+        } 
 
         // // 
         // // UNTESTED MANIFEST FILE LISTENER

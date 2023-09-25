@@ -28,6 +28,8 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
+      kafka_broker: 
+        condition: service_healthy
 
 
 
@@ -36,7 +38,7 @@ services:
   #
   recommendation-service:
     container_name: recommendation_service
-    image: 'philipasd/api_gateway:latest'
+    image: 'philipasd/recommendation_service:latest'
     networks:
       - friend-recommendation-system
     expose:
@@ -45,6 +47,8 @@ services:
       - "7002:7002"
     depends_on:
       neo4j:
+        condition: service_healthy
+      kafka_broker: 
         condition: service_healthy
     
   #
@@ -58,11 +62,11 @@ services:
     ports:
       - "7000:7000"
     depends_on:
-      kafka:
+      kafka_broker:
         condition: service_healthy
       postgresdb: 
         condition: service_healthy
-      redisdb: 
+      redis: 
         condition: service_healthy
     networks:
       - friend-recommendation-system
@@ -77,7 +81,7 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      redisdb: 
+      redis: 
         condition: service_healthy
     networks:
       - friend-recommendation-system
@@ -100,7 +104,7 @@ services:
   postgresdb:
     image: postgres:14-alpine
     ports:
-      - 5432:5432
+      - "5432:5432"
     restart: always
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
@@ -180,6 +184,6 @@ volumes:
   mongodb_data_container:
   db-data:
   zookeeper_data:
-    driver: local
+    driver: bridge
   kafka_data:
-    driver: local
+    driver: bridge

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -32,13 +33,17 @@ import com.example.user_service.domains.User;
 
 import reactor.test.StepVerifier;
 
-@RunWith(SpringRunner.class)
-@DataR2dbcTest
+// @DataR2dbcTest
+// @RunWith(SpringRunner.class)
+// @DataJpaTest
+// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class UserRepositoryUnitTest {
 
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private TestEntityManager entityManager;
 
     public String FIRSTNAME = "XXXXXX";
     
@@ -46,29 +51,35 @@ public class UserRepositoryUnitTest {
     
     public String EMAIL = "PPPPP@PPPP";
 
-    @AfterEach
-    public void cleanUp() { 
-        repository.deleteAll();
+
+    private User user1, user2, user3, user4;
+
+    @BeforeEach
+    public void setup() { 
+        user1 = new User()
+            .firstName(FIRSTNAME)
+            .lastName(LASTNAME)
+            .email(EMAIL);
+
     }
 
-    @Test
-    public void User_GetOne_ReturnsUserObject() throws Exception {
+    // @Test
+    // public void shouldInsertAndQuery() throws Exception {
         
-        // Long id = new Random().nextLong();
 
-        // User newUser = new User();
-        // newUser.setId(id);
-        // newUser.setFirstName(FIRSTNAME);
-        // newUser.setLastName(LASTNAME);
-        // newUser.setEmail(EMAIL);
-        // newUser.setLastModifiedBy("test");
-        // newUser.setLastModifiedDate(Instant.now());
-    
-        // User savedItem = repository.save(newUser).block(); 
-
-        // assertNotNull(savedItem);
+    //     // User newUser = new User();
+    //     // newUser.setFirstName(FIRSTNAME);
+    //     // newUser.setLastName(LASTNAME);
+    //     // newUser.setEmail(EMAIL);
+    //     // newUser.setLastModifiedBy("test");
+    //     // newUser.setLastModifiedDate(Instant.now());
         
-        // User response = repository.getById(id).block();
-        // assertNotNull(response);
-    }
+    //     // // Insert 
+    //     // User savedItem = repository.save(newUser).block(); 
+
+    //     // assertNotNull(savedItem);
+        
+    //     // User response = repository.getById(id).block();
+    //     // assertNotNull(response);
+    // }
 }

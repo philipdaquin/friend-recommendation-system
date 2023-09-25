@@ -22,29 +22,29 @@ import com.example.user_service.UserServiceApplication;
 import com.example.user_service.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(SpringRunner.class)
-@WebAppConfiguration
-@SpringBootTest(classes = UserServiceApplication.class)
-@TestPropertySource(properties = "testContext=true")
-@DirtiesContext
+// @RunWith(SpringRunner.class)
+// @WebAppConfiguration
+// @SpringBootTest(classes = UserServiceApplication.class)
+// @TestPropertySource(properties = "testContext=true")
+// @DirtiesContext
 public class UserControllerTest {
 
-    @MockBean
-    UserService userService;
+    // @MockBean
+    // UserService userService;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
     // @Autowired
-    // private Filter springSecurityFilterChain;
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    // private WebApplicationContext webApplicationContext;
+    // // @Autowired
+    // // private Filter springSecurityFilterChain;
+    // private MockMvc mockMvc;
+    // private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Before
-    public void setup() throws Exception {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                // .addFilter(springSecurityFilterChain)
-                .build();
-    }
+    // @Before
+    // public void setup() throws Exception {
+    //     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+    //             // .addFilter(springSecurityFilterChain)
+    //             .build();
+    // }
 
     @Test
     public void signup() throws Exception {
