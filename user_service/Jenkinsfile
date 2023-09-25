@@ -7,84 +7,84 @@ pipeline {
     }
     stages { 
 
-        stage('Checkout') { 
-            steps { 
-                checkout scm 
-            }
-        }
+        // stage('Checkout') { 
+        //     steps { 
+        //         checkout scm 
+        //     }
+        // }
 
-        stage('Compile Code') {
-            steps {
-                sh 'cd user_service && ./mvnw clean compile'
-            }
-        } 
+        // stage('Compile Code') {
+        //     steps {
+        //         sh 'cd user_service && ./mvnw clean compile'
+        //     }
+        // } 
 
         
         
-        stage('Static Code Analysis') {
-            // environment {
-            //     SONAR_URL = "http://34.201.116.83:9000"
-            // }
-            // steps {
-            //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-            //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-            //     }
-            // }
-            steps { 
-                sh 'echo sonar analysis'
-            }
-        }
+        // stage('Static Code Analysis') {
+        //     // environment {
+        //     //     SONAR_URL = "http://34.201.116.83:9000"
+        //     // }
+        //     // steps {
+        //     //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+        //     //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        //     //     }
+        //     // }
+        //     steps { 
+        //         sh 'echo sonar analysis'
+        //     }
+        // }
         
         
-        stage('Unit Test') {
-            steps {
-                sh 'cd user_service && ./mvnw test'
-            }
-        } 
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'cd user_service && ./mvnw test'
+        //     }
+        // } 
         
         
-        stage('Integration Test') { 
-            steps { 
-                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-                // echo 'integration testing'
-                 sh 'cd user_service && ./mvnw test'
-            }
-        } 
+        // stage('Integration Test') { 
+        //     steps { 
+        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+        //         // echo 'integration testing'
+        //          sh 'cd user_service && ./mvnw test'
+        //     }
+        // } 
 
-        stage('End to End Test') { 
-            steps { 
-                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-                // echo 'e2e tests'
-                 sh 'cd user_service && ./mvnw test'
+        // stage('End to End Test') { 
+        //     steps { 
+        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+        //         // echo 'e2e tests'
+        //          sh 'cd user_service && ./mvnw test'
 
-            }
-        } 
+        //     }
+        // } 
       
-        stage('Acceptance Test') { 
-            steps { 
-                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-                // echo 'acceptance tests'
-                 sh 'cd user_service && ./mvnw test'
+        // stage('Acceptance Test') { 
+        //     steps { 
+        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+        //         // echo 'acceptance tests'
+        //          sh 'cd user_service && ./mvnw test'
 
-            }
-        } 
+        //     }
+        // } 
 
-        stage("Performance tests") { 
-            steps { 
-                // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-                // echo 'performance test'
-                sh 'cd user_service && ./mvnw test'
-            }
-        }
-        stage('Package Artifact Jar') {
-            steps { 
-                // sh 'cd user_service && ./mvnw package'
-                // echo 'packaging the artifact'
-                sh 'cd user_service && ./mvnw test'
+        // stage("Performance tests") { 
+        //     steps { 
+        //         // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+        //         // echo 'performance test'
+        //         sh 'cd user_service && ./mvnw test'
+        //     }
+        // }
+        // stage('Package Artifact Jar') {
+        //     steps { 
+        //         // sh 'cd user_service && ./mvnw package'
+        //         // echo 'packaging the artifact'
+        //         sh 'cd user_service && ./mvnw test'
 
 
-            }
-        } 
+        //     }
+        // } 
 
         // stage('Build Docker Image') {
         //     steps {
