@@ -95,15 +95,16 @@ pipeline {
         stage('Build Docker Image') {
             steps { 
                 script { 
-                    dockerImage = docker.build(env.APP_IMAGE, "-f user_service/Dockerfile user_service/")
+                    dockerImage = docker.build(APP_IMAGE, "-f user_service/Dockerfile user_service/")
                 }
             }
         } 
         stage('Push Image to DockerHub') {
             steps { 
                 script { 
-                        docker.withRegistry('https://registry.hub.docker.com', "docker-hub") {
+                        docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push("latest")
                     }
                 }
             }
