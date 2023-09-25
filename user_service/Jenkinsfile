@@ -2,7 +2,7 @@ pipeline {
     agent any 
 
     environment { 
-        dockerImageName = "philipasd/user_service"
+        APP_IMAGE = "philipasd/user_service"
         dockerImage = ""
     }
     stages { 
@@ -95,14 +95,14 @@ pipeline {
         stage('Build Docker Image') {
             steps { 
                 script { 
-                    dockerImage = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+                    dockerImage = docker.build(env.APP_IMAGE, "-f user_service/Dockerfile user_service/")
                 }
             }
         } 
         stage('Push Image to DockerHub') {
             steps { 
                 script { 
-                        docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                        docker.withRegistry('https://registry.hub.docker.com', "docker-hub") {
                         dockerImage.push("${env.BUILD_NUMBER}")
                     }
                 }
@@ -114,7 +114,6 @@ pipeline {
         // // 
         // stage('Trigger Manifest Update') {
         //         echo "triggering updatemanifestjob"
-
         //         build job: 'updateFriendServiceManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
         // }
     }
