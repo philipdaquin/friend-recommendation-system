@@ -46,14 +46,16 @@ pipeline {
         stage('Integration Test') { 
             steps { 
                 // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-                echo 'integration testing'
+                // echo 'integration testing'
+                 sh 'cd user_service && ./mvnw test'
             }
         } 
 
         stage('End to End Test') { 
             steps { 
                 // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-                echo 'e2e tests'
+                // echo 'e2e tests'
+                 sh 'cd user_service && ./mvnw test'
 
             }
         } 
@@ -61,7 +63,8 @@ pipeline {
         stage('Acceptance Test') { 
             steps { 
                 // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-                echo 'acceptance tests'
+                // echo 'acceptance tests'
+                 sh 'cd user_service && ./mvnw test'
 
             }
         } 
@@ -70,15 +73,16 @@ pipeline {
             steps { 
                 steps { 
                     // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-                echo 'performance test'
+                    // echo 'performance test'
+                     sh 'cd user_service && ./mvnw test'
 
                 }
             }
         }
         stage('Package Artifact Jar') {
             steps { 
-                // sh 'cd user_service && ./mvnw package'
-                echo 'packaging the artifact'
+                sh 'cd user_service && ./mvnw package'
+                // echo 'packaging the artifact'
 
             }
         } 
