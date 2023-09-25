@@ -91,7 +91,7 @@ pipeline {
         stage('Build Docker Image') {
             steps { 
                 script { 
-                    def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+                    app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
                 }
             }
         } 
