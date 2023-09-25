@@ -84,9 +84,7 @@ pipeline {
 
       
         stage('Build Docker Image') {
-            steps {
-                app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
-            }
+            app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
         } 
         stage('Push Image to DockerHub') {
             steps { 
