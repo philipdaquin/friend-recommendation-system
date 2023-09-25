@@ -1,6 +1,6 @@
 pipeline { 
     agent any 
-    def app
+    // def app
     environment { 
         APP_IMAGE = "philipasd/user_service"
         dockerImage = ""
