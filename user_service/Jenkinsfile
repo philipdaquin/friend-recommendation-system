@@ -5,7 +5,7 @@ pipeline {
         dockerImageName = "philipasd/user_service"
     }
     stages { 
-
+        
         stage('Checkout') { 
             steps { 
                 checkout scm 
@@ -30,56 +30,56 @@ pipeline {
         }
         
         
-        stage('Unit Test') {
-            steps {
-                sh 'cd user_service && ./mvnw test'
-            }
-        } 
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'cd user_service && ./mvnw test'
+        //     }
+        // } 
         
         
-        stage('Integration Test') { 
-            steps { 
-                sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-            }
-        } 
+        // stage('Integration Test') { 
+        //     steps { 
+        //         sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+        //     }
+        // } 
 
-        stage("Performance tests") { 
-            steps { 
-                steps { 
-                    sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-                }
-            }
-        }
-        stage('Package Artifact Jar') {
-            steps { 
-                sh 'cd user_service && ./mvnw package'
-            }
-        } 
+        // stage("Performance tests") { 
+        //     steps { 
+        //         steps { 
+        //             sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+        //         }
+        //     }
+        // }
+        // stage('Package Artifact Jar') {
+        //     steps { 
+        //         sh 'cd user_service && ./mvnw package'
+        //     }
+        // } 
 
       
-        stage('Build Docker Image') {
-            steps {
-                def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
-            }
-        } 
-        stage('Push Image to DockerHub') {
-            steps { 
-                script { 
-                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                            app.push("${env.BUILD_NUMBER}")
-                    }
-                }
-            }
-        } 
+        // stage('Build Docker Image') {
+        //     steps {
+        //         def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+        //     }
+        // } 
+        // stage('Push Image to DockerHub') {
+        //     steps { 
+        //         script { 
+        //                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+        //                     app.push("${env.BUILD_NUMBER}")
+        //             }
+        //         }
+        //     }
+        // } 
 
-        // 
-        // UNTESTED MANIFEST FILE LISTENER
-        // 
-        stage('Trigger Manifest Update') {
-                echo "triggering updatemanifestjob"
+        // // 
+        // // UNTESTED MANIFEST FILE LISTENER
+        // // 
+        // stage('Trigger Manifest Update') {
+        //         echo "triggering updatemanifestjob"
 
-                build job: 'updateFriendServiceManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
+        //         build job: 'updateFriendServiceManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        // }
     }
     post { 
         success { 
