@@ -82,17 +82,26 @@ pipeline {
             }
         } 
 
-      
+        // stage('Build Docker Image') {
+        //     steps {
+        //         sh "docker build -t user_service:${COMMIT_ID} -f user_service/Dockerfile product-service/"
+        //     }
+        // }
+
         stage('Build Docker Image') {
-            app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+            steps { 
+                script { 
+                    def app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
+                }
+            }
         } 
         stage('Push Image to DockerHub') {
-            // steps { 
-            //     script { 
+            steps { 
+                script { 
                         docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
                         app.push("${env.BUILD_NUMBER}")
-                //     }
-                // }
+                    }
+                }
             }
         } 
 
