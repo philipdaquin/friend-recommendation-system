@@ -1,6 +1,6 @@
 pipeline { 
     agent any 
-
+    def app 
     environment { 
         dockerImageName = "philipasd/user_service"
     }
@@ -87,12 +87,12 @@ pipeline {
             app = docker.build("${dockerImageName}", "-f user_service/Dockerfile user_service/")
         } 
         stage('Push Image to DockerHub') {
-            steps { 
-                script { 
+            // steps { 
+            //     script { 
                         docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                            app.push("${env.BUILD_NUMBER}")
-                    }
-                }
+                        app.push("${env.BUILD_NUMBER}")
+                //     }
+                // }
             }
         } 
 
