@@ -71,12 +71,9 @@ pipeline {
 
         stage("Performance tests") { 
             steps { 
-                steps { 
-                    // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-                    // echo 'performance test'
-                     sh 'cd user_service && ./mvnw test'
-
-                }
+                // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+                // echo 'performance test'
+                sh 'cd user_service && ./mvnw test'
             }
         }
         stage('Package Artifact Jar') {
