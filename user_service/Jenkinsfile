@@ -94,11 +94,11 @@ pipeline {
 
         stage('Build Docker Image') {
             steps { 
-                // script { 
-                //     dockerImage = docker.build(APP_IMAGE, "-f user_service/Dockerfile user_service")
-                // }
+                script { 
+                    dockerImage = docker.build(APP_IMAGE)
+                }
 
-                sh "docker build -t ${APP_IMAGE}:${env.BUILD_NUMBER} -f user_service/Dockerfile user-service/"
+                // sh "docker build -t ${APP_IMAGE}:${env.BUILD_NUMBER} -f user_service/Dockerfile user-service/"
                 // sh "docker build -t ${APP_IMAGE}:${env.BUILD_NUMBER}"
                 // app = docker.build(APP_IMAGE)
             }
