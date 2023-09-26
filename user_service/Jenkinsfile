@@ -3,7 +3,7 @@ pipeline {
     environment { 
         APP_IMAGE = "philipasd/user_service"
         dockerImage = ""
-        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+        registryCredential = credentials('dockerhub')
 
     }
     stages { 
@@ -85,27 +85,20 @@ pipeline {
 
         stage('Build Docker Image') {
             steps { 
-                sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user_service/"
+
+                dockerImage = docker.build(APP_IMAGE, "-f user_service/Dockerfile user_service/")
+
+                // sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user_service/"
             }
         } 
-        stage('Login') {
-
-			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-			}
-		}
         stage('Push Image to DockerHub') {
             steps { 
-                // script { 
-                //         docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                //         dockerImage.push("${env.BUILD_NUMBER}")
-                //         dockerImage.push("latest")
-                //     }
-                // }
-                // withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
-                //     sh 'docker login -u ${docker_user} -p ${docker_pass}'
-                    sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
-                // }
+                script { 
+                        docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push("latest")
+                    }
+                }
             }
         } 
 
