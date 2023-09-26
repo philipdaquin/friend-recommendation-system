@@ -86,6 +86,11 @@ pipeline {
                 sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user_service/"
             }
         } 
+        stage('Login to Dockerhubt') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
         stage('Push Image to DockerHub') {
             steps { 
                 script { 
