@@ -108,6 +108,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>api_gateway</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

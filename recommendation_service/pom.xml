@@ -155,7 +155,7 @@
 
 	<build>	
 		<testSourceDirectory>${myTestSourceDirectory}</testSourceDirectory>
-
+		<finalName>recommendation_service</finalName>
 		<plugins>
 		 	
 			<plugin>

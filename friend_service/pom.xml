@@ -111,7 +111,6 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
-			<version>2.0.206</version>
 		</dependency>
 		
 		<dependency>
@@ -156,6 +155,8 @@
 	</dependencies>
 
 	<build>
+		<testSourceDirectory>${myTestSourceDirectory}</testSourceDirectory>
+		<finalName>friend_service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -60,7 +60,7 @@ pipeline {
             steps { 
                 // sh 'cd friend_service && ./mvnw clean test -Pintegration-testing'
                 // echo 'acceptance tests'
-                 sh 'cd friend_service && ./mvnw test'
+                sh 'cd friend_service && ./mvnw test'
             }
         } 
 
