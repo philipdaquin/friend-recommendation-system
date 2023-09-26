@@ -2,6 +2,8 @@ pipeline {
     agent any 
     environment { 
         APP_IMAGE = "philipasd/user_service"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+
     }
     stages { 
 
@@ -105,13 +107,12 @@ pipeline {
             //             dockerImage.push("latest")
             //         }
             //     }
-
             // }
             steps{
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
-                    sh 'docker login -u ${docker_user} -p ${docker_pass}'
-                    sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
-                }
+                // withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
+                // }
             }
         } 
 
