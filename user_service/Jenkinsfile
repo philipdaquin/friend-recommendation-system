@@ -18,76 +18,60 @@ pipeline {
                 sh 'cd user_service && ./mvnw clean compile'
             }
         } 
+       
+        stage ('Sonar') {
+            steps {
+                // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
+                //     sh '''
+                //         mvn clean compile -DskipTests=true sonar:sonar \
+                //           -Dsonar.projectKey=java-devsecops \
+                //           -Dsonar.host.url=http://sonarqube:9000 \
+                //           -Dsonar.login=${sonartoken}
+                //     '''
+                // }
+                echo "hello world"
+            }
+        }
+        
+        stage('Unit Test') {
+            steps {
+                sh 'cd user_service && ./mvnw test'
+            }
+        } 
+        
+        
+        stage('Integration Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'integration testing'
+                sh 'cd user_service && ./mvnw test'
+            }
+        } 
 
-        
-        
-        // stage('Static Code Analysis') {
-        //     // environment {
-        //     //     SONAR_URL = "http://34.201.116.83:9000"
-        //     // }
-        //     // steps {
-        //     //     withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-        //     //         sh 'cd user_service && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        //     //     }
-        //     // }
-        //     steps { 
-        //         sh 'echo sonar analysis'
-        //     }
-        // }
-        //  stage ('Sonar') {
-        //     steps {
-        //         withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
-        //             sh '''
-        //                 mvn clean compile -DskipTests=true sonar:sonar \
-        //                   -Dsonar.projectKey=java-devsecops \
-        //                   -Dsonar.host.url=http://sonarqube:9000 \
-        //                   -Dsonar.login=${sonartoken}
-        //             '''
-        //         }
-        //     }
-        // }
-        
-        
-        // stage('Unit Test') {
-        //     steps {
-        //         sh 'cd user_service && ./mvnw test'
-        //     }
-        // } 
-        
-        
-        // stage('Integration Test') { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //         // echo 'integration testing'
-        //          sh 'cd user_service && ./mvnw test'
-        //     }
-        // } 
-
-        // stage('End to End Test') { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //         // echo 'e2e tests'
-        //          sh 'cd user_service && ./mvnw test'
-
-        //     }
-        // } 
+        stage('End to End Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'e2e tests'
+                 sh 'cd user_service && ./mvnw test'
+            }
+        } 
       
-        // stage('Acceptance Test') { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //         // echo 'acceptance tests'
-        //          sh 'cd user_service && ./mvnw test'
+        stage('Acceptance Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'acceptance tests'
+                 sh 'cd user_service && ./mvnw test'
+            }
+        } 
 
-        //     }
-        // } 
+        stage("Performance tests") { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+                // echo 'performance test'
+                sh 'cd user_service && ./mvnw test'
+            }
+        }
 
-        // stage("Performance tests") { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-        //         // echo 'performance test'
-        //         sh 'cd user_service && ./mvnw test'
-        //     }
-        // }
         stage('Package Artifact Jar') {
             steps { 
                 sh 'cd user_service && ./mvnw package'
@@ -99,23 +83,14 @@ pipeline {
                 sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user_service/"
             }
         } 
+
         stage('Push Image to DockerHub') {
-            // steps { 
-            //     script { 
-            //             docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-            //             dockerImage.push("${env.BUILD_NUMBER}")
-            //             dockerImage.push("latest")
-            //         }
-            //     }
-            // }
+           
             steps{
-                // withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 sh 'docker push ${APP_IMAGE}:latest'
-                // }
             }
         } 
-
    
     }
     post { 
