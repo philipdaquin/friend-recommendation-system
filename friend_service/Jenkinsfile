@@ -3,7 +3,7 @@ pipeline {
     environment { 
         APP_IMAGE = "philipasd/friend_service"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-
+ 
     }
     stages { 
 
