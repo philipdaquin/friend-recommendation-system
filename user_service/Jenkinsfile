@@ -111,7 +111,7 @@ pipeline {
             steps{
                 // withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
+                sh 'docker push ${APP_IMAGE}:latest'
                 // }
             }
         } 
