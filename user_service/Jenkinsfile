@@ -1,17 +1,16 @@
 pipeline { 
     agent any 
-    // def app
     environment { 
         APP_IMAGE = "philipasd/user_service"
         dockerImage = ""
     }
     stages { 
 
-        // stage('Checkout') { 
-        //     steps { 
-        //         checkout scm 
-        //     }
-        // }
+        stage('Checkout') { 
+            steps { 
+                checkout scm 
+            }
+        }
 
         // stage('Compile Code') {
         //     steps {
@@ -82,18 +81,12 @@ pipeline {
             }
         } 
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         sh "docker build -t user_service:${COMMIT_ID} -f user_service/Dockerfile product-service/"
-        //     }
-        // }
-
         stage('Build Docker Image') {
             steps { 
                 // script { 
                 //     dockerImage = docker.build(APP_IMAGE)
                 // }
-                sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile.base user-service/"
+                sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user-service/"
                 // sh "docker build -t ${APP_IMAGE}:/${env.BUILD_NUMBER} ."
                 // app = docker.build(APP_IMAGE)
             }
