@@ -76,15 +76,15 @@ pipeline {
         //         sh 'cd user_service && ./mvnw test'
         //     }
         // }
-        // stage('Package Artifact Jar') {
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw package'
-        //         // echo 'packaging the artifact'
-        //         sh 'cd user_service && ./mvnw test'
+        stage('Package Artifact Jar') {
+            steps { 
+                sh 'cd user_service && ./mvnw package'
+                // echo 'packaging the artifact'
+                // sh 'cd user_service && ./mvnw test'
 
 
-        //     }
-        // } 
+            }
+        } 
 
         // stage('Build Docker Image') {
         //     steps {

@@ -207,7 +207,6 @@
 				
 				Build Docker Image 
 
-			 -->
 			<plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
@@ -230,7 +229,6 @@
                     </buildArgs>
                 </configuration>
 				<dependencies>
-					<!-- To make this work on JDK 9+ -->
 					<dependency>
 						<groupId>javax.activation</groupId>
 						<artifactId>javax.activation-api</artifactId>
@@ -239,6 +237,7 @@
 				</dependencies>
             </plugin>
 
+			 -->
 
 
 			<!-- 
