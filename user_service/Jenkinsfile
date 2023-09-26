@@ -82,11 +82,11 @@ pipeline {
         } 
 
         stage('Build Docker Image') {
+            // environment {
+            //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+            // }
             steps { 
-                // script { 
-                //     dockerImage = docker.build(APP_IMAGE)
-                // }
-                sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user-service/"
+                sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user_service/"
                 // sh "docker build -t ${APP_IMAGE}:/${env.BUILD_NUMBER} ."
                 // app = docker.build(APP_IMAGE)
             }
