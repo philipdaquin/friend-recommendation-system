@@ -112,7 +112,7 @@ pipeline {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
                     sh 'docker login -u ${docker_user} -p ${docker_pass}'
-                    sh 'docker push dileep95/ansibledeploy:${DOCKER_TAG}'
+                    sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
                 }
             }
         } 
