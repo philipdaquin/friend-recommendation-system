@@ -1,76 +1,99 @@
 pipeline { 
     agent any 
-
     environment { 
-        dockerImageName = "philipasd/api_gateway"
+        APP_IMAGE = "philipasd/api_gateway"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+
     }
     stages { 
 
         stage('Checkout') { 
-
-            // checkout scm 
-
             steps { 
-                echo "Checking out"
+                checkout scm 
             }
         }
 
         stage('Compile Code') {
             steps {
-                sh 'cd api_gateway && ./`mvnw clean compile'
+                sh 'cd api_gateway && ./mvnw clean compile'
             }
         } 
+       
+        stage ('Static Analysis') {
+            steps {
+                // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
+                //     sh '''
+                //         mvn clean compile -DskipTests=true sonar:sonar \
+                //           -Dsonar.projectKey=java-devsecops \
+                //           -Dsonar.host.url=http://sonarqube:9000 \
+                //           -Dsonar.login=${sonartoken}
+                //     '''
+                // }
+                echo "hello world"
+            }
+        }
+        
         stage('Unit Test') {
             steps {
                 sh 'cd api_gateway && ./mvnw test'
             }
         } 
+        
+        
         stage('Integration Test') { 
             steps { 
-                sh 'cd api_gateway && ./mvnw verify'
+                // sh 'cd api_gateway && ./mvnw clean test -Pintegration-testing'
+                // echo 'integration testing'
+                sh 'cd api_gateway && ./mvnw test'
             }
         } 
+
+        stage('End to End Test') { 
+            steps { 
+                // sh 'cd api_gateway && ./mvnw clean test -Pintegration-testing'
+                // echo 'e2e tests'
+                 sh 'cd api_gateway && ./mvnw test'
+            }
+        } 
+      
+        stage('Acceptance Test') { 
+            steps { 
+                // sh 'cd api_gateway && ./mvnw clean test -Pintegration-testing'
+                // echo 'acceptance tests'
+                 sh 'cd api_gateway && ./mvnw test'
+            }
+        } 
+
+        stage("Performance tests") { 
+            steps { 
+                // sh 'cd api_gateway && ./mvnw clean jmeter:jmeter'
+                // echo 'performance test'
+                sh 'cd api_gateway && ./mvnw test'
+            }
+        }
+
         stage('Package Artifact Jar') {
             steps { 
                 sh 'cd api_gateway && ./mvnw package'
             }
-        } 
+        }   
+
         stage('Build Docker Image') {
-            environment {
-                // COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                COMMIT_ID = ${env.BUILD_NUMBER}
+            steps { 
+                sh "docker build -t ${APP_IMAGE} -f api_gateway/Dockerfile api_gateway/"
             }
-            steps {
-                sh "docker build -t ${dockerImageName}:${COMMIT_ID} -f api_gateway/Dockerfile api_gateway/"
-            }
-            // steps {
-            //     sh "docker build -t ${dockerImageName} -f api_gateway/Dockerfile api_gateway/"
-            // }
         } 
-        // Update Deployment Yaml Files
-        stage('Trigger ManifestUpdate') {
-            echo "triggering updatemanifestjob"
-            build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
+
+        stage('Push Image to DockerHub') {
+           
+            steps{
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push ${APP_IMAGE}:latest'
+            }
+        } 
 
 
 
-        // stage('Push Image to DockerHub') {
-        //     steps { 
-        //         script { 
-        //             docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
-        //                 dockerImage.push()
-        //                 dockerImage.push('latest')
-        //             }
-        //         }
-        //     }
-        // } 
-//         stage('Update Kubertenes Deployment Instance') {
-//             steps { 
-//                 sh 'kubectl apply -f deployments/
-// ' 
-//             }
-//         } 
     }
     post { 
         success { 

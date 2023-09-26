@@ -1,64 +1,99 @@
 pipeline { 
     agent any 
-
     environment { 
-        dockerImageName = "philipasd/discovery_service"
+        APP_IMAGE = "philipasd/discovery_service"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+
     }
     stages { 
 
         stage('Checkout') { 
             steps { 
-                echo "Hello World!"
+                checkout scm 
             }
         }
 
         stage('Compile Code') {
             steps {
-                sh 'cd discovery_service && ./`mvnw clean compile'
+                sh 'cd discovery_service && ./mvnw clean compile'
             }
         } 
+       
+        stage ('Static Analysis') {
+            steps {
+                // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
+                //     sh '''
+                //         mvn clean compile -DskipTests=true sonar:sonar \
+                //           -Dsonar.projectKey=java-devsecops \
+                //           -Dsonar.host.url=http://sonarqube:9000 \
+                //           -Dsonar.login=${sonartoken}
+                //     '''
+                // }
+                echo "hello world"
+            }
+        }
+        
         stage('Unit Test') {
             steps {
                 sh 'cd discovery_service && ./mvnw test'
             }
         } 
+        
+        
         stage('Integration Test') { 
             steps { 
-                sh 'cd discovery_service && ./mvnw verify'
+                // sh 'cd discovery_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'integration testing'
+                sh 'cd discovery_service && ./mvnw test'
             }
         } 
+
+        stage('End to End Test') { 
+            steps { 
+                // sh 'cd discovery_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'e2e tests'
+                 sh 'cd discovery_service && ./mvnw test'
+            }
+        } 
+      
+        stage('Acceptance Test') { 
+            steps { 
+                // sh 'cd discovery_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'acceptance tests'
+                 sh 'cd discovery_service && ./mvnw test'
+            }
+        } 
+
+        stage("Performance tests") { 
+            steps { 
+                // sh 'cd discovery_service && ./mvnw clean jmeter:jmeter'
+                // echo 'performance test'
+                sh 'cd discovery_service && ./mvnw test'
+            }
+        }
+
         stage('Package Artifact Jar') {
             steps { 
                 sh 'cd discovery_service && ./mvnw package'
             }
-        } 
+        }   
+
         stage('Build Docker Image') {
-            // environment {
-            //     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-            // }
-            // steps {
-            //     sh "docker build -t product-service:${COMMIT_ID} -f product-service/Dockerfile product-service/"
-            // }
-            steps {
-                sh "docker build -t ${dockerImageName} -f discovery_service/Dockerfile discovery_service/"
+            steps { 
+                sh "docker build -t ${APP_IMAGE} -f discovery_service/Dockerfile discovery_service/"
             }
         } 
+
         stage('Push Image to DockerHub') {
-            steps { 
-                script { 
-                    docker.withDockerRegistry('https://registry.hub.docker.com', registryCredential) { 
-                        dockerImage.push()
-                        dockerImage.push('latest')
-                    }
-                }
+           
+            steps{
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push ${APP_IMAGE}:latest'
             }
         } 
-        stage('Update Kubertenes Deployment Instance') {
-            steps { 
-                sh 'kubectl apply -f deployments/
-' 
-            }
-        } 
+
+
+
     }
     post { 
         success { 

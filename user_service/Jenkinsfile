@@ -19,7 +19,7 @@ pipeline {
             }
         } 
        
-        stage ('Sonar') {
+        stage ('Static Analysis') {
             steps {
                 // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
                 //     sh '''
@@ -76,7 +76,7 @@ pipeline {
             steps { 
                 sh 'cd user_service && ./mvnw package'
             }
-        } 
+        }   
 
         stage('Build Docker Image') {
             steps { 
@@ -91,7 +91,9 @@ pipeline {
                 sh 'docker push ${APP_IMAGE}:latest'
             }
         } 
-   
+
+
+
     }
     post { 
         success { 

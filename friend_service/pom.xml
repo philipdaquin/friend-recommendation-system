@@ -181,8 +181,11 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-		<plugin>
-            <groupId>com.spotify</groupId>
+
+			<!-- 
+				Build Docker Image and Push to Docker Hub
+			<plugin>
+            	<groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.4.9</version>
                 <executions>
@@ -203,7 +206,6 @@
                     </buildArgs>
                 </configuration>
 				<dependencies>
-					<!-- To make this work on JDK 9+ -->
 					<dependency>
 						<groupId>javax.activation</groupId>
 						<artifactId>javax.activation-api</artifactId>
@@ -211,6 +213,7 @@
 					</dependency>
 				</dependencies>
             </plugin>
+			 -->
 
 
 			<!-- 
