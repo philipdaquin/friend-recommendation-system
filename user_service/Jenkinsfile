@@ -88,16 +88,16 @@ pipeline {
         } 
         stage('Push Image to DockerHub') {
             steps { 
-                // script { 
-                //         docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                //         dockerImage.push("${env.BUILD_NUMBER}")
-                //         dockerImage.push("latest")
-                //     }
-                // }
-                withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
-                    sh 'docker login -u ${docker_user} -p ${docker_pass}'
-                    sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
+                script { 
+                        docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push("latest")
+                    }
                 }
+                // withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'docker_pass', usernameVariable: 'docker_user')]) {
+                //     sh 'docker login -u ${docker_user} -p ${docker_pass}'
+                //     sh 'docker push ${APP_IMAGE}:${env.BUILD_NUMBER}'
+                // }
             }
         } 
 
