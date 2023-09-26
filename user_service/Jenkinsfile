@@ -2,8 +2,6 @@ pipeline {
     agent any 
     environment { 
         APP_IMAGE = "philipasd/user_service"
-        registryCredential = credentials('dockerhub')
-
     }
     stages { 
 
