@@ -76,15 +76,15 @@ pipeline {
         //         sh 'cd user_service && ./mvnw test'
         //     }
         // }
-        stage('Package Artifact Jar') {
-            steps { 
-                sh 'cd user_service && ./mvnw package'
-                // echo 'packaging the artifact'
-                // sh 'cd user_service && ./mvnw test'
+        // stage('Package Artifact Jar') {
+        //     steps { 
+        //         sh 'cd user_service && ./mvnw package'
+        //         // echo 'packaging the artifact'
+        //         // sh 'cd user_service && ./mvnw test'
 
 
-            }
-        } 
+        //     }
+        // } 
 
         // stage('Build Docker Image') {
         //     steps {
@@ -99,7 +99,7 @@ pipeline {
                 }
 
                 // sh "docker build -t ${APP_IMAGE}:${env.BUILD_NUMBER} -f user_service/Dockerfile user-service/"
-                // sh "docker build -t ${APP_IMAGE}:${env.BUILD_NUMBER}"
+                sh "docker build -t ${APP_IMAGE}:${env.BUILD_NUMBER} ."
                 // app = docker.build(APP_IMAGE)
             }
         } 
@@ -108,7 +108,7 @@ pipeline {
                 script { 
                         docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         dockerImage.push("${env.BUILD_NUMBER}")
-                        // app.push("${env.BUILD_NUMBER}")
+                        dockerImage.push("latest")
                     }
                 }
             }
