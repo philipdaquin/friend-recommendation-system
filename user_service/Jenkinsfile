@@ -80,22 +80,21 @@ pipeline {
         }   
 
         stage('Build Docker Image') {
+            environment {
+                COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+            }
             steps { 
-                sh "docker build -t ${APP_IMAGE} -f user_service/Dockerfile user_service/"
+                sh "docker build -t ${APP_IMAGE}:${COMMIT_ID} -f user_service/Dockerfile user_service/"
             }
         } 
 
         stage('Push Image to DockerHub') {
-
-
             environment {
-                COMMIT_ID = "${env.BUILD_NUMBER}"
+                COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
             }
-
-
             steps{
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push ${APP_IMAGE}:v${COMMIT_ID}'
+                sh 'docker push ${APP_IMAGE}:${COMMIT_ID}'
             }
         } 
 
