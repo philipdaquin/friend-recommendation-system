@@ -89,7 +89,7 @@ pipeline {
 
 
             environment {
-                COMMIT_ID = env.BUILD_NUMBER
+                COMMIT_ID = "${env.BUILD_NUMBER}"
             }
 
 
