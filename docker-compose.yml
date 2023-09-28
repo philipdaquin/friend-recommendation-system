@@ -90,28 +90,32 @@ services:
   #
   # Redis db
   redis:
+    container_name: redis
     image: 'bitnami/redis:latest'
-    restart: always
     ports:
       - "6379:6379"
     networks:
       - friend-recommendation-system
+    environment:
+      - REDIS_PASSWORD=password
+      - ALLOW_EMPTY_PASSWORD=yes
   
-
   #
   #
   # PostgreSQL
+  #
+  #
   postgresdb:
-    image: postgres:14-alpine
+    image: postgres
+    container_name: postgres_container
     ports:
       - "5432:5432"
-    restart: always
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=username
-      - POSTGRES_DB=citizix_db
+      - PGDATA= /data/postgres
     networks:
       - friend-recommendation-system
     healthcheck:
@@ -119,7 +123,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
 
   #
   #   Apache Kafka Cluster 
@@ -153,16 +156,17 @@ services:
   mongodb:
     image: "mongo:latest"
     container_name: mongo-container
-    restart: always
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data_container:/data/db
     networks:
       - friend-recommendation-system
+  
   #
   #
   # Neo4j
+  #
   neo4j:
     environment:
       NEO4J_AUTH: none
@@ -171,8 +175,6 @@ services:
       - "7687:7687/tcp"
     deploy:
       replicas: 1
-
-
 
 
 
