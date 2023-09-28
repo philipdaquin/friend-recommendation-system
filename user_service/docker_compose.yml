@@ -2,17 +2,22 @@ version: "1.0"
 
 services:
 
-  user-service:
+  user_api:
+    # image: user_service
     build: .
-    container_name: user_service_test
-    expose: 
-      - 7000
     ports: 
       - "7000:7000"
+    environment:
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_URL=postgresql://postgreSql:5432/users
+    depends_on:
+      postgreSql:
+        condition: service_started
     networks:
-      - user-service-network 
+      - user-service-local
 
-  postgresdb_test:
+  postgreSql:
     image: postgres
     container_name: postgres_container_test
     ports:
@@ -25,14 +30,15 @@ services:
       - POSTGRES_USER=postgres
       - PGDATA= /data/postgres
       - POSTGRES_DB=users
-    networks:
-      - user-service-network 
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "db", "-U", "postgres", "-h", "database"]
       interval: 10s
       timeout: 5s
-      retries: 3  
+      retries: 3 
+    networks:
+      - user-service-local 
+  
   
 networks:
-  user-service-network:
+  user-service-local:
     external: false

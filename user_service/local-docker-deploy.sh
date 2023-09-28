@@ -1,6 +1,6 @@
 
-# docker kill user_service_test
-# docker rm user_service_test
+docker kill user_api
+docker rm user_api
 
 # Build 
 
@@ -12,10 +12,11 @@
 
 # # Package 
 
-# ./mvnw package 
+./mvnw package 
 
-# # Docker build image
-# docker build -t user_service_test .
+# Docker build image
+docker build -t user_api .
 
 # Docker run 
-docker run --name user_service_test -d -t --link postgresdb_test:postgres -p 7000:7000 user_service_user-service-network
+docker run --name user_api -d -t --link postgreSql:postgres \n 
+-p 7000:7000 user-service-local

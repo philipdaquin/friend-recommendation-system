@@ -23,11 +23,11 @@ logging:
 #
 ####
 postgres.port: 5432
-postgres.host: "127.0.0.1"
+postgres.host: "postgres_container_test"
 postgres.database-name: users 
 postgres.username: postgres
 # postgres.url: postgresql://${postgres.:localhost}:${postgres.port}/${postgres.database-name}
-postgres.url: postgresql://${postgres.host}:${postgres.port}/${postgres.database-name}
+postgres.url: postgresql://${DB_HOST:localhost}:${postgres.port}/${postgres.database-name}
 PRODUCER_TOPIC: user
 
 spring:
