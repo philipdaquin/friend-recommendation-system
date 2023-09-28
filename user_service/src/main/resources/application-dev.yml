@@ -26,7 +26,7 @@ postgres.port: 5432
 postgres.host: localhost
 postgres.database-name: users 
 postgres.username: postgres
-# postgres.url: postgresql://${postgres.host:localhost}:${postgres.port}/${postgres.database-name}
+# postgres.url: postgresql://${postgres.:localhost}:${postgres.port}/${postgres.database-name}
 postgres.url: postgresql://${postgres.host}:${postgres.port}/${postgres.database-name}
 PRODUCER_TOPIC: user
 
@@ -54,7 +54,7 @@ spring:
   liquibase:
     url: jdbc:${postgres.url}
     user: postgres
-    password: ${postgres.password}
+    password: password
   ##
   #  Apache Kafka Produder 
   ##

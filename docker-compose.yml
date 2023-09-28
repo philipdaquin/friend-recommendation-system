@@ -63,11 +63,11 @@ services:
       - "7000:7000"
     depends_on:
       kafka_broker:
-        condition: service_healthy
+        condition: service_started
       postgresdb: 
-        condition: service_healthy
+        condition: service_started
       redis: 
-        condition: service_healthy
+        condition: service_started
     networks:
       - friend-recommendation-system
   #
@@ -113,9 +113,11 @@ services:
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
+      - POSTGRES_HOST=localhost
       - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=username
+      - POSTGRES_USER=postgres
       - PGDATA= /data/postgres
+      - POSTGRES_DB=users
     networks:
       - friend-recommendation-system
     healthcheck:

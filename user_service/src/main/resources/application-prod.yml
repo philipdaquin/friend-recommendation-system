@@ -26,6 +26,7 @@ postgres.database-name: user
 postgres.url: postgresql://${postgres.host}:${postgres.port}/${postgres.database-name}
 PRODUCER_TOPIC: user
 postgres.username: username
+postgres.password: password
 # postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/
 # postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/
 
