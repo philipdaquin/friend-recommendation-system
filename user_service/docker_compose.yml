@@ -1,44 +1,44 @@
 version: "1.0"
 
 services:
-
-  user_api:
-    # image: user_service
+  user-api:
     build: .
+    container_name: user-api
     ports: 
       - "7000:7000"
     environment:
+      - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_DATASOURCE_URL=postgresql://postgreSql:5432/users
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/users
     depends_on:
-      postgreSql:
+      postgres-db:
         condition: service_started
     networks:
       - user-service-local
 
-  postgreSql:
+  postgres-db:
     image: postgres
-    container_name: postgres_container_test
+    restart: always
+    container_name: postgres-container-test
     ports:
       - "5432:5432"
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
+      - ./document/data.sql:/docker-entrypoint-initdb.d/data.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     environment:
-      - POSTGRES_HOST=localhost
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
-      - PGDATA= /data/postgres
       - POSTGRES_DB=users
-    healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "db", "-U", "postgres", "-h", "database"]
-      interval: 10s
-      timeout: 5s
-      retries: 3 
     networks:
       - user-service-local 
-  
   
 networks:
   user-service-local:
     external: false
+volumes:
+  db-data:

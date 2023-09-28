@@ -1,22 +1,22 @@
 
-docker kill user_api
-docker rm user_api
+docker network create user-service-local
+
+
+docker kill user-api
+docker rm user-api
 
 # Build 
-
-# ./mvnw clean compile 
+./mvnw clean compile 
 
 # # Test 
+./mvnw test 
 
-# ./mvnw test 
-
-# # Package 
-
-./mvnw package 
+# Package 
+./mvnw package -Dmaven.test.skip=true
 
 # Docker build image
-docker build -t user_api .
+docker build -t user-api .
 
-# Docker run 
-docker run --name user_api -d -t --link postgreSql:postgres \n 
--p 7000:7000 user-service-local
+
+# Run the user_api container
+docker run --name user-api -d -t --link postgres-db:postgres -p 7000:7000 user-api
