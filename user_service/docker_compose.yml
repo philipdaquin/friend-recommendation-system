@@ -1,0 +1,38 @@
+version: "1.0"
+
+services:
+
+  user-service:
+    build: .
+    container_name: user_service_test
+    expose: 
+      - 7000
+    ports: 
+      - "7000:7000"
+    networks:
+      - user-service-network 
+
+  postgresdb_test:
+    image: postgres
+    container_name: postgres_container_test
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - PGDATA= /data/postgres
+      - POSTGRES_DB=users
+    networks:
+      - user-service-network 
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "db", "-U", "postgres", "-h", "database"]
+      interval: 10s
+      timeout: 5s
+      retries: 3  
+  
+networks:
+  user-service-network:
+    external: false

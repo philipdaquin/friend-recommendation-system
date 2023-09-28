@@ -23,7 +23,7 @@ logging:
 #
 ####
 postgres.port: 5432
-postgres.host: localhost
+postgres.host: "127.0.0.1"
 postgres.database-name: users 
 postgres.username: postgres
 # postgres.url: postgresql://${postgres.:localhost}:${postgres.port}/${postgres.database-name}

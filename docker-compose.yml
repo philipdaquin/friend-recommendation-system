@@ -56,7 +56,7 @@ services:
   #
   user-service:
     container_name: user_service
-    image: 'philipasd/user_service:latest'
+    image: 'philipasd/user_service:v0.0.0'
     expose:
       - 7000
     ports:
@@ -125,7 +125,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
   #
   #   Apache Kafka Cluster 
   #
