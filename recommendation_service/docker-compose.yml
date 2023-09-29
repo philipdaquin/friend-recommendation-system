@@ -11,6 +11,8 @@ services:
     depends_on:
       neo4j-db:
         condition: service_started
+      kafka_broker: 
+        condition: service_started
     networks:
       - recommendation-service-local 
 
@@ -30,6 +32,33 @@ services:
       - NEO4J_ALLOW_UPGRADE=true
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - recommendation-service-local
+
+  kafka_broker:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka_broker
+    ports:
+      - "9091:9091"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_broker:9091
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - recommendation-service-local
 
 
 networks:

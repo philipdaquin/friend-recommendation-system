@@ -10,6 +10,7 @@ spring:
   kafka:
     consumer:
       group-id: test
+      
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     bootstrap-servers: kafka_broker:9091
