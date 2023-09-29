@@ -1,9 +1,9 @@
 version: "1.0"
 
 services:
-  user-api:
+  user-service:
     build: .
-    container_name: user-api
+    container_name: user-service
     ports: 
       - "7000:7000"
     environment:

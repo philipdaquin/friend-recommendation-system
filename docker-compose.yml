@@ -55,7 +55,8 @@ services:
   #   User Service 
   #
   user-service:
-    container_name: user_service
+    build: ./user_service
+    container_name: user-service
     image: 'philipasd/user_service:v0.0.0'
     expose:
       - 7000
