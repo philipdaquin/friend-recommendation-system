@@ -13,7 +13,7 @@ public class KafkaProducerService {
     private final ReactiveKafkaProducerTemplate<String, DomainEvent<Friend>> producer;
 
     @Value("{${spring.kafka.template.default-topic}}")
-    private String topic = "user";
+    private String topic = "friend";
 
     public KafkaProducerService(ReactiveKafkaProducerTemplate producer) { 
         this.producer = producer;

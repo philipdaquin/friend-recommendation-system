@@ -1,0 +1,36 @@
+version: "1.0"
+
+services:
+  friend-service: 
+    build: .  
+    container_name: friend-service
+    ports:
+      - "7001:7001"
+    depends_on:
+      mongo-db:
+        condition: service_started
+    networks:
+      - friend-service-local
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    
+  mongo-db:
+    image: "mongo:latest"
+    container_name: mongo-container
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME= username
+      - MONGO_INITDB_ROOT_PASSWORD= password
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+    networks:
+      - friend-service-local
+
+networks:
+  friend-service-local:
+    external: false
+
+volumes:
+  mongodb_data_container:
