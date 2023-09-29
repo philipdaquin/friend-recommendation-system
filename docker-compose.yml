@@ -4,6 +4,7 @@ services:
 
 
   discovery-service:
+    build: ./discovery_service
     container_name: discovery_service
     networks:
       - friend-recommendation-system
@@ -169,7 +170,7 @@ services:
   #
   # Neo4j
   #
-  neo4j:
+  neo4j-db:
     container_name: neo4j
     image: bitnami/neo4j:latest
     ports:

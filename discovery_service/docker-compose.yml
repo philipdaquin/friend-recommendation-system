@@ -1,0 +1,16 @@
+version: "1.0"
+
+services:
+  discovery-service: 
+    build: .  
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - discovery-service-local
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+networks:
+  discovery-service-local:
+    external: false
