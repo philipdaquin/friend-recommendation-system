@@ -4,6 +4,7 @@ services:
 
 
   discovery-service:
+    build: ./discovery_service
     container_name: discovery_service
     image: 'philipasd/discovery_service:latest'
     networks:
@@ -12,11 +13,14 @@ services:
       - 8761
     ports:
       - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       neo4j:
         condition: service_healthy
   
   friend-service:
+    build: ./friend_service
     container_name: friend_service
     image: 'philipasd/friend_service:latest'
     networks:
@@ -25,6 +29,8 @@ services:
       - 7001
     ports:
       - "7001:7001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       neo4j:
         condition: service_healthy
@@ -37,7 +43,8 @@ services:
   #   RECOMMENDATION SERVICE
   #
   recommendation-service:
-    container_name: recommendation_service
+    build: ./recommendation_service
+    container_name: recommendation-service
     image: 'philipasd/recommendation_service:latest'
     networks:
       - friend-recommendation-system
@@ -45,6 +52,8 @@ services:
       - 7002
     ports:
       - "7002:7002"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       neo4j:
         condition: service_healthy
@@ -57,7 +66,6 @@ services:
   user-service:
     build: ./user_service
     container_name: user-service
-    # image: 'philipasd/user_service:v0.0.0'
     expose:
       - 7000
     ports:
@@ -69,14 +77,16 @@ services:
         condition: service_started
       redis: 
         condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     networks:
       - friend-recommendation-system
   #
   #   API GATEWAY
   #
-  api-gateway:
+  api-gateway:  
+    build: ./api_gateway
     container_name: api_gateway
-    image: 'philipasd/api_gateway:latest'
     expose:
       - 9090
     ports:
@@ -95,11 +105,11 @@ services:
     image: 'bitnami/redis:latest'
     ports:
       - "6379:6379"
-    networks:
-      - friend-recommendation-system
     environment:
       - REDIS_PASSWORD=password
       - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - friend-recommendation-system
   
   #
   #
@@ -108,24 +118,23 @@ services:
   #
   postgresdb:
     image: postgres
-    container_name: postgres_container
+    restart: always
+    container_name: postgres-container-test
     ports:
       - "5432:5432"
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
+      - ./document/data.sql:/docker-entrypoint-initdb.d/data.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     environment:
-      - POSTGRES_HOST=localhost
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
-      - PGDATA= /data/postgres
       - POSTGRES_DB=users
     networks:
       - friend-recommendation-system
-    healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "db", "-U", "postgres", "-h", "database"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
   #
   #   Apache Kafka Cluster 
   #
@@ -170,13 +179,20 @@ services:
   # Neo4j
   #
   neo4j:
-    environment:
-      NEO4J_AUTH: none
-    image: neo4j:3.5.0
+    container_name: neo4j
+    image: bitnami/neo4j:latest
     ports:
-      - "7687:7687/tcp"
-    deploy:
-      replicas: 1
+      - "7475:7474"
+      - "7687:7687"
+      - "7473:7473"
+    networks:
+      - recommendation-service-local 
+    environment:
+      - NEO4J_PASSWORD= password
+      - NEO4J_HOST= username
+      - NEO4J_ALLOW_UPGRADE=true
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
 
 
 
@@ -184,6 +200,7 @@ networks:
   friend-recommendation-system:
     external: false
     driver: bridge
+    
 volumes:
   mongodb_data_container:
   db-data:

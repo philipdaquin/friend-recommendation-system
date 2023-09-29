@@ -23,16 +23,13 @@ services:
       - "7687:7687"
       - "7473:7473"
     networks:
-      - recommendation-service-local 
+      - recommendation-service-local
     environment:
       - NEO4J_PASSWORD= password
       - NEO4J_HOST= username
       - NEO4J_ALLOW_UPGRADE=true
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
-
-  
-
 
 
 networks:

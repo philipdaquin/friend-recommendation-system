@@ -31,8 +31,8 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   postgres-db:
-    image: postgres
     restart: always
+    image: postgres
     container_name: postgres-container-test
     ports:
       - "5432:5432"
