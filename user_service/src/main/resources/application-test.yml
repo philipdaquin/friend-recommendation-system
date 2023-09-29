@@ -86,14 +86,8 @@ spring:
     url: ${spring.datasource.url}
     user: postgres
     password: password
-  
-  
   cache:
     type: redis
-    #
-    # Time-To-Live 
-    #   
-    #
     redis:
       time-to-live: 60000
   data:

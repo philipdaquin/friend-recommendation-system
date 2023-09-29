@@ -23,15 +23,24 @@ spring:
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
-  liquibase:
-    url: jdbc:${postgres.url}
-    user: postgres
-    password: password
+  # liquibase:
+  #   url: jdbc:${postgres.url}
+  #   user: postgres
+  #   password: password
   kafka:
     bootstrap-servers: localhost:9091
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+  data:
+    redis:
+      host: redis-db
+      port: 6379
+
 eureka:
   instance:
     prefer-ip-address: true

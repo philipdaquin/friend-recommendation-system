@@ -16,3 +16,5 @@ logging:
     kafka.*: WARN
     org.springframework.*: INFO
     org.apache.kafka.*: WARN
+
+

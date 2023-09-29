@@ -27,6 +27,15 @@ spring:
     url: jdbc:${postgres.url}
     user: postgres
     password: password
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+  data:
+    redis:
+      host: redis-db
+      port: 6379
+  
   kafka:
     bootstrap-servers: localhost:9091
     producer:

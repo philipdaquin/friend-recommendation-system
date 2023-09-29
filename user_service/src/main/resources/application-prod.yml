@@ -52,6 +52,17 @@ spring:
     url: ${postgres.url}
     user: postgres
     password: ${postgres.password}
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+  data:
+    redis:
+      host: redis-db
+      port: 6379
+  
+  
   ##
   #  Apache Kafka Produder 
   ##

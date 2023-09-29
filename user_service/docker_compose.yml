@@ -14,8 +14,21 @@ services:
     depends_on:
       postgres-db:
         condition: service_started
+      # redis-db:
+      #   condition: service_started
     networks:
       - user-service-local
+
+  redis-db:
+    container_name: redis
+    image: 'bitnami/redis:latest'
+    ports:
+      - "6379:6379"
+    networks:
+      - user-service-local 
+    environment:
+      - REDIS_PASSWORD=password
+      - ALLOW_EMPTY_PASSWORD=yes
 
   postgres-db:
     image: postgres
