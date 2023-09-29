@@ -3,7 +3,7 @@ pipeline {
     environment { 
         APP_IMAGE = "philipasd/recommendation_service"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-
+         COMMIT_ID = "${env.BUILD_NUMBER}"
     }
     stages { 
 
@@ -79,8 +79,11 @@ pipeline {
         }   
 
         stage('Build Docker Image') {
+
+
+
             steps { 
-                sh "docker build -t ${APP_IMAGE} -f recommendation_service/Dockerfile recommendation_service/"
+                sh "docker build -t ${APP_IMAGE}:${COMMIT_ID} -f recommendation_service/Dockerfile recommendation_service/"
             }
         } 
 
@@ -88,7 +91,7 @@ pipeline {
            
             steps{
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push ${APP_IMAGE}:latest'
+                sh 'docker push ${APP_IMAGE}:${COMMIT_ID}'
             }
         } 
 
