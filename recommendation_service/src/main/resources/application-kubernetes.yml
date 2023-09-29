@@ -1,20 +1,20 @@
 
 
+
+neo4j.host: neo4j 
+
 spring:
   config:
     activate:
-      on-profile: production
-  
+      on-profile: kubernetes
   kafka:
     consumer:
       group-id: test
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     bootstrap-servers: localhost:9091
-
-
   neo4j:
-    uri: neo4j://localhost:7687/recommendations
+    uri: neo4j://neo4j:7687/recommendations
     authentication:  
       username: neo4j
       password: password
@@ -26,4 +26,4 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka
+      defaultZone: http://discovery-service:8761/eureka/
