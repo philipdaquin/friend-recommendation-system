@@ -18,6 +18,9 @@ spring:
   config:
     activate:
       on-profile: kubernetes 
+  
+    
+  
   datasource:
     url: ${postgres.url}
     username: postgres

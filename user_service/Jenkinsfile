@@ -14,65 +14,65 @@ pipeline {
             }
         }
 
-        // stage('Compile Code') {
-        //     steps {
-        //         sh 'cd user_service && ./mvnw clean compile'
-        //     }
-        // } 
+        stage('Compile Code') {
+            steps {
+                sh 'cd user_service && ./mvnw clean compile'
+            }
+        } 
        
-        // stage ('Static Analysis') {
-        //     steps {
+        stage ('Static Analysis') {
+            steps {
                 
-        //         // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
-        //         //     sh '''
-        //         //         mvn clean compile -DskipTests=true sonar:sonar \
-        //         //           -Dsonar.projectKey=java-devsecops \
-        //         //           -Dsonar.host.url=http://sonarqube:9000 \
-        //         //           -Dsonar.login=${sonartoken}
-        //         //     '''
-        //         // }
-        //         echo "hello world"
-        //     }
-        // }
+                // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
+                //     sh '''
+                //         mvn clean compile -DskipTests=true sonar:sonar \
+                //           -Dsonar.projectKey=java-devsecops \
+                //           -Dsonar.host.url=http://sonarqube:9000 \
+                //           -Dsonar.login=${sonartoken}
+                //     '''
+                // }
+                echo "hello world"
+            }
+        }
         
-        // stage('Unit Test') {
-        //     steps {
-        //         sh 'cd user_service && ./mvnw test'
-        //     }
-        // } 
+        stage('Unit Test') {
+            steps {
+                sh 'cd user_service && ./mvnw test'
+            }
+        } 
         
         
-        // stage('Integration Test') { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //         // echo 'integration testing'
-        //         sh 'cd user_service && ./mvnw test'
-        //     }
-        // } 
+        stage('Integration Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'integration testing'
+                sh 'cd user_service && ./mvnw test'
+            }
+        } 
 
-        // stage('End to End Test') { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //         // echo 'e2e tests'
-        //          sh 'cd user_service && ./mvnw test'
-        //     }
-        // } 
+        stage('End to End Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'e2e tests'
+                 sh 'cd user_service && ./mvnw test'
+            }
+        } 
       
-        // stage('Acceptance Test') { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
-        //         // echo 'acceptance tests'
-        //          sh 'cd user_service && ./mvnw test'
-        //     }
-        // } 
+        stage('Acceptance Test') { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean test -Pintegration-testing'
+                // echo 'acceptance tests'
+                 sh 'cd user_service && ./mvnw test'
+            }
+        } 
 
-        // stage("Performance tests") { 
-        //     steps { 
-        //         // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
-        //         // echo 'performance test'
-        //         sh 'cd user_service && ./mvnw test'
-        //     }
-        // }
+        stage("Performance tests") { 
+            steps { 
+                // sh 'cd user_service && ./mvnw clean jmeter:jmeter'
+                // echo 'performance test'
+                sh 'cd user_service && ./mvnw test'
+            }
+        }
 
         stage('Package Artifact Jar') {
             steps { 
