@@ -17,6 +17,9 @@ docker rm user-service
 # Docker build image
 docker build -t user-service .
 
+docker tag user-service philipasd/user-service:v0.0.0
+
+docker push philipasd/user-service:v0.0.0
 
 # Run the user_api container
-docker run --name user-service -d -t --link postgres-db:postgres -p 7000:7000 user-service
+# docker run --name user-service -d -t --link postgres-db:postgres -p 7000:7000 user-service

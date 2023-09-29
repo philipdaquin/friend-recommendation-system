@@ -1,0 +1,44 @@
+
+
+
+
+---
+postgres.port: 5432
+postgres.host: postgres-db
+postgres.database-name: users 
+postgres.username: postgres
+postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/
+PRODUCER_TOPIC: user
+spring:
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+  config:
+    activate:
+      on-profile: kubernetes 
+  datasource:
+    url: ${postgres.url}
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    url: jdbc:${postgres.url}
+    user: postgres
+    password: password
+  kafka:
+    bootstrap-servers: localhost:9091
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://discovery-service:8761/eureka/
+
+
