@@ -14,7 +14,7 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     bootstrap-servers: localhost:9091
   neo4j:
-    uri: bolt://neo4j:7687/recommendations
+    uri: bolt://neo4j-db:7687/recommendations
     authentication:  
       username: username
       password: password

@@ -14,8 +14,8 @@ services:
     depends_on:
       postgres-db:
         condition: service_started
-      # redis-db:
-      #   condition: service_started
+      redis-db:
+        condition: service_started
     networks:
       - user-service-local
 

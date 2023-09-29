@@ -9,13 +9,13 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      neo4j:
+      neo4j-db:
         condition: service_started
     networks:
       - recommendation-service-local 
 
     # Neo4j
-  neo4j:
+  neo4j-db:
     container_name: neo4j
     image: bitnami/neo4j:latest
     ports:

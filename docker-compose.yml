@@ -4,9 +4,7 @@ services:
 
 
   discovery-service:
-    build: ./discovery_service
     container_name: discovery_service
-    image: 'philipasd/discovery_service:latest'
     networks:
       - friend-recommendation-system
     expose:
@@ -15,14 +13,10 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      neo4j:
-        condition: service_healthy
   
   friend-service:
     build: ./friend_service
     container_name: friend_service
-    image: 'philipasd/friend_service:latest'
     networks:
       - friend-recommendation-system
     expose:
@@ -32,20 +26,16 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      neo4j:
-        condition: service_healthy
       kafka_broker: 
         condition: service_healthy
-
-
-
+      mongo-db: 
+        condition: service_started
   #
   #   RECOMMENDATION SERVICE
   #
   recommendation-service:
     build: ./recommendation_service
     container_name: recommendation-service
-    image: 'philipasd/recommendation_service:latest'
     networks:
       - friend-recommendation-system
     expose:
@@ -55,7 +45,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
-      neo4j:
+      neo4j-db:
         condition: service_healthy
       kafka_broker: 
         condition: service_healthy
@@ -73,9 +63,9 @@ services:
     depends_on:
       kafka_broker:
         condition: service_started
-      postgresdb: 
+      postgres-db: 
         condition: service_started
-      redis: 
+      redis-db: 
         condition: service_started
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -92,15 +82,16 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      redis: 
+      redis-db: 
         condition: service_healthy
     networks:
       - friend-recommendation-system
 
+
   #
   #
   # Redis db
-  redis:
+  redis-db:
     container_name: redis
     image: 'bitnami/redis:latest'
     ports:
@@ -116,7 +107,7 @@ services:
   # PostgreSQL
   #
   #
-  postgresdb:
+  postgres-db:
     image: postgres
     restart: always
     container_name: postgres-container-test
@@ -164,7 +155,7 @@ services:
   #
   #
   # Mongo Db
-  mongodb:
+  mongo-db:
     image: "mongo:latest"
     container_name: mongo-container
     ports:
