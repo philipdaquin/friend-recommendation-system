@@ -186,7 +186,7 @@ services:
       - "7687:7687"
       - "7473:7473"
     networks:
-      - recommendation-service-local 
+      - friend-recommendation-system
     environment:
       - NEO4J_PASSWORD= password
       - NEO4J_HOST= username
