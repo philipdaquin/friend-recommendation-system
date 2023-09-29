@@ -12,7 +12,7 @@ spring:
       group-id: test
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    bootstrap-servers: localhost:9091
+    bootstrap-servers: kafka_broker:9091
   neo4j:
     uri: bolt://neo4j-db:7687/recommendations
     authentication:  
