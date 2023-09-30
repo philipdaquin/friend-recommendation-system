@@ -33,6 +33,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
 
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper

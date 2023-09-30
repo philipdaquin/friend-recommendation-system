@@ -194,6 +194,7 @@
 				
 				Build Docker Image 
 
+			 -->
 			<plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
@@ -209,14 +210,14 @@
                 </executions>
                 <configuration>
                     <repository>philipasd/${project.name}</repository>
-                    <tag>${project.version}</tag>
+                    <!-- <tag>${project.version}</tag> -->
+                    <tag>v0.0.0</tag>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                     <buildArgs>
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
                 </configuration>
             </plugin>
-			 -->
 
 			<!-- 
 

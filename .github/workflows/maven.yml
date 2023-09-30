@@ -70,17 +70,17 @@ jobs:
     # - name: Update dependency graph
     #   uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
-  Deploy:
-    needs: Build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: kubectl - Google Cloud GKE cluster.
-      uses: ameydev/gke-kubectl-action@master
-      env:
-        PROJECT_ID: ${{ env.PROJECT_ID }}
-        APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
-        CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
-        ZONE_NAME: ${{ env.GKE_ZONE }}
-      with:
-        args: apply -f deployment/
+  # Deploy:
+  #   needs: Build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - name: kubectl - Google Cloud GKE cluster.
+  #     uses: ameydev/gke-kubectl-action@master
+  #     env:
+  #       PROJECT_ID: ${{ env.PROJECT_ID }}
+  #       APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
+  #       CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
+  #       ZONE_NAME: ${{ env.GKE_ZONE }}
+  #     with:
+  #       args: apply -f deployment/
