@@ -22,6 +22,7 @@ pipeline {
        
         stage ('Static Analysis') {
             steps {
+                // Testing
                 // withCredentials([string(credentialsId: 'sonar', variable: 'sonartoken')]) {
                 //     sh '''
                 //         mvn clean compile -DskipTests=true sonar:sonar \
