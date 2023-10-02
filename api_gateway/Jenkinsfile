@@ -83,7 +83,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps { 
-                sh "docker build -t ${APP_IMAGE}:0.0.3 -f api_gateway/Dockerfile api_gateway/"
+                sh "docker build -t ${APP_IMAGE}:0.0.4 -f api_gateway/Dockerfile api_gateway/"
             }
         } 
 
@@ -91,7 +91,7 @@ pipeline {
            
             steps{
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push ${APP_IMAGE}:0.0.3'
+                sh 'docker push ${APP_IMAGE}:0.0.4'
             }
         } 
 
