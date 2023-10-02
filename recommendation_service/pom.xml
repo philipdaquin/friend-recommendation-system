@@ -211,7 +211,7 @@
                 <configuration>
                     <repository>philipasd/${project.name}</repository>
                     <!-- <tag>${project.version}</tag> -->
-                    <tag>v0.0.0</tag>
+                    <tag>0.0.0</tag>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                     <buildArgs>
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
