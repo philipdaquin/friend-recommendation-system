@@ -3,6 +3,7 @@ pipeline {
     environment { 
         APP_IMAGE = "philipasd/api_gateway"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        COMMIT_ID = "${env.BUILD_NUMBER}"
 
     }
     stages { 
@@ -29,7 +30,7 @@ pipeline {
                 //           -Dsonar.login=${sonartoken}
                 //     '''
                 // }
-                echo "hello world"
+                echo "hello world hello there!"
             }
         }
         
@@ -80,7 +81,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps { 
-                sh "docker build -t ${APP_IMAGE} -f api_gateway/Dockerfile api_gateway/"
+                sh "docker build -t ${APP_IMAGE}:${COMMIT_ID} -f api_gateway/Dockerfile api_gateway/"
             }
         } 
 
@@ -88,7 +89,7 @@ pipeline {
            
             steps{
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push ${APP_IMAGE}:latest'
+                sh 'docker push ${APP_IMAGE}:${COMMIT_ID}'
             }
         } 
 
