@@ -28,7 +28,7 @@ import jakarta.validation.constraints.NotNull;
 @EnableR2dbcRepositories(basePackages = "com.example.user_service.repository")
 @EnableR2dbcAuditing
 @EnableTransactionManagement
-@Profile({"dev, prod, test"})
+@Profile({"dev, prod, test, docker, kubernetes"})
 public class PostgresConfig extends AbstractR2dbcConfiguration{
 
 

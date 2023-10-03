@@ -3,7 +3,7 @@ docker kill postgres
 docker rm postgres
 docker pull postgres
 
-docker run -d \                                                                  125 ↵
+docker run -d \                                                                  
     --name postgres \
     --rm \
     -e POSTGRES_PASSWORD=password \
@@ -14,4 +14,4 @@ docker run -d \                                                                 
 
 
 docker pull redis
-docker run --name some-redis -d redis
+docker run --name redis -p 6379:6379 -d redis
