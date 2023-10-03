@@ -29,9 +29,10 @@ import com.example.user_service.domains.User;
 // @EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 public class RedisConfig {
     
-    @Value("${}")
+    @Value("${redis.port}")
     private Integer redisPort;
 
+    @Value("${redis.host}")
     private String redisHost;
 
 
