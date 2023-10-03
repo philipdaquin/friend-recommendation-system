@@ -10,6 +10,18 @@ server:
     include-binding-errors: always
   port: 7000
 
+management: 
+  health:
+    probes:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 logging:
   level:
     root: INFO
