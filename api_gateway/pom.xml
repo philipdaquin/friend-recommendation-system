@@ -128,7 +128,7 @@
 			<!-- 
 			Build Docker Image and push to Docker Hub 	
 			-->
-
+<!-- 
 			<plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
@@ -158,7 +158,7 @@
 					</dependency>
 				</dependencies>
             </plugin> 
-
+ -->
 
 
 		</plugins>

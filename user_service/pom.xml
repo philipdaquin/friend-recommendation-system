@@ -210,7 +210,7 @@
 				
 				Build Docker Image 
 			 -->
-
+<!-- 
 			<plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
@@ -240,7 +240,7 @@
 					</dependency>
 				</dependencies>
             </plugin>
-
+ -->
 
 
 			<!-- 
