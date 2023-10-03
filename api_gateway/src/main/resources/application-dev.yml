@@ -119,7 +119,7 @@ spring:
       # - 
       #
       - id: retry
-        uri: lb://api-gateway/9090
+        uri: lb://api-gateway/8090
         predicates:
         - Path= /api-gateway/retry
         filters:

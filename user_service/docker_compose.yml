@@ -31,7 +31,7 @@ services:
   #     - ALLOW_EMPTY_PASSWORD=yes
   redis-db:
     image: redis:latest
-    container_name: redis
+    container_name: redis-db
     command: [ "redis-server", "--protected-mode", "no" ]
     ports:
     - "6379:6379"

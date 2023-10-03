@@ -1,6 +1,6 @@
 
 server:
-  port: 9090
+  port: 8090
   ssl:
     enabled: false
     key-alias: 1

@@ -5,7 +5,7 @@ services:
     build: .
     container_name: api-gateway
     ports: 
-      - "9090:9090"
+      - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:

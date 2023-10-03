@@ -57,7 +57,7 @@ services:
     image: redis:latest
     container_name: redis
     ports:
-    - 6379:6379
+    - 6380:6380
   # loki:
   #   image: grafana/loki:2.7.3
   #   container_name: loki
