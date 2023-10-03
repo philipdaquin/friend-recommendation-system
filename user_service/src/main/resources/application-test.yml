@@ -1,67 +1,14 @@
-spring:
-  application:
-    name: user-service
-server:
-  error:
-    include-message: always
-    include-binding-errors: always
-  port: 7000
-
-logging:
-  level:
-    root: INFO
-    kafka.*: WARN
-    org.springframework.*: INFO
-    org.apache.kafka.*: WARN
-
----
-####
-#   
-#   Testing 
-#
-####
-# postgres.port: 5432
-# postgres.host: localhost
-# postgres.database-name: user 
-# postgres.password: password 
-# postgres.url: ${spring.datasource.url}
-# PRODUCER_TOPIC: user
-
-# spring:
-#   devtools:
-#     restart:
-#       enabled: false
-#     livereload:
-#       enabled: true
-#   config:
-#     activate:
-#       on-profile: test
-#   datasource:
-#     url: jdbc:postgresql://${postgres.host}:${postgres.port}
-#     username: postgres
-#     password: password
-#     driver-class-name: org.postgresql.Driver
-#   liquibase:
-#     url: ${spring.datasource.url}
-#     user: postgres
-#     password: ${postgres.password}
-#   ##
-#   #  Apache Kafka Produder 
-#   ##
-#   kafka:
-#     bootstrap-servers: localhost:9091
-#     producer:
-#       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
-# eureka:
-#   client:
-#     enabled: false
 
 postgres.port: 5432
 postgres.host: localhost
 postgres.url: ${spring.datasource.url}
 postgres.database-name: postgres
 prometheus.enabled: false
+
+
+redis.host: "localhost"
+redis.port: 6379
+
 spring:
   config:
     activate:
@@ -76,12 +23,6 @@ spring:
   datasource:
     url: jdbc:h2:mem:database
     driver-class-name: org.h2.Driver
-  # datasource:
-  #   # url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}
-  #   url: jdbc:h2:mem:database
-  #   username: postgres
-  #   password: password
-    # driver-class-name: org.postgresql.Driver
   liquibase:
     url: ${spring.datasource.url}
     user: postgres
@@ -92,8 +33,8 @@ spring:
       time-to-live: 60000
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${redis.host}
+      port: ${redis.port}
       
 
 eureka:

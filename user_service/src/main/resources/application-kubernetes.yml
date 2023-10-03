@@ -1,14 +1,19 @@
-
-
-
-
----
+####
+#   
+#   Kubernetes 
+#
+####
 postgres.port: 5432
 postgres.host: postgres-db
 postgres.database-name: users 
 postgres.username: postgres
 postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/
 PRODUCER_TOPIC: user
+
+
+redis.host:  redis-db
+redis.port: 6379
+
 spring:
   devtools:
     restart:
@@ -18,8 +23,6 @@ spring:
   config:
     activate:
       on-profile: kubernetes 
-  
-    
   
   datasource:
     url: ${postgres.url}
@@ -36,8 +39,8 @@ spring:
       time-to-live: 60000
   data:
     redis:
-      host: redis-db
-      port: 6379
+      host: ${redis.host}
+      port: ${redis.port}
   
   kafka:
     bootstrap-servers: kafka_broker:9091
