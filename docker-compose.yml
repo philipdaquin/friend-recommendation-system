@@ -237,9 +237,10 @@ services:
       - tempo
     ports:
       - '3000:3000'
-    # volumes:
-    #   - ./monitoring/grafana/data:/var/lib/grafana
-    #   - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    volumes:
+      # - ./monitoring/grafana/data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards
+      - ./monitoring/grafana/datasources/datasources.yml:/etc/grafana/datasources/datasources.yml
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin

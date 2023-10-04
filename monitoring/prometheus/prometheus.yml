@@ -2,11 +2,17 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ["prometheus:9090"]
+
   - job_name: 'otel-collector'
     static_configs:
       - targets: ["otel-collector:8889"]
 
   - job_name: 'user-service'
+    scrape_interval: 2s
     metrics_path: '/actuator/prometheus'
     static_configs: 
       - targets: ["user-service:7000"]

@@ -2,7 +2,9 @@ receivers:
   otlp:
     protocols:
       http:
+        endpoint: otel-collector:4318
       grpc:
+        endpoint: otel-collector:4317
 
 processors:
   # batch metrics before sending to reduce API usage
@@ -26,14 +28,10 @@ exporters:
     tls:
       insecure: true
 
-  # zipkin:
-  #   endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+  # tempo:
+  #   endpoint: "http://tempo:9411/api/v2/spans"
   #   format: proto
 
-  # jaeger:
-  #   endpoint: jaeger-all-in-one:14250
-  #   tls:
-  #     insecure: true
 # https://github.com/open-telemetry/opentelemetry-collector/blob/main/extension/README.md
 extensions:
   # responsible for responding to health check calls on behalf of the collector.
