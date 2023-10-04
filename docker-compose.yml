@@ -227,9 +227,9 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     restart: always
-    # depends_on:
-    #   - loki
-    #   - prometheus
+    depends_on:
+      - loki
+      - prometheus
       # - tempo
     ports:
       - '3000:3000'
@@ -239,8 +239,8 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_AUTH_DISABLE_LOGIN_FORM: true
-      GF_AUTH_ANONYMOUS_ENABLED: true
+      # GF_AUTH_DISABLE_LOGIN_FORM: true
+      # GF_AUTH_ANONYMOUS_ENABLED: true
 
   prometheus:
     image: prom/prometheus:latest
