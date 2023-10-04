@@ -259,16 +259,16 @@ services:
       cadvisor:
         condition: service_started
 
-  # alertmanager:
-  #   image: prom/alertmanager:latest
-  #   container_name: alertmanager
-  #   ports:
-  #     - '9093:9093'
-  #   volumes:
-  #     - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-  #   command:
-  #     - '--config.file=/etc/alertmanager/alertmanager.yml'
-  #     - '--web.external-url=http://localhost:9093'
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--web.external-url=http://localhost:9093'
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -299,7 +299,8 @@ services:
     volumes:
       - ./monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml
       # - ../logs/loki.log:/var/log/spring.log
-    command: "--config.file=/etc/promtail/promtail.yaml"
+    command: 
+      - "--config.file=/etc/promtail/promtail.yaml"
     ports:
       - "9080:9080"
     depends_on:
