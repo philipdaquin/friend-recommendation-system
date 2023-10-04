@@ -73,7 +73,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - LOKI_URI=http://loki:3100/loki/api/v1/push
-      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411
     networks:
       - friend-recommendation-system
   #
@@ -223,7 +223,9 @@ services:
       - 4317:4317 # OTLP gRPC receiver
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
-
+    depends_on:
+      zipkin:
+        condition: service_started
 
   grafana:
     image: grafana/grafana:latest
@@ -318,11 +320,16 @@ services:
     command: -config.file /etc/tempo-config.yml
     ports:
       - "3200:3200"     # Tempo
-      - "4317:4317"     # OTLP
-      - "9411:9411"     # Zipkin
+      - "4317"     # OTLP
+      # - "9411:9411"     # Zipkin
     volumes:
       - ./monitoring/tempo/tempo.yml:/etc/tempo-config.yml
-
+  # Zipkin
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: always
+    ports:
+      - "9411:9411"
 networks:
   friend-recommendation-system:
     external: false
