@@ -26,16 +26,16 @@ services:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
 
-  # alertmanager:
-  #   image: prom/alertmanager:latest
-  #   container_name: alertmanager
-  #   ports:
-  #     - '9093:9093'
-  #   volumes:
-  #     - ./monitoring/alertmanager:/etc/alertmanager
-  #   command:
-  #     - '--config.file=/etc/alertmanager/alertmanager.yml'
-  #     - '--web.external-url=http://localhost:9093'
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      # - '--web.external-url=http://localhost:9093'
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest

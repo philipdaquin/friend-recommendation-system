@@ -11,22 +11,49 @@ server:
   port: 7000
 
 management: 
-  health:
-    probes:
-      enabled: true
   endpoint:
     health:
+      probes:
+        enabled: true
       show-details: always
+      show-components: always
   endpoints:
     web:
       exposure:
         include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
+  otlp:
+    metrics:
+      export:
+        url: "http://localhost:4319/v1/metrics"
+        resource-attributes:
+          service:
+            name: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        step: 10s
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        all: true
+        http.server.requests: true
+
 
 logging:
-  level:
-    root: INFO
-    kafka.*: WARN
-    org.springframework.*: INFO
-    org.apache.kafka.*: WARN
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  # level:
+  #   root: INFO
+  #   kafka.*: WARN
+  #   org.springframework.*: INFO
+  #   org.apache.kafka.*: WARN
 
 
