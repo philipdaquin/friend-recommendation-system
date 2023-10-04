@@ -1,5 +1,5 @@
 server:
-  http_listen_port: 3100
+  http_listen_port: 3200
 
 distributor:
   receivers:
@@ -19,6 +19,7 @@ metrics_generator:
   registry:
     external_labels:
       source: tempo
+      cluster: docker-compose
   storage:
     path: /tmp/tempo/generator/wal
     remote_write:
@@ -28,11 +29,22 @@ metrics_generator:
 storage:
   trace:
     backend: local
+    wal:
+      path: /tmp/tempo/wal
     local:
       path: /tmp/tempo/blocks
+
+
 
 overrides:
   metrics_generator_processors: [service-graphs, span-metrics]
 
 usage_report:
   reporting_enabled: false
+
+ingester:
+  max_block_duration: 5m               # cut the headblock when this much time passes. this is being set for demo purposes and should probably be left alone normally
+
+compactor:
+  compaction:
+    block_retention: 1h                # overall Tempo trace retention. set for demo purposes

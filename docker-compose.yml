@@ -72,6 +72,8 @@ services:
         condition: service_started
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - LOKI_URI=http://loki:3100/loki/api/v1/push
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     networks:
       - friend-recommendation-system
   #
@@ -230,7 +232,7 @@ services:
     depends_on:
       - loki
       - prometheus
-      # - tempo
+      - tempo
     ports:
       - '3000:3000'
     # volumes:
@@ -246,15 +248,13 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     restart: always
-    extra_hosts:
-      - host.docker.internal:host-gateway
     ports:
       - '9090:9090'
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--web.external-url=http://localhost:9090'
+      # - '--web.external-url=http://localhost:9090'
     depends_on:
       cadvisor:
         condition: service_started
@@ -292,18 +292,18 @@ services:
   #   - 6380:6380
   #   networks:
   #     - friend-recommendation-system
-  # promtail:
-  #   image: grafana/promtail:2.1.0
-  #   container_name: promtail
-  #   volumes:
-  #     - ./monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml
-  #     # - ../logs/loki.log:/var/log/spring.log
-  #   command: 
-  #     - "--config.file=/etc/promtail/promtail.yml"
-  #   ports:
-  #     - "9080:9080"
-  #   depends_on:
-  #     - loki
+  promtail:
+    image: grafana/promtail:2.1.0
+    container_name: promtail
+    volumes:
+      - ./monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml
+      # - ../logs/loki.log:/var/log/spring.log
+    command: 
+      - "--config.file=/etc/promtail/promtail.yml"
+    ports:
+      - "9080:9080"
+    depends_on:
+      - loki
 
   loki:
     image: grafana/loki:2.7.3
@@ -312,16 +312,16 @@ services:
     ports:
       - "3100:3100"
 
-  # tempo:
-  #   image: grafana/tempo:2.0.0
-  #   container_name: tempo
-  #   command: -config.file /etc/tempo-config.yml
-  #   ports:
-  #     - "3110:3100"     # Tempo
-  #     # - "4317:4317"     # OTLP
-  #     - "9411:9411"     # Zipkin
-  #   volumes:
-  #     - ./monitoring/tempo/tempo.yml:/etc/tempo-config.yml
+  tempo:
+    image: grafana/tempo:2.0.0
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "3200:3200"     # Tempo
+      - "4317:4317"     # OTLP
+      - "9411:9411"     # Zipkin
+    volumes:
+      - ./monitoring/tempo/tempo.yml:/etc/tempo-config.yml
 
 networks:
   friend-recommendation-system:
