@@ -3,6 +3,28 @@
 #   Development 
 #
 ####
+
+
+
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+        step: 10s
+        resource-attributes:
+          service:
+            name: ${spring.application.name}  
+    tracing:
+      endpoint: "http://localhost:4318/v1/traces"
+
+
+
 postgres.port: 5432
 postgres.host: "postgres_container_test"
 postgres.database-name: users 
