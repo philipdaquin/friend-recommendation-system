@@ -9,7 +9,7 @@
       "pluginName": "Prometheus"
     },
     {
-      "name": "DS_LOKI",
+      "name": "Loki",
       "label": "Loki",
       "description": "",
       "type": "datasource",
@@ -831,7 +831,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "${DS_LOKI}"
+        "uid": "loki"
       },
       "fieldConfig": {
         "defaults": {
@@ -955,7 +955,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "${DS_LOKI}"
+            "uid": "loki"
           },
           "editorMode": "code",
           "expr": "sum by(type) (rate({compose_service=~\"app-.*\"} | pattern `<date> <time> <_>=<trace_id> <_>=<span_id> <_>=<trace_flags> <type> <_> --- <msg>` | type != \"\" |= \"$log_keyword\" [1m]))",
@@ -970,7 +970,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "${DS_LOKI}"
+        "uid": "loki"
       },
       "gridPos": {
         "h": 9,
@@ -994,7 +994,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "${DS_LOKI}"
+            "uid": "loki"
           },
           "editorMode": "code",
           "expr": "{compose_service=~\"app-.*\"} | pattern `<date> <time> <_>=<trace_id> <_>=<span_id> <_>=<trace_flags> <type> <_> --- <msg>` | line_format \"{{.compose_service}}\\t{{.type}}\\ttrace_id={{.trace_id}}\\t{{.msg}}\" |= \"$log_keyword\"",
