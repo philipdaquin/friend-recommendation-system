@@ -21,7 +21,8 @@ exporters:
       label1: value1
 
   otlp:
-    endpoint: tempo:4317
+    # endpoint: tempo:4317
+    endpoint: otel-collector:4317
     tls:
       insecure: true
 
@@ -52,7 +53,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [jaeger,zipkin,otlp]
+      exporters: [otlp]
     logs:
       receivers: [otlp]
       exporters: [loki]

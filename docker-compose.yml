@@ -282,29 +282,28 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
     depends_on:
-      redis:
+      redis-db:
         condition: service_started
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-    - 6380:6380
-    networks:
-      - friend-recommendation-system
-  
-  promtail:
-    image: grafana/promtail:2.1.0
-    container_name: promtail
-    volumes:
-      - ./monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml
-      # - ../logs/loki.log:/var/log/spring.log
-    command: 
-      - "--config.file=/etc/promtail/promtail.yaml"
-    ports:
-      - "9080:9080"
-    depends_on:
-      - loki
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #   - 6380:6380
+  #   networks:
+  #     - friend-recommendation-system
+  # promtail:
+  #   image: grafana/promtail:2.1.0
+  #   container_name: promtail
+  #   volumes:
+  #     - ./monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml
+  #     # - ../logs/loki.log:/var/log/spring.log
+  #   command: 
+  #     - "--config.file=/etc/promtail/promtail.yml"
+  #   ports:
+  #     - "9080:9080"
+  #   depends_on:
+  #     - loki
 
   loki:
     image: grafana/loki:2.7.3
@@ -313,16 +312,16 @@ services:
     ports:
       - "3100:3100"
 
-  tempo:
-    image: grafana/tempo:2.0.0
-    container_name: tempo
-    command: -config.file /etc/tempo-config.yml
-    ports:
-      - "3110:3100"     # Tempo
-      - "4317:4317"     # OTLP
-      - "9411:9411"     # Zipkin
-    volumes:
-      - ./monitoring/tempo/tempo.yml:/etc/tempo-config.yml
+  # tempo:
+  #   image: grafana/tempo:2.0.0
+  #   container_name: tempo
+  #   command: -config.file /etc/tempo-config.yml
+  #   ports:
+  #     - "3110:3100"     # Tempo
+  #     # - "4317:4317"     # OTLP
+  #     - "9411:9411"     # Zipkin
+  #   volumes:
+  #     - ./monitoring/tempo/tempo.yml:/etc/tempo-config.yml
 
 networks:
   friend-recommendation-system:

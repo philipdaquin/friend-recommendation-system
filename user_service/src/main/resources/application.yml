@@ -24,13 +24,13 @@ management:
   tracing:
     sampling:
       probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
+  # zipkin:
+  #   tracing:
+  #     endpoint: "http://localhost:9411/api/v2/spans"
   otlp:
     metrics:
       export:
-        url: "http://localhost:4319/v1/metrics"
+        url: "http://localhost:4318/v1/metrics"
         resource-attributes:
           service:
             name: ${spring.application.name}
