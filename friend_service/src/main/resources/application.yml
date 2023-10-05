@@ -10,6 +10,7 @@ server:
     include-binding-errors: always
   port: 7001
 
+
 management: 
   endpoint:
     metrics:
@@ -64,3 +65,9 @@ management:
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    org.springframework.transaction: TRACE
+    root: INFO
+    kafka.*: WARN
+    org.springframework.*: INFO
+    org.apache.kafka.*: WARN
