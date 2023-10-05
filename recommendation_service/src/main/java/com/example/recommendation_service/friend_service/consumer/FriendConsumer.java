@@ -29,13 +29,17 @@ public class FriendConsumer {
         this.service = service;
     } 
 
+    /**
+     * @param event
+     */
     @KafkaListener(topics = topic, groupId = consumerId)
     public void consume(
-        // ConsumerRecord<String, DomainEvent<Friend>> event, Acknowledgment ack
-        @Payload DomainEvent<Friend> event
+        ConsumerRecord<String, DomainEvent<Friend>> event, 
+        Acknowledgment ack
+        // @Payload DomainEvent<Friend> event
         ) {
         log.info("Friend Consumer is working");
-        service.apply(event);
-        // ack.acknowledge();
+        service.apply(event.value());
+        ack.acknowledge();
     }
 }
