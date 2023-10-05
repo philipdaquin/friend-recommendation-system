@@ -7,10 +7,11 @@ spring:
   
   kafka:
     consumer:
+      auto-offset-reset: earliest
       group-id: test
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    bootstrap-servers: localhost:9091
+    bootstrap-servers: localhost:9191
 
 
   neo4j:

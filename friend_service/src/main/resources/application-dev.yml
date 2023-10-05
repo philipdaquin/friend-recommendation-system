@@ -13,7 +13,7 @@ spring:
   kafka:
     template:
       default-topic: friend
-    bootstrap-servers: localhost:9091
+    bootstrap-servers: localhost:9191
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer

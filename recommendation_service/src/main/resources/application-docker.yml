@@ -8,12 +8,14 @@ spring:
     activate:
       on-profile: docker
   kafka:
+    
     consumer:
-      group-id: test
-      
+      auto-offset-reset: earliest
+
+      group-id: recommendation-events-listener-group
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    bootstrap-servers: kafka_broker:9091
+    bootstrap-servers: kafka_broker:9191
   neo4j:
     uri: bolt://neo4j-db:7687/recommendations
     authentication:  

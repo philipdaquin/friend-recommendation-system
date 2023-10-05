@@ -55,7 +55,7 @@ spring:
   kafka:
     template:
       default-topic: user
-    bootstrap-servers: kafka_broker:9091
+    bootstrap-servers: kafka_broker:9191
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
