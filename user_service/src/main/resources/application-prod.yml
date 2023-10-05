@@ -53,7 +53,9 @@ spring:
   #  Apache Kafka Produder 
   ##
   kafka:
-    bootstrap-servers: localhost:9091
+    template:
+      default-topic: user
+    bootstrap-servers: kafka_broker:9091
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer

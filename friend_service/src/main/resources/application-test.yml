@@ -13,11 +13,9 @@ spring:
     url: jdbc:h2:file:~/testdb
   kafka:
     bootstrap-servers: localhost:9091
-    
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
-
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
