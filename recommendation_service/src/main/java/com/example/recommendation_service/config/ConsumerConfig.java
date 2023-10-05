@@ -18,39 +18,39 @@ import org.springframework.util.backoff.FixedBackOff;
 import org.springframework.kafka.retrytopic.RetryTopicBeanNames;
 
 
-@Configuration
-@EnableKafka
+// @Configuration
+// @EnableKafka
 public class ConsumerConfig {
 
-    private final KafkaTemplate<Object, Object> broker;
+    // private final KafkaTemplate<Object, Object> broker;
 
-    private final ConsumerFactory<String, Object> consumerFactory;
+    // private final ConsumerFactory<String, Object> consumerFactory;
 
-    public ConsumerConfig(KafkaTemplate<Object, Object> broker, ConsumerFactory<String, Object> factory) { 
-        this.broker = broker;
-        this.consumerFactory = factory;
-    }
+    // public ConsumerConfig(KafkaTemplate<Object, Object> broker, ConsumerFactory<String, Object> factory) { 
+    //     this.broker = broker;
+    //     this.consumerFactory = factory;
+    // }
 
-    ConcurrentKafkaListenerContainerFactory<String, Object> kafkaBlockingRetry() { 
-        var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
+    // ConcurrentKafkaListenerContainerFactory<String, Object> kafkaBlockingRetry() { 
+    //     var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
 
-        factory.setConsumerFactory(consumerFactory);
-        factory.setCommonErrorHandler(retryError());
-        consumerFactory.getListeners();
+    //     factory.setConsumerFactory(consumerFactory);
+    //     factory.setCommonErrorHandler(retryError());
+    //     consumerFactory.getListeners();
 
-        return factory;
-    }
+    //     return factory;
+    // }
 
-    public DefaultErrorHandler retryError() { 
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(broker);
-        return new DefaultErrorHandler(recoverer, new FixedBackOff(1000, 3));
-    }
+    // public DefaultErrorHandler retryError() { 
+    //     DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(broker);
+    //     return new DefaultErrorHandler(recoverer, new FixedBackOff(1000, 3));
+    // }
 
-    @Bean(name = RetryTopicBeanNames.DESTINATION_TOPIC_RESOLVER_BEAN_NAME)
-    public DestinationTopicResolver topicResolver(ApplicationContext context) { 
-        DefaultDestinationTopicResolver resolver = new DefaultDestinationTopicResolver(Clock.systemUTC());
-        resolver.defaultFalse();
-        resolver.setClassifications(Collections.emptyMap(), true);
-        return resolver;
-    }
+    // @Bean(name = RetryTopicBeanNames.DESTINATION_TOPIC_RESOLVER_BEAN_NAME)
+    // public DestinationTopicResolver topicResolver(ApplicationContext context) { 
+    //     DefaultDestinationTopicResolver resolver = new DefaultDestinationTopicResolver(Clock.systemUTC());
+    //     resolver.defaultFalse();
+    //     resolver.setClassifications(Collections.emptyMap(), true);
+    //     return resolver;
+    // }
 }

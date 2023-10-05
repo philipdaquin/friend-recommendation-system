@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 
 import com.example.recommendation_service.user_service.domains.events.DomainEvent;
@@ -29,7 +31,12 @@ public class UserConsumer {
         this.service = service;
     } 
 
-
+    @RetryableTopic(
+        attempts = "4",
+        backoff = @Backoff(delay = 1000),
+        include = {ClassCastException.class},
+        includeNames = "java.lang.ClassCastException"
+    )
     @KafkaListener(topics = topic, groupId = consumerId)
     public void consume(
         //ConsumerRecord<String, DomainEvent<User>>
