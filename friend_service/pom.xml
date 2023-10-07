@@ -213,7 +213,7 @@
 			<!-- 
 				Build Docker Image and Push to Docker Hub
 			 -->
-<!-- 
+
 
 			<plugin>
             	<groupId>com.spotify</groupId>
@@ -245,7 +245,7 @@
 					</dependency>
 				</dependencies>
             </plugin>
- -->
+
 
 			<!-- 
 

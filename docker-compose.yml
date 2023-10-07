@@ -14,6 +14,8 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - LOKI_URI=http://loki:3100/loki/api/v1/push
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
   
   friend-service:
     build: ./friend_service
@@ -26,6 +28,8 @@ services:
       - "7001:7001"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - LOKI_URI=http://loki:3100/loki/api/v1/push
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     depends_on:
       kafka_broker: 
         condition: service_started
@@ -45,6 +49,8 @@ services:
       - "7002:7002"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - LOKI_URI=http://loki:3100/loki/api/v1/push
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
     depends_on:
       neo4j-db:
         condition: service_started
@@ -91,7 +97,8 @@ services:
         condition: service_started
     networks:
       - friend-recommendation-system
-
+      - LOKI_URI=http://loki:3100/loki/api/v1/push
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
 
   #
   #
@@ -149,14 +156,14 @@ services:
     image: confluentinc/cp-kafka:latest
     container_name: kafka_broker
     ports:
-      - "9091:9091"
+      - "9191:9191"
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_broker:9091
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_broker:9191
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1

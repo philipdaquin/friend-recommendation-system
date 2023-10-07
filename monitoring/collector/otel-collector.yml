@@ -18,12 +18,13 @@ exporters:
     endpoint: "http://loki:3100/loki/api/v1/push"
 
   prometheus:
-    endpoint: "0.0.0.0:8889"
+    endpoint:  otel-collector:8889
+    # endpoint:  otel-collector:8889
+    # endpoint:  "0.0.0.0:8889"
     const_labels:
       label1: value1
 
   otlp:
-    # endpoint: tempo:4317
     endpoint: tempo:4317
     tls:
       insecure: true

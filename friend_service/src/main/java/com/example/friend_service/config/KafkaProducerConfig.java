@@ -20,7 +20,7 @@ public class KafkaProducerConfig {
     @Bean
     public ReactiveKafkaProducerTemplate<String, DomainEvent<Friend>> reactiveKafkaProducerTemplate() {
         SenderOptions<String, DomainEvent<Friend>> senderOptions = SenderOptions.<String, DomainEvent<Friend>>create()
-            // .producerProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9091")
+            // .producerProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9191")
             .producerProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName())
             .producerProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName())
             // .producerProperty(ProducerConfig.ACKS_CONFIG, "all")

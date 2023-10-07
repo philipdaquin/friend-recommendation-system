@@ -10,19 +10,69 @@ server:
 
 spring:
   profiles:
-    active: dev
+    default: dev
   application:
     name: api_gateway
-management:
-  endpoint:
-    gateway:
+
+management: 
+  health:
+    livenessstate:
       enabled: true
+    readinessstate:
+      enabled: true
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+      show-details: always
+      show-components: always
   endpoints:
     web:
       exposure:
         include: "*"
-    enabled-by-default: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: "http://tempo:9411/api/v2/spans"
+  otlp:
+    metrics:
+      export:
+        url: "http://otel-collector:4318/v1/metrics"
+        step: 10s
+        resource-attributes:
+          service:
+            name: ${spring.application.name}  
+    tracing:
+      endpoint: "http://otel-collector:4318/v1/traces"
+
+  prometheus:
+    metrics:
+      export:
+        step: 10s
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        all: true
+        http.server.requests: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
 logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     root: INFO
     kafka.*: WARN
@@ -30,6 +80,7 @@ logging:
     org.neo4j.*: INFO
     com.memorynotfound: DEBUG
     org.apache.kafka.*: ERROR
+
 eureka:
   instance:
     prefer-ip-address: true

@@ -10,7 +10,22 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: flog_scrape
-    
+  - job_name: user-service
     static_configs: 
       - targets: ["user-service:7000"]
+      
+  - job_name: friend-service
+    static_configs: 
+      - targets: ["friend-service:7001"]
+
+  - job_name: 'recommendation-service'
+    static_configs: 
+      - targets: ["recommendation-service:7002"]
+  
+  - job_name: 'api-gateway'
+    static_configs: 
+      - targets: ["api-gateway:8090"]
+  
+  - job_name: 'discovery-service'
+    static_configs: 
+      - targets: ["discovery-service:8761"]

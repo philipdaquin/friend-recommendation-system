@@ -7,4 +7,4 @@ COPY target/discovery_service.jar discovery_service.jar
 
 ENTRYPOINT [ "java", "-jar", "/discovery_service.jar" ]
 
-EXPOSE 7001
+EXPOSE 8761

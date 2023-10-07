@@ -14,6 +14,7 @@ import org.springframework.cloud.client.circuitbreaker.Customizer;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {

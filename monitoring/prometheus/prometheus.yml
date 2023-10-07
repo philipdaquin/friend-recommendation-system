@@ -16,6 +16,30 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs: 
       - targets: ["user-service:7000"]
+  
+  - job_name: 'friend-service'
+    scrape_interval: 2s
+    metrics_path: '/actuator/prometheus'
+    static_configs: 
+      - targets: ["friend-service:7001"]
+  
+  - job_name: 'recommendation-service'
+    scrape_interval: 2s
+    metrics_path: '/actuator/prometheus'
+    static_configs: 
+      - targets: ["recommendation-service:7002"]
+  
+  - job_name: 'api-gateway'
+    scrape_interval: 2s
+    metrics_path: '/actuator/prometheus'
+    static_configs: 
+      - targets: ["api-gateway:8090"]
+  
+  - job_name: 'discovery-service'
+    scrape_interval: 2s
+    metrics_path: '/actuator/prometheus'
+    static_configs: 
+      - targets: ["discovery-service:8761"]
 
 
     # 
