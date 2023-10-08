@@ -1,4 +1,4 @@
-package com.example.recommendation_service.friend_service.consumer;
+package com.example.recommendation_service.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -6,15 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
-import org.springframework.kafka.retrytopic.FixedDelayStrategy;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 
-import com.example.recommendation_service.friend_service.domains.Friend;
-import com.example.recommendation_service.friend_service.domains.events.DomainEvent;
-import com.example.recommendation_service.friend_service.service.FriendConsumerService;
+import com.example.recommendation_service.domains.Friend;
+import com.example.recommendation_service.domains.events.FriendDomainEvent;
+import com.example.recommendation_service.service.FriendConsumerService;
 
 @Component
 public class FriendConsumer {
@@ -43,7 +42,7 @@ public class FriendConsumer {
     )
     @KafkaListener(topics = topic, groupId = consumerId)
     public void consume(
-        ConsumerRecord<String, DomainEvent<Friend>> event, 
+        ConsumerRecord<String, FriendDomainEvent<Friend>> event, 
         Acknowledgment ack
         // @Payload DomainEvent<Friend> event
         ) {

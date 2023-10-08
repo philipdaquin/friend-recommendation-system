@@ -1,4 +1,4 @@
-package com.example.recommendation_service.friend_service.service;
+package com.example.recommendation_service.service;
 
 import java.time.Instant;
 
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.example.recommendation_service.friend_service.domains.Friend;
-import com.example.recommendation_service.friend_service.domains.events.DomainEvent;
+import com.example.recommendation_service.domains.Friend;
+import com.example.recommendation_service.domains.events.FriendDomainEvent;
+import com.example.recommendation_service.domains.enums.FriendEventType;
 import com.example.recommendation_service.repository.Neo4JUserRepository;
 
 import reactor.core.publisher.Mono;
-
 
 @Service
 @Transactional
@@ -28,7 +28,7 @@ public class FriendConsumerService {
         this.repository = repository;
     }
 
-    public Mono<Friend> apply(DomainEvent<Friend> event) { 
+    public Mono<Friend> apply(FriendDomainEvent<Friend> event) { 
         
         Friend friend = event.getSubject();
 

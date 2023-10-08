@@ -24,9 +24,9 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.recommendation_service.friend_service.service.FriendConsumerService;
-import com.example.recommendation_service.user_service.domains.User;
-import com.example.recommendation_service.user_service.ranked.RankedUser;
+import com.example.recommendation_service.domains.User;
+import com.example.recommendation_service.domains.ranked.RankedUser;
+import com.example.recommendation_service.service.FriendConsumerService;
 
 import org.neo4j.harness.Neo4j;
 import org.neo4j.harness.Neo4jBuilders;

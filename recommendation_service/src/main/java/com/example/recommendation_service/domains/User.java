@@ -1,4 +1,4 @@
-package com.example.recommendation_service.user_service.domains;
+package com.example.recommendation_service.domains;
 
 import java.time.Instant;
 import java.util.Date;

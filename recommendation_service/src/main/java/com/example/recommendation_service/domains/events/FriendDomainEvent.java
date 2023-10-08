@@ -1,18 +1,19 @@
-package com.example.recommendation_service.friend_service.domains.events;
+package com.example.recommendation_service.domains.events;
 
-import java.io.InputStream;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
-public class DomainEvent<T> implements Serializable {
+import com.example.recommendation_service.domains.enums.FriendEventType;
+import com.example.recommendation_service.domains.enums.UserEventType;
+
+public class FriendDomainEvent<T> {
 
     private T subject;
     private FriendEventType eventType;
     private Date createdDate = Date.from(Instant.now());
     private String createdBy;
 
-    public DomainEvent(){}
+    public FriendDomainEvent(){}
 
     public T getSubject() {
         return subject;

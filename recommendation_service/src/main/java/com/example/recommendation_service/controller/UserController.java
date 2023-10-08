@@ -1,4 +1,4 @@
-package com.example.recommendation_service.user_service.controller;
+package com.example.recommendation_service.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.recommendation_service.domains.User;
+import com.example.recommendation_service.domains.ranked.RankedUser;
 import com.example.recommendation_service.repository.Neo4JUserRepository;
-import com.example.recommendation_service.user_service.domains.User;
-import com.example.recommendation_service.user_service.ranked.RankedUser;
 
 import jakarta.validation.constraints.NotNull;
 import reactor.core.publisher.Flux;
@@ -20,6 +20,8 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/api/v1")
 public class UserController {
 
+
+    
     private final Neo4JUserRepository repository;
 
     public UserController(Neo4JUserRepository repository) { 

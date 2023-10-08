@@ -1,4 +1,4 @@
-package com.example.recommendation_service.friend_service.domains;
+package com.example.recommendation_service.domains;
 import java.util.Date;
 
 

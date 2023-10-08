@@ -14,9 +14,14 @@ spring:
       on-profile: docker
   kafka:
     
+    retry:
+      topic:
+        enabled: true
+        attempts: 10
+    
     consumer:
       auto-offset-reset: earliest
-
+      
       group-id: recommendation-events-listener-group
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer

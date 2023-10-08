@@ -1,4 +1,4 @@
-package com.example.recommendation_service.user_service.service;
+package com.example.recommendation_service.service;
 
 
 import java.time.Instant;
@@ -10,10 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.recommendation_service.friend_service.service.FriendConsumerService;
+import com.example.recommendation_service.domains.User;
+import com.example.recommendation_service.domains.events.UserDomainEvent;
 import com.example.recommendation_service.repository.Neo4JUserRepository;
-import com.example.recommendation_service.user_service.domains.User;
-import com.example.recommendation_service.user_service.domains.events.DomainEvent;
 
 import reactor.core.publisher.Mono;
 
@@ -34,7 +33,7 @@ public class UserConsumerService {
      * 
      * @param event
      */
-    public Mono<User> apply(DomainEvent<User> event) { 
+    public Mono<User> apply(UserDomainEvent<User> event) { 
         
         switch (event.getEventType()) { 
             case USER_ADDED: 

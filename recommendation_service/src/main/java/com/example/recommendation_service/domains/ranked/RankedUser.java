@@ -1,6 +1,6 @@
-package com.example.recommendation_service.user_service.ranked;
+package com.example.recommendation_service.domains.ranked;
 
-import com.example.recommendation_service.user_service.domains.User;
+import com.example.recommendation_service.domains.User;
 
 public class RankedUser {
     private User user;

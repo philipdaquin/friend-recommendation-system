@@ -1,16 +1,17 @@
-package com.example.recommendation_service.user_service.domains.events;
+package com.example.recommendation_service.domains.events;
 
 import java.time.Instant;
 import java.util.Date;
 
-public class DomainEvent<T> {
+import com.example.recommendation_service.domains.enums.UserEventType;
+public class UserDomainEvent<T> {
 
     private T subject;
     private UserEventType eventType;
     private Date createdDate = Date.from(Instant.now());
     private String createdBy;
 
-    public DomainEvent(){}
+    public UserDomainEvent(){}
 
     public T getSubject() {
         return subject;

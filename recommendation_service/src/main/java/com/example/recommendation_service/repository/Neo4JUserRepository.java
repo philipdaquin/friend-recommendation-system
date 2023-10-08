@@ -1,19 +1,11 @@
 package com.example.recommendation_service.repository;
-
-import java.time.Instant;
 import java.util.Date;
-
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
-import org.springframework.data.util.Streamable;
-import org.springframework.stereotype.Repository;
-
-import com.example.recommendation_service.friend_service.domains.Friend;
-import com.example.recommendation_service.user_service.domains.User;
+import com.example.recommendation_service.domains.User;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 // @SuppressWarnings("unused")
 // @Repository

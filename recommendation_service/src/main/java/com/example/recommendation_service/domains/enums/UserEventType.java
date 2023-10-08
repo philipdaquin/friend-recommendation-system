@@ -1,4 +1,4 @@
-package com.example.recommendation_service.user_service.domains.events;
+package com.example.recommendation_service.domains.enums;
 
 public enum UserEventType {
     USER_ADDED,
