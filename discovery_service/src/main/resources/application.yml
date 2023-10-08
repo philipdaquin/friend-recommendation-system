@@ -81,10 +81,15 @@ logging:
 spring:
   config:
     activate:
-      on-profile: development
+      on-profile: dev
 eureka:
   instance:
-    prefer-ip-address: true
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/
 
 --- 
 spring:
@@ -93,7 +98,13 @@ spring:
       on-profile: docker 
 eureka:
   instance:
-    prefer-ip-address: true
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
 ---
 spring:
   config:
@@ -103,4 +114,11 @@ eureka:
   instance:
     prefer-ip-address: true
 ---
+
+spring:
+  profiles: cloud
+eureka:
+  instance:
+    hostname: ${APPLICATION_DOMAIN}
+    nonSecurePort: 80
 

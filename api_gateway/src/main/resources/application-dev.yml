@@ -1,3 +1,8 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+
 spring:
   data:
     redis:
@@ -90,9 +95,6 @@ spring:
             redis-rate-limiter.replenishRate: 10
             redis-rate-limiter.burstCapacity: 10
             redis-rate-limiter.requestedTokens: 1
-
-
-
 
       - id: recommendation-service
         uri: lb://recommendation-service

@@ -2,9 +2,7 @@ package com.example.recommendation_service.domains.events;
 
 import java.time.Instant;
 import java.util.Date;
-
 import com.example.recommendation_service.domains.enums.FriendEventType;
-import com.example.recommendation_service.domains.enums.UserEventType;
 
 public class FriendDomainEvent<T> {
 

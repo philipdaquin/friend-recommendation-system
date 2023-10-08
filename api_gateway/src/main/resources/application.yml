@@ -25,6 +25,8 @@ management:
       enabled: true
     prometheus:
       enabled: true
+    gateway:
+      enabled: true
     health:
       probes:
         enabled: true
@@ -80,12 +82,6 @@ logging:
     org.neo4j.*: INFO
     com.memorynotfound: DEBUG
     org.apache.kafka.*: ERROR
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: TRACE
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/

@@ -17,7 +17,7 @@ docker rm api-gateway
 # Docker build image
 docker build -t api-gateway .
 
-docker tag api-gateway philipasd/api-gateway:v0.0.0
+docker tag api-gateway philipasd/api-gateway:0.0.0
 
 # docker push philipasd/api-gateway:v0.0.0
 

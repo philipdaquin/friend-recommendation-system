@@ -1,4 +1,4 @@
-package com.config;
+package com.example.api_gateway.config;
 import java.time.Duration;
 
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
