@@ -1,6 +1,11 @@
 
 
 spring:
+  devtools: 
+    restart:
+      enabled: true
+    livereload: 
+      enabled: true
   config:
     activate:
       on-profile: dev

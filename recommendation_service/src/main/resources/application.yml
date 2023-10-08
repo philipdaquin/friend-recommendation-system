@@ -73,8 +73,6 @@ logging:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     root: INFO
-    kafka.*: WARN
     org.springframework.*: INFO
-    org.apache.kafka.*: WARN
 
 

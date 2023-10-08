@@ -4,6 +4,11 @@
 neo4j.host: neo4j 
 
 spring:
+  devtools: 
+    restart:
+      enabled: true
+    livereload: 
+      enabled: true
   config:
     activate:
       on-profile: docker

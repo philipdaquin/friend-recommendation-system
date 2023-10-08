@@ -1,0 +1,193 @@
+version: '1.0'
+
+services:
+  # Neo4j
+  neo4j-db:
+    container_name: neo4j
+    image: bitnami/neo4j:latest
+    ports:
+      - "7475:7474"
+      - "7687:7687"
+      - "7473:7473"
+    networks:
+      - recommendation-service-local
+    environment:
+      - NEO4J_PASSWORD= password
+      - NEO4J_HOST= username
+      - NEO4J_ALLOW_UPGRADE=true
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - recommendation-service-local
+
+  kafka_broker:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka_broker
+    ports:
+      - "9191:9191"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_broker:9191
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - recommendation-service-local
+
+  #
+  #   
+  #
+  #
+  redis-db:
+    image: redis:latest
+    container_name: redis-db
+    command: [ "redis-server", "--protected-mode", "no" ]
+    ports:
+    - "6379:6379"
+    networks:
+      - recommendation-service-local
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.82.0
+    restart: always
+    command:
+      - --config=/etc/otelcol-contrib/otel-collector.yml
+    volumes:
+      - ../monitoring/collector/otel-collector.yml:/etc/otelcol-contrib/otel-collector.yml
+    ports:
+      - 1888:1888 # pprof extension
+      - 8888:8888 # Prometheus metrics exposed by the collector
+      - 8889:8889 # Prometheus exporter metrics
+      - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      - 55679:55679 # zpages extension
+    networks:
+      - recommendation-service-local 
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
+    ports:
+      - '3000:3000'
+    volumes:
+      - ../monitoring/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ../monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ../monitoring/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    networks:
+      - recommendation-service-local 
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - '9090:9090'
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      cadvisor:
+        condition: service_started
+    networks:
+      - recommendation-service-local 
+
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - '9093:9093'
+    volumes:
+      - ../monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    networks:
+      - recommendation-service-local 
+
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    ports:
+      - '8080:8080'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      redis-db:
+        condition: service_started
+    networks:
+      - recommendation-service-local 
+
+  promtail:
+    image: grafana/promtail:2.1.0
+    container_name: promtail
+    volumes:
+      - ../monitoring/promtail/promtail.yml:/etc/promtail/promtail.yml
+      # - ../logs/loki.log:/var/log/spring.log
+    command: 
+      - "--config.file=/etc/promtail/promtail.yml"
+    ports:
+      - "9080:9080"
+    depends_on:
+      - loki
+    networks:
+      - recommendation-service-local 
+
+
+  loki:
+    image: grafana/loki:2.7.3
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - recommendation-service-local 
+
+
+  tempo:
+    image: grafana/tempo:2.0.0
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "3200:3200"     # Tempo
+      # - "4317"          # OTLP
+      - "9411:9411"     # Zipkin
+    volumes:
+      - ../monitoring/tempo/tempo.yml:/etc/tempo-config.yml
+    networks:
+      - recommendation-service-local 
+
+
+
+
+
+networks:
+  recommendation-service-local:
+    external: false 
