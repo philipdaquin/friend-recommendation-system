@@ -1,0 +1,144 @@
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://discovery-service:8761/eureka/
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+  data:
+    redis:
+      host: redis-db
+      port: 6379 
+  cloud:
+    discovery:
+      client:
+        health-indicator:
+          enabled: true
+    gateway:
+      # default-filters:
+      # - AddResponseHeader=X-My-Response-Default, Default-Value
+      # httpclient:
+      #   ssl:
+      #     #
+      #     # Turn true if you are using certificates that are not trusted
+      #     #cd 
+      #     # useInsecureTrustManager: false
+      #     useInsecureTrustManager: true
+
+      discovery:
+        locator:
+          enabled: true
+
+      routes:
+      # Id - Every route requires a unique identifer 
+      - id: user-service
+        
+        # uri - the target UTI 
+        uri: http://user-service
+        
+        # predicates - are conditions that determine whether a route should be applied to an incoming request
+        # If the path matches this route "/users/**", this route will be applied 
+        predicates:
+        - Path= /users/**
+        
+        # filters - are used to perform various operations on the request or response, such as rewriting 
+        # `RewritePath` filter is used to transform the path of the request before it is forwarded to the backend service.
+        # It captures the remaining path after `/user/` and replaces it in the url 
+        filters: 
+        - name: RewritePath
+          args: 
+            regexp: "/users/(?<remaining>.*)"
+            replacement: "/api/v1/users/${remaining}"
+        - name: CircuitBreaker 
+          args:
+            name: user-service
+            fallbackuri: forward:/user-service-fallback
+        - name: RequestRateLimiter
+          args:
+            # ReplishRate 
+            # Defines how many request per second to allow without any dropped requests
+            redis-rate-limiter.replenishRate: 10
+            
+            # BurstCapacity
+            # The maximum number of requests a user is allowed in a single record without any dropped requests
+            redis-rate-limiter.burstCapacity: 10
+
+            # RequestedTokens
+            # Defines how may tokens a request cost
+            redis-rate-limiter.requestedTokens: 1
+
+
+      - id: friend-service
+        uri: http://friend-service
+        predicates:
+        - Path= /friend/**
+        filters: 
+        - name: RewritePath
+          args: 
+            regexp: "/friend/(?<remaining>.*)"
+            replacement: "/${remaining}"
+        - name: CircuitBreaker 
+          args:
+            name: user-service
+            fallbackuri: forward:/friend-service-fallback
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 10
+            redis-rate-limiter.requestedTokens: 1
+      - id: recommendation-service
+        uri: http://recommendation-service
+        predicates:
+        - Path= /recommendation/**
+        filters: 
+        - name: RewritePath
+          args: 
+            regexp: "/recommendation/(?<remaining>.*)"
+            replacement: "/${remaining}"
+        - name: CircuitBreaker 
+          args:
+            name: user-service
+            fallbackuri: forward:/recommendation-service-fallback
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 10
+            redis-rate-limiter.requestedTokens: 1
+      #
+      # Retry
+      # - 
+      #
+      - id: retry
+        uri: http://api-gateway/8090
+        predicates:
+        - Path= /api-gateway/retry
+        filters:
+        - name: retry
+          args:
+            # Retries
+            # - The number of retries that should be attempted
+            retries: 3
+            # Http Method 
+            methods: GET
+            series: SERVER_ERROR
+            # Status
+            # - The HTTP status codes  
+            statuses: BAD_REQUEST, INTERNAL_SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException, org.springframework.web.client.HttpServerErrorException
+            # Backoff
+            # - The configured exponential backoff for the retries 
+            backoff:
+              firstBackoff: 10ms 
+              maxBackoff: 500ms
+              factor: 3
+              basedOnPreviousValue: false

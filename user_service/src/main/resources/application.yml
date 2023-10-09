@@ -19,8 +19,8 @@ management:
   endpoint:
     metrics:
       enabled: true
-    # prometheus:
-    #   enabled: true
+    prometheus:
+      enabled: true
     health:
       probes:
         enabled: true

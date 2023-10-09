@@ -2,35 +2,46 @@ spring:
   config:
     activate:
       on-profile: dev
+  data:
+    redis:
+      host: localhost
+      port: 6379 
   cloud:
     discovery:
       client:
         health-indicator:
           enabled: true
-    
     gateway:
       default-filters:
-      - SaveSession
-      - TokenRelay
-      - name: RequestRateLimiter
-        args:
-          redis-rate-limiter:
-            replenishRate: 10
-            burstCapacity: 20
-            requestedTokens: 1
+      - AddResponseHeader=X-My-Response-Default, Default-Value
+
       httpclient:
         ssl:
-          use-insecure-trust-manager: true
+          #
+          # Turn true if you are using certificates that are not trusted
+          #
+          # useInsecureTrustManager: false
+          useInsecureTrustManager: true
+
       discovery:
         locator:
           enabled: true
-      
+
       routes:
       # Id - Every route requires a unique identifer 
       - id: user-service
+        
+        # uri - the target UTI 
         uri: lb://user-service
+        
+        # predicates - are conditions that determine whether a route should be applied to an incoming request
+        # If the path matches this route "/users/**", this route will be applied 
         predicates:
         - Path= /users/**
+        
+        # filters - are used to perform various operations on the request or response, such as rewriting 
+        # `RewritePath` filter is used to transform the path of the request before it is forwarded to the backend service.
+        # It captures the remaining path after `/user/` and replaces it in the url 
         filters: 
         - name: RewritePath
           args: 
@@ -40,18 +51,20 @@ spring:
           args:
             name: user-service
             fallbackuri: forward:/user-service-fallback
-        # - name: RequestRateLimiter
-        #   args:
-        #     redis-rate-limiter.replenishRate: 10
-        #     redis-rate-limiter.burstCapacity: 10
-        #     redis-rate-limiter.requestedTokens: 1
-        - name: Retry
+        - name: RequestRateLimiter
           args:
-            retries: 3
-            method: GET
-            backoff:
-              firstBackoff: 50ms
-              maxBackoff: 500ms
+            # ReplishRate 
+            # Defines how many request per second to allow without any dropped requests
+            redis-rate-limiter.replenishRate: 10
+            
+            # BurstCapacity
+            # The maximum number of requests a user is allowed in a single record without any dropped requests
+            redis-rate-limiter.burstCapacity: 10
+
+            # RequestedTokens
+            # Defines how may tokens a request cost
+            redis-rate-limiter.requestedTokens: 1
+
 
       - id: friend-service
         uri: lb://friend-service
@@ -66,11 +79,11 @@ spring:
           args:
             name: user-service
             fallbackuri: forward:/friend-service-fallback
-        # - name: RequestRateLimiter
-        #   args:
-        #     redis-rate-limiter.replenishRate: 10
-        #     redis-rate-limiter.burstCapacity: 10
-        #     redis-rate-limiter.requestedTokens: 1
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 10
+            redis-rate-limiter.requestedTokens: 1
 
       - id: recommendation-service
         uri: lb://recommendation-service
@@ -85,11 +98,11 @@ spring:
           args:
             name: user-service
             fallbackuri: forward:/recommendation-service-fallback
-        # - name: RequestRateLimiter
-        #   args:
-        #     redis-rate-limiter.replenishRate: 10
-        #     redis-rate-limiter.burstCapacity: 10
-        #     redis-rate-limiter.requestedTokens: 1
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 10
+            redis-rate-limiter.requestedTokens: 1
 
 
       #
@@ -134,69 +147,3 @@ eureka:
       enabled: true
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-
-management: 
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
-  endpoint:
-    metrics:
-      enabled: true
-    prometheus:
-      enabled: true
-    health:
-      probes:
-        enabled: true
-      show-details: always
-      show-components: always
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  tracing:
-    sampling:
-      probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: "http://tempo:9411/api/v2/spans"
-  otlp:
-    metrics:
-      export:
-        url: "http://otel-collector:4318/v1/metrics"
-        step: 10s
-        resource-attributes:
-          service:
-            name: ${spring.application.name}  
-    tracing:
-      endpoint: "http://otel-collector:4318/v1/traces"
-  prometheus:
-    metrics:
-      export:
-        step: 10s
-  metrics:
-    tags:
-      application: ${spring.application.name}
-    distribution:
-      percentiles-histogram:
-        all: true
-        http.server.requests: true
-  info:
-    env:
-      enabled: true
-    java:
-      enabled: true
-    os:
-      enabled: true
-
-logging:
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
-  level:
-    root: INFO
-    com.example: DEBUG
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.security: TRACE
-    
-
