@@ -21,14 +21,14 @@ public class WebSecurityConfiguration {
         .build();
     }
 
-    @Bean
-    SecurityWebFilterChain secureHttpApi(ServerHttpSecurity http) { 
-        return http
-            .headers(header -> header.hsts(hts -> hts.disable()))
-            .authorizeExchange(exchange -> exchange.anyExchange().authenticated())
-            // .oauth2ResourceServer(OAuth2ResourceServerSpec::jwt)
-            .csrf(csrf -> csrf.disable())
-        .build();
-    }
+    // @Bean
+    // SecurityWebFilterChain secureHttpApi(ServerHttpSecurity http) { 
+    //     return http
+    //         .headers(header -> header.hsts(hts -> hts.disable()))
+    //         .authorizeExchange(exchange -> exchange.anyExchange().authenticated())
+    //         // .oauth2ResourceServer(OAuth2ResourceServerSpec::jwt)
+    //         .csrf(csrf -> csrf.disable())
+    //     .build();
+    // }
 
 }

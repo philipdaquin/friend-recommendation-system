@@ -1,19 +1,20 @@
+spring:
+  application:
+    name: api_gateway
+  profiles:
+    default: dev
 
 server:
   port: 8090
-  ssl:
-    enabled: false
-    key-alias: 1
-    key-store-password: changeit
-    key-store: classpath:server-keystore.p12
-    key-store-type: PKCS12
-
-spring:
-  profiles:
-    default: dev
-  application:
-    name: api_gateway
-
+  error:
+    include-message: always
+    include-binding-errors: always
+  # ssl:
+  #   enabled: false
+  #   key-alias: 1
+  #   key-store-password: changeit
+  #   key-store: classpath:server-keystore.p12
+  #   key-store-type: PKCS12
 management: 
   health:
     livenessstate:

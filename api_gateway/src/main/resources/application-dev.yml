@@ -1,27 +1,18 @@
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8080/eureka/
-
 spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379 
-  application:
-    name: api-gateway
-  
   config:
     activate:
       on-profile: dev
     import: optional:configserver:http://localhost:9296
-    
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379 
   cloud:
     discovery:
       client:
         health-indicator:
           enabled: true
-        
     gateway:
       default-filters:
       - AddResponseHeader=X-My-Response-Default, Default-Value
@@ -145,3 +136,15 @@ spring:
               factor: 3
               basedOnPreviousValue: false
         
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
