@@ -2,7 +2,7 @@
 
 spring:
   application:
-    name: recommendation-name
+    name: recommendation-service
   profiles:
     default: dev
 

@@ -14,12 +14,14 @@ import org.springframework.data.neo4j.repository.config.EnableReactiveNeo4jRepos
 import org.springframework.data.neo4j.repository.config.ReactiveNeo4jRepositoryConfigurationExtension;
 import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 // @EnableReactiveNeo4jRepositories
 @SpringBootApplication
 @EnableReactiveNeo4jAuditing
 @EnableTransactionManagement
 @ComponentScan
+@EnableDiscoveryClient
 public class RecommendationServiceApplication {
 
 	public static void main(String[] args) {

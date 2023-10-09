@@ -17,7 +17,7 @@ docker rm recommendation-service
 # Docker build image
 docker build -t recommendation-service .
 
-docker tag recommendation-service philipasd/recommendation-service:v0.0.0
+docker tag recommendation-service philipasd/recommendation-service:0.0.0
 
 # docker push philipasd/recommendation-service:v0.0.0
 
