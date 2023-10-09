@@ -17,7 +17,7 @@ docker rm user-service
 # Docker build image
 docker build -t user-service .
 
-docker tag user-service philipasd/user-service:v0.0.0
+docker tag user-service philipasd/user-service:0.0.0
 
 # docker push philipasd/user-service:v0.0.0
 

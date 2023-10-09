@@ -2,7 +2,6 @@ version: '1.0'
 
 services:
 
-
   discovery-service:
     build: ./discovery_service
     container_name: discovery_service

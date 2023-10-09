@@ -17,7 +17,7 @@ docker rm friend-service
 # Docker build image
 docker build -t friend-service .
 
-docker tag friend-service philipasd/friend-service:v0.0.0
+docker tag friend-service philipasd/friend-service:0.0.0
 
 # docker push philipasd/friend-service:v0.0.0
 
