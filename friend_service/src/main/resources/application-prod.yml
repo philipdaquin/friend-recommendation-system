@@ -23,7 +23,6 @@ spring:
 
 PRODUCER_TOPIC: friend
 
-
 eureka:
   instance:
     prefer-ip-address: true

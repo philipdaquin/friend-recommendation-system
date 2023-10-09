@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // @EnableR2dbcRepositories
 // @EnableWebFlux
 @SpringBootApplication
+
 public class FriendServiceApplication {
 
 	public static void main(String[] args) {

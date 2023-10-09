@@ -22,14 +22,18 @@ spring:
     pathmatch:
       matching-strategy: ant-path-matcher
 
-PRODUCER_TOPIC: friend
-
-
 eureka:
   instance:
+    hostname: localhost
     prefer-ip-address: true
   client:
-    registerWithEureka: true
-    fetchRegistry: true
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
+      # defaultZone: http://localhost:7000/eureka/
+
+PRODUCER_TOPIC: friend
