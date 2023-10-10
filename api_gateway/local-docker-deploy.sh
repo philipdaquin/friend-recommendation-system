@@ -6,10 +6,10 @@ docker kill api-gateway
 docker rm api-gateway
 
 # Build 
-# ./mvnw clean compile 
+./mvnw clean compile 
 
-# # # Test 
-# ./mvnw test 
+# # Test 
+./mvnw test 
 
 # Package 
 ./mvnw package -Dmaven.test.skip=true
