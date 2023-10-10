@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: config-service
+  profiles:
+    active: native
+#   cloud:
+#     config:
+#       server:
+#         git:
+#           username: philipdaquin
+#           password: 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
+#           uri: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#           clone-on-start: true
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+  port: 8088
+
+
