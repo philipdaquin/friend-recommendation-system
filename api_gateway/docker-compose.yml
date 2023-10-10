@@ -1,6 +1,20 @@
 version: "1.0"
 
 services:
+  discovery-service:
+    build: ../discovery_service
+    container_name: discovery_service
+    networks:
+      - gateway-service-local
+    expose:
+      - 8761
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOKI_URI=http://loki:3100/loki/api/v1/push
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
+
   api-gateway:
     build: .
     container_name: api-gateway
@@ -25,19 +39,6 @@ services:
     networks:
       - gateway-service-local
 
-  discovery-service:
-    build: ../discovery_service
-    container_name: discovery_service
-    networks:
-      - gateway-service-local
-    expose:
-      - 8761
-    ports:
-      - "8761:8761"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - LOKI_URI=http://loki:3100/loki/api/v1/push
-      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://tempo:9411
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.82.0

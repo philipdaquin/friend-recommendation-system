@@ -1,24 +1,7 @@
-
-redis.host:  redis-db
-redis.port: 6379
-
-
-
-
-server:
-  port: 8090
 spring:
   config:
     activate:
       on-profile: docker
-  cache:
-    type: redis
-    redis:
-      time-to-live: 60000
-  data:
-    redis:
-      host: ${redis.host}
-      port: ${redis.port}
   cloud:
     discovery:
       client:
@@ -57,6 +40,11 @@ spring:
           args:
             name: user-service
             fallbackuri: forward:/user-service-fallback
+        # - name: RequestRateLimiter
+        #   args:
+        #     redis-rate-limiter.replenishRate: 10
+        #     redis-rate-limiter.burstCapacity: 10
+        #     redis-rate-limiter.requestedTokens: 1
         - name: Retry
           args:
             retries: 3
@@ -78,13 +66,11 @@ spring:
           args:
             name: user-service
             fallbackuri: forward:/friend-service-fallback
-        - name: Retry
-          args:
-            retries: 3
-            method: GET
-            backoff:
-              firstBackoff: 50ms
-              maxBackoff: 500ms
+        # - name: RequestRateLimiter
+        #   args:
+        #     redis-rate-limiter.replenishRate: 10
+        #     redis-rate-limiter.burstCapacity: 10
+        #     redis-rate-limiter.requestedTokens: 1
 
       - id: recommendation-service
         uri: lb://recommendation-service
@@ -99,13 +85,97 @@ spring:
           args:
             name: user-service
             fallbackuri: forward:/recommendation-service-fallback
-        - name: Retry
+        # - name: RequestRateLimiter
+        #   args:
+        #     redis-rate-limiter.replenishRate: 10
+        #     redis-rate-limiter.burstCapacity: 10
+        #     redis-rate-limiter.requestedTokens: 1
+
+
+      #
+      # Retry
+      # - 
+      #
+      - id: retry
+        uri: lb://api-gateway/8090
+        predicates:
+        - Path= /api-gateway/retry
+        filters:
+        - name: retry
           args:
+            # Retries
+            # - The number of retries that should be attempted
             retries: 3
-            method: GET
+            # Http Method 
+            methods: GET
+            series: SERVER_ERROR
+            # Status
+            # - The HTTP status codes  
+            statuses: BAD_REQUEST, INTERNAL_SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException, org.springframework.web.client.HttpServerErrorException
+            # Backoff
+            # - The configured exponential backoff for the retries 
             backoff:
-              firstBackoff: 50ms
+              firstBackoff: 10ms 
               maxBackoff: 500ms
+              factor: 3
+              basedOnPreviousValue: false
+
+management: 
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+      show-details: always
+      show-components: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: "http://tempo:9411/api/v2/spans"
+  otlp:
+    metrics:
+      export:
+        url: "http://otel-collector:4318/v1/metrics"
+        step: 10s
+        resource-attributes:
+          service:
+            name: ${spring.application.name}  
+    tracing:
+      endpoint: "http://otel-collector:4318/v1/traces"
+  prometheus:
+    metrics:
+      export:
+        step: 10s
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        all: true
+        http.server.requests: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
 eureka:
   instance:
     hostname: localhost
@@ -118,7 +188,7 @@ eureka:
       enabled: true
     serviceUrl:
       defaultZone: http://discovery-service:8761/eureka/
-      
+
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
