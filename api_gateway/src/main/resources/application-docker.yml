@@ -10,20 +10,22 @@ spring:
     
     gateway:
       default-filters:
-      - SaveSession
-      - TokenRelay
-      - name: RequestRateLimiter
-        args:
-          redis-rate-limiter:
-            replenishRate: 10
-            burstCapacity: 20
-            requestedTokens: 1
+      # - SaveSession
+      # - TokenRelay
+      # - name: RequestRateLimiter
+      #   args:
+      #     redis-rate-limiter:
+      #       replenishRate: 10
+      #       burstCapacity: 20
+      #       requestedTokens: 1
       httpclient:
         ssl:
           use-insecure-trust-manager: true
       discovery:
         locator:
+
           enabled: true
+
       
       routes:
       # Id - Every route requires a unique identifer 
@@ -178,7 +180,6 @@ management:
 
 eureka:
   instance:
-    hostname: localhost
     prefer-ip-address: true
   client:
     enabled: true
@@ -187,7 +188,7 @@ eureka:
     healthcheck:
       enabled: true
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: ${eureka_url:http://discovery-service:8761/eureka/}
 
 logging:
   pattern:
