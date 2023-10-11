@@ -5,3 +5,38 @@ spring:
     default: dev
   config: 
     import: "optional:configserver:http://localhost:8088"
+
+---
+
+
+spring:
+  config: 
+    activate:
+      on-profile: test
+    import: "optional:configserver:http://localhost:8088"
+
+---
+
+spring:
+  config: 
+    activate:
+      on-profile: prod
+    import: "optional:configserver:http://config-server:8088"
+
+---
+
+
+spring:
+  config: 
+    activate:
+      on-profile: kubernetes 
+    import: "optional:configserver:http://config-server:8088"
+
+---
+
+
+spring:
+  config: 
+    activate:
+      on-profile: docker 
+    import: "optional:configserver:http://config-server:8088"

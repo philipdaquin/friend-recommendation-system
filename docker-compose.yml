@@ -2,6 +2,21 @@ version: '1.0'
 
 services:
 
+  config-service: 
+    build: ./config_service
+    container_name: config_service
+    networks:
+      - friend-recommendation-system
+    expose:
+      - 8088
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      discovery-service:
+        condition: service_started
+
   discovery-service:
     build: ./discovery_service
     container_name: discovery_service
@@ -34,6 +49,10 @@ services:
         condition: service_started
       mongo-db: 
         condition: service_started
+      config-service: 
+        condition: service_started
+      discovery-service: 
+        condition: service_started
   #
   #   RECOMMENDATION SERVICE
   #
@@ -57,7 +76,10 @@ services:
         condition: service_started
       zookeeper:
         condition: service_started
-    
+      config-service: 
+        condition: service_started
+      discovery-service: 
+        condition: service_started
   #
   #   User Service 
   #
@@ -74,6 +96,10 @@ services:
       postgres-db: 
         condition: service_started
       redis-db: 
+        condition: service_started
+      config-service: 
+        condition: service_started
+      discovery-service: 
         condition: service_started
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -95,6 +121,10 @@ services:
       - friend-recommendation-system
     depends_on:
       redis-db:
+        condition: service_started
+      config-service: 
+        condition: service_started
+      discovery-service: 
         condition: service_started
     environment:
       - SPRING_PROFILES_ACTIVE=docker
