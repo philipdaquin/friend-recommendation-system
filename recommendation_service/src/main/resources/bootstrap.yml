@@ -1,4 +1,0 @@
-spring:
-  profiles:
-    group:
-      production: default, test, dev, prod, docker, kubernetes
