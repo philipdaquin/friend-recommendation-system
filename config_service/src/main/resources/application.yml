@@ -8,6 +8,7 @@ spring:
           # basedir: config
           clone-on-start: true
           try-master-branch: true
+          force-pull: true
           username: philipdaquin
           password: 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
           uri: https://github.com/philipdaquin/friend-recommendation-infra.git
