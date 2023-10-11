@@ -14,6 +14,10 @@ import org.springframework.data.neo4j.repository.config.EnableReactiveNeo4jRepos
 import org.springframework.data.neo4j.repository.config.ReactiveNeo4jRepositoryConfigurationExtension;
 import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 // @EnableReactiveNeo4jRepositories
@@ -22,6 +26,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableTransactionManagement
 @ComponentScan
 @EnableDiscoveryClient
+@OpenAPIDefinition(info =
+	@Info(title = "Recommendation Service API", version = "1.0", description = "Documentation Recommendation Service API v1.0")
+)
 public class RecommendationServiceApplication {
 
 	public static void main(String[] args) {
