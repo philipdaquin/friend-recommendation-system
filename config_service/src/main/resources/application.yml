@@ -1,6 +1,8 @@
 spring:
   application:
     name: config-service
+  profiles: 
+    default: dev
   cloud:
     config:
       server:
@@ -26,3 +28,39 @@ server:
   port: 8088
 
 
+---
+spring:
+  config: 
+    activate:
+      on-profile: docker
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://discovery-service:8761/eureka/
+
+---
+
+spring:
+  config: 
+    activate:
+      on-profile: kubernetes
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://discovery-service:8761/eureka/
