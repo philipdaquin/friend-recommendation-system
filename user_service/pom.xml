@@ -66,6 +66,19 @@
             <artifactId>spring-cloud-starter-config</artifactId>
 			<version>4.0.3</version>
         </dependency>
+		<!-- for config auto retry -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>3.1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+		<!-- for auto retry -->
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core-micrometer</artifactId>

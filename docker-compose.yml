@@ -13,6 +13,11 @@ services:
       - "8088:8088"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://config-service:8088/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       discovery-service:
         condition: service_started

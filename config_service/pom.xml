@@ -51,7 +51,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-service</artifactId>
+			<artifactId>spring-cloud-config-server</artifactId>
+			<version>4.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

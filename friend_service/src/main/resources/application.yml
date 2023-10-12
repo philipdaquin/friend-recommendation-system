@@ -23,11 +23,18 @@ spring:
     import: "optional:configserver:http://config-service:8088"
 
 ---
-
 spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-service
+      fail-fast: true
+      retry:
+        max-attempts: 60
   config: 
     activate:
-      on-profile: docker
+      on-profile: docker 
     import: "optional:configserver:http://config-service:8088"
 
 ---
