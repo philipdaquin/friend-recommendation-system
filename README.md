@@ -13,6 +13,9 @@ Facebook is a social media platform that connects people who may know each other
 - https://github.com/philipdaquin/friend-recommendation-provision
 - https://github.com/philipdaquin/friend-recommendation-infra
 
+## Final Architecture
+![FinalArchitecture](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/80b35dae-8159-4cb6-a10f-350019f5d2be)
+
 **Main Uses:**
 - **Add** / **Update** / **Delete** User profile
 - **Send** / **Accept** / **Reject** / **Delete** Friend Request
