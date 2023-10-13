@@ -13,6 +13,43 @@ Facebook is a social media platform that connects people who may know each other
 - https://github.com/philipdaquin/friend-recommendation-provision
 - https://github.com/philipdaquin/friend-recommendation-infra
 
+
+## Table of Contents 
+
+- [Overview](overview) 
+General System
+Main Uses
+Users and
+Scaling Goals
+Performance Goals
+Higher Level
+Back of
+Constraints:**
+Assumptions:********
+Calculate QPS
+Architecture Services
+Choosing the
+Final Architecture
+ Services 
+CQRS Design
+Pros**:
+Cons**:
+How it
+equential Diagram
+Adding Friends
+Recommending Friends
+User Service
+Recommendation Service
+Friend Service
+Class-relations
+Centralised Monitoring
+Architecture
+The
+Observability services
+Kubernetes Observabilty
+
+
+
 **Main Uses:**
 - **Add** / **Update** / **Delete** user profile
 - **Send** / **Accept** / **Reject** / Delete Friend Request
