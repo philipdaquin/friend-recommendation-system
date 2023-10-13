@@ -16,8 +16,8 @@ Facebook is a social media platform that connects people who may know each other
 
 ## Table of Contents 
 
-[Overview](#overview) 
-General System
+-[Overview](#overview) 
+-[General System Requirements](#general-system-requirements)
 Main Uses
 Users and
 Scaling Goals
