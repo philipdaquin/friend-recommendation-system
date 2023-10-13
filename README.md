@@ -9,9 +9,13 @@ Facebook is a social media platform that connects people who may know each other
 3. Users should be able to provide basic information.
 4. Users should only receive newly updated lists when new users are added or updates are made, rather than with every reload. 
 
-**Associated Files:**
+**Supporting Repositories**
 - https://github.com/philipdaquin/friend-recommendation-provision
 - https://github.com/philipdaquin/friend-recommendation-infra
+
+
+
+
 
 ## Final Architecture
 ![FinalArchitecture](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/80b35dae-8159-4cb6-a10f-350019f5d2be)
