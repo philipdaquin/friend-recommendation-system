@@ -1,7 +1,9 @@
 # Friend Recommendation System [WIP]
+
 ### Overview 
 Facebook is a social media platform that connects people who may know each other. By leveraging advanced algorithms and user data analysis, the system identifies common interests, mutual connections, and relevant activities to propose individuals who are likely to share meaningful connections.
 
+### General System Requirements
 1. Users should have the ability to send, cancel, accept, reject and delete friend requests 
 2. The system should be able to suggest potential friends based on mutual connections. 
 3. Users should be able to provide basic information.
@@ -11,18 +13,22 @@ Facebook is a social media platform that connects people who may know each other
 - https://github.com/philipdaquin/friend-recommendation-provision
 - https://github.com/philipdaquin/friend-recommendation-infra
 
+**Main Uses:**
+- **Add** / **Update** / **Delete** user profile
+- **Send** / **Accept** / **Reject** / Delete Friend Request
+- System should **Send** Recommended Profiles
 
-### Users and Roles
+**Users and Roles**
 - **Member** — All members can send each other friend request, cancel request, create their own profile etc.
 - **Admin** — responsible mainly for adding, deleting users
 - **System** — responsible mainly for suggesting users
 
-### Scaling Goals
+**Scaling Goals**
 1. **Highly Available / Reliable** — The system should be able to withstand peak hours but occasional data point loss is acceptable  
 2. **Scalable** — The system should accommodate large volumes of user
 3. **Privacy** — The recommendations should be private to the user
 
-### Performance Goals
+**Performance Goals**
 1. **Highly Performant** — The system should be able to send near real time recommended users
 2. **Eventual Consistency** — few second delays for retrieving new set of list
 
