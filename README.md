@@ -18,7 +18,7 @@ Facebook is a social media platform that connects people who may know each other
 
 
 ## Final Architecture
-![FinalArchitecture](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/80b35dae-8159-4cb6-a10f-350019f5d2be)
+![FinalArchitecture](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/abccce11-60d0-483d-aad4-29c42d1082bb)
 
 **Main Uses:**
 - **Add** / **Update** / **Delete** User profile
@@ -112,7 +112,8 @@ We can use different type of databases here:
 - Neo4J would be optimal for this type of QPS to support Recommendation Service. As the QPS goes higher, we may be able to use more robust and proven tools like HDFS and Spark.
 
 ## Final Architecture
-![FinalArchitecture](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/80b35dae-8159-4cb6-a10f-350019f5d2be)
+![FinalArchitecture](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/abccce11-60d0-483d-aad4-29c42d1082bb)
+
 
 ### Services 
 | Service Name | Ports | Persistence | Messaging | Caching | Service Type |
@@ -130,7 +131,8 @@ CQRS stands for Command and Query Responsibility Segregation, a pattern that sep
 The Recommendation Service reads every Event that takes place in both User and Friend Domains.
 - By using the CQRS, it will allow us to minimise data contention at the domain level, integrate our Recommendation Service more efficiently and support high traffic request during peak periods.
 - By reading the stream of events rather than the actual data, we can avoid data conflicts and maximise both performance and scalability. The events can be used to asynchronously generate materialised views on the data that can be used to populate our read store.
-![cqrs](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/3528001a-277d-4a40-9e66-8837ee52d6e2)
+![cqrs](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/91f9c2dd-5422-4055-bd1e-c15fb9f875a7)
+
 
 **Pros**:
 - Support different types of data schemas
@@ -153,7 +155,7 @@ The Recommendation Service reads every Event that takes place in both User and F
 2. Execute a dual write to database and Kafka cluster. Send an event called `Add-Friend` Command to the Friend Service and wait for Kafka acknowledgement.
 3. The aggregated service listens to this event and replicates the domain data on the graph database.
 4. If on error, rollback the database transaction.
-![addongfroedm ](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/996ca6e5-ca1b-456c-a7a2-7df26449caed)
+![addongfroedm ](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/4da38563-f62f-4025-9526-00cdd70c4a83)
 
 ******************************Recommending Friends****************************** 
 ![Recommendation](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/76e3c470-8614-4a47-b109-a28cbb08de1b)
@@ -165,8 +167,7 @@ Using Neo4J real time queries, it is possible to return recommendations to users
 
 ## API Design 
 ### Use Case Diagram 
-![useractivty](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/725faeff-ae04-4cf4-834a-5e2183aac55b)
-
+![useractivty](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/787290a3-8579-4492-8e04-2988aae67e2f)
 **************************User Service************************** 
 
 - Create User / Update User / Get User / Delete User
@@ -213,7 +214,7 @@ Using Neo4J real time queries, it is possible to return recommendations to users
 |  |  |
 
 ## Class-relations Diagram 
-![diagram](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/b79a8998-77a5-491c-a771-4bf7212ff6ee)
+![diagram](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/ef8f559b-b9f7-4559-b9bc-17e4dc3704ed)
 
 
 ## Centralised Monitoring, Alerting and Logging System 
@@ -228,7 +229,7 @@ Monitoring is mainly comprised of the following four sets of activities:
 - Metrics collections
 - Metrics visualisation
 - Alerts and notifications
-![moniyoring](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/6a0b4adf-1174-4c37-87bc-51a369e06b2b)
+![moniyoring](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/953cb680-cfad-4175-84ea-64acac15dd4a)
 ### Observability services: 
 - **Application Observability** - Micrometer
 - **Distributed Tracing** — Tempo, Zipkin
@@ -240,7 +241,7 @@ Monitoring is mainly comprised of the following four sets of activities:
 - **Alert System**: Alert Manager
 - **Container Observability**: cAdvisor
 
-![kubernetesMonitoring](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/0ffa5424-e415-446e-aaff-bdac9ff85df2)
+![kubernetesMonitoring](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/ea8ca02c-0c2a-4b8b-aa5b-c2869df5457a)
 ### Kubernetes Observabilty:
 The kubernetes monitoring services are provided by Prometheus Operator. You can find more information
 [here](https://github.com/prometheus-operator/kube-prometheus/tree/main):
