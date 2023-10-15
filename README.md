@@ -158,7 +158,8 @@ The Recommendation Service reads every Event that takes place in both User and F
 ![addongfroedm ](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/4da38563-f62f-4025-9526-00cdd70c4a83)
 
 ******************************Recommending Friends****************************** 
-![Recommendation](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/76e3c470-8614-4a47-b109-a28cbb08de1b)
+![Recmmendation](https://github.com/philipdaquin/friend-recommendation-system/assets/85416532/c64ae96c-2b67-4795-a895-c08eb9737ce8)
+
 Using Neo4J real time queries, it is possible to return recommendations to users without extensive machine learning.
 1. Find mutual frineds of your frineds' list.
 2. Remove the user's friends from the list
